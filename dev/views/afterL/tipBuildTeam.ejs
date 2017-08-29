@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>提示</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
+<![endif]-->
+<!--[if gte IE 9]><!-->
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!--<![endif]-->
+	<style>
+	body{
+        background:url('../img/014.jpg') no-repeat ;
+        background-size:100%;
+    }
+    @media (max-width: 970px) {
+        body{
+            background-size:1000px 600px;
+        }
+    }
+	.container{
+		display: block;
+		padding:10px;
+		margin:20% auto;
+		border:solid 2px #86334a;
+		max-width:500px;
+		min-width:300px;
+	}
+	</style>
+</head>
+<body>
+	<div class='container'>
+		<h4>你已经建立了一个团队，如果你要再建一个，必须先解散原来的团队．</h3>
+		<button id='dont' class="btn btn-default">不建了</button>
+		<button id='dismiss' class="btn btn-warning">解散原来的团队</button>
+	</div>
+
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<![endif]-->
+	<script src='/js/lib/formPostUrl.js'></script>
+	<script>
+		var username = '<%=username%>';
+		var data = {
+				username:username
+			}
+		document.getElementById('dont').onclick = function(){
+			formPostUrl('/main',data)
+		}
+		document.getElementById('dismiss').onclick =function(){
+			formPostUrl('/dismiss',data)
+		}
+	</script>
+</body>
+</html>

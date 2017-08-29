@@ -1,0 +1,7 @@
+db.users.remove({})
+db.peoples.remove({})
+db.starmarks.remove({})
+db.teams.remove({})
+db.peopleteams.remove({})
+db.messages.remove({})
+db.tmessages.remove({})

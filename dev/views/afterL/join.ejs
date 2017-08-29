@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>加入团队</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
+<![endif]-->
+<!--[if gte IE 9]><!-->
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!--<![endif]-->
+	<style>
+	body{
+        background:url('../img/014.jpg') no-repeat ;
+        background-size:100%;
+    }
+    @media (max-width: 970px) {
+        body{
+            background-size:1000px 600px;
+        }
+    }
+		.container{
+			border:solid 2px #6a5;
+			width:400px;
+			height:150px;
+			display: block;
+			margin:20% auto;
+			padding:1em;
+		}
+		tip{
+			display: block;
+		}
+		#tip{
+			color:red;
+		}
+	</style>
+
+</head>
+<body>
+	<div class="container">
+		<h4>请输入该团队的口令：</h4>
+		<p id='tip'></p>
+		<input id='pw' type="text">
+		<button id='ok'>确认</button>
+        <button id='back'>返回主页</button>
+	</div>
+
+
+
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<![endif]-->
+<script src='js/lib/formPostUrl.js'></script>
+<script>
+	var doc = document;
+	var 
+		username = '<%=username%>',
+		id = '<%=id%>';
+
+	function backToMain(){
+		var data = {
+  			username:username
+  		}
+		formPostUrl('/main',data);
+	}
+  	doc.getElementById('back').onclick = backToMain;
+
+	doc.getElementById('ok').onclick=function(){
+		var pw = doc.getElementById('pw').value.trim();
+ 		var data = {
+ 			password:pw,
+ 			username:username,
+ 			id:id,
+ 		}
+ 		console.log(data);
+		var J_data = JSON.stringify(data);
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("POST","/join_ok",true);
+		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		xmlhttp.send("J_data="+J_data);
+		xmlhttp.onreadystatechange=function(){
+ 			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+ 				var judge = JSON.parse(xmlhttp.responseText);
+ 				console.log(judge)
+ 				if(judge){
+ 					backToMain();
+ 				}else{
+	 				doc.querySelector("#tip").innerText='Password error.';
+ 				}
+ 			}
+ 		}
+	}
+
+</script>	
+</body>
+</html>

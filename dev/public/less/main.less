@@ -1,0 +1,767 @@
+*{margin:0;padding:0;border:none;transition: all 0.3s;font-family: "微软雅黑";}
+.badge{
+		background: #F4102E;
+	}
+body{
+background:url('../img/014.jpg') no-repeat ;
+background-size:100%;
+   	@media (max-width: 970px) {
+    background-size:1000px 100%;
+	}
+}
+.container{
+padding:0 5px;
+background:transparent;
+margin:50px auto;
+width: auto;
+border:solid 1px #888;
+border-left: none;
+border-right:none;
+	@media (max-width:450px){
+		margin:0;
+		padding:0;
+		width:100%;
+	}
+}
+
+
+.ele{
+width:40px;
+height:40px;
+line-height:150%;
+border-radius: 10%;
+border:solid 1px #eee;
+margin:10px;
+font-size: 1.8em;
+text-align: center;
+background-color:#333;
+display: inline-block;
+color:#fff;
+cursor:pointer;
+	&:hover{
+	border:solid 1px #444;
+	}
+}
+
+#content{
+	display: inline-block;
+	width:auto;
+	height:600px;
+	background: transparent;
+	@media (max-width:450px){
+		width:100%;
+	}
+}
+#domore{
+	height:100%;
+	width:0px;
+	overflow: hidden;
+	float: right;
+	background-color: transparent;
+	@media (max-width:450px){
+		background: rgba(200,200,200,0.5);
+		position:absolute;
+		z-index: 20;
+		left:82%;
+		top:80px;
+	}
+}
+#logOff{
+	display: block;
+	width:100%;
+	text-align:center;
+	float:right;
+	cursor:pointer;
+	border-radius: 0.2em;
+	color:#fff;
+	background-color: #222;
+	height:20px;
+}
+#checkMess{
+	overflow-y: scroll;
+	background-color: rgba(255, 255, 255, 0.4);
+	border-right:1px solid #999;
+	height:100%;
+	width:320px;
+	display: inline-block;
+	float:left;
+	@media (max-width:450px){
+		height:100%;
+		width:100%;
+	}
+}
+#user_info{
+height: 80px;
+background: transparent;
+	#avator{
+	float: left;
+	display: inline-block;
+	height:100%;
+	width:30%;
+	max-width:80px;
+	border-radius: solid 1px #999;
+	border-radius: 50%;
+	overflow: hidden;
+		img{
+		width:100%;
+		height:100%;
+		}
+	}
+	#intro{
+	padding-left: 5px;
+	float: left;
+	display: inline-block;
+	height:100%;
+	width:55%;
+		#name{
+		float: left;
+		display: block;
+		height: auto;
+		width: 100%;
+			#nickname{
+			float: left;
+			font-size: 1.1em;
+			display: inline-block;
+			}
+			#username{
+			float: left;
+			font-size: 0.8em;
+			display: inline-block;
+			}
+		}
+		#introduce{
+			width: 100%;
+			float: left;
+			display: block;
+			font-size: 0.9em;
+		}
+	}
+	#set {
+	float: right;
+	display: inline-block;
+	height: 100%;
+	text-align: center;
+	width:15%;
+	font-size: 1.8em;
+	line-height: 270%;
+	cursor: pointer;
+		&:hover{
+		background-color: #333;
+		color:#fff;
+		transform:translate(30deg); 
+		}
+	}
+}
+
+#search-content{
+position: relative;
+width:100%;
+height: auto;
+	div{
+	display: inline-block;
+	}
+	#search{
+	border:solid 1px #aaa;
+	width:100%;
+	display: inline-block;
+	float: right;
+	margin:2px 0;
+	height:30px;
+	background: rgba(0,0,0,0.2);
+	overflow: hidden;
+		close{
+		overflow: hidden;
+		width:8%;
+		height:100%;
+		background: #fff;
+		cursor: pointer;
+		line-height: 150%;
+		font-size: 1.5em;
+		line-height: -50%;
+		padding-bottom: 2px;
+			&:hover{
+			background: #555;
+			color: #fff;	
+			}
+		}
+		#search-id{
+		padding-left: 0.1em;
+		float: right;
+		overflow: hidden;
+		margin:0 2px;
+		height:100%;
+		width:70%;
+		}
+		#sub{
+		float: right;
+		background:#fff;
+		width:20%;
+		height:100%;
+		overflow: hidden;
+			&:hover{
+			background: #555;
+			color: #fff;	
+			}
+		}
+	}
+	#search-info{
+	display: block;
+	width: 100%;
+	height:auto;
+		li{
+			// width:10
+			margin:1px 0;
+			padding:1px 5px;
+		}
+		#search-team{
+		display: block;
+		float: left;
+		height: auto;
+		border-bottom: solid 0.2em #222;
+			li{
+				margin:1px 0;
+				padding:1px 5px;
+			}
+			#teamImg{
+			display: block;
+			width: 200px;
+			height:150px;
+			float: left;
+				img{
+				width: 100%;
+				height: 100%;
+				}
+			}
+			#tinfo{
+			padding:0.3em;
+			width:90%;
+				#teamname{
+				margin:2px;
+				display: block;
+				height:auto;
+				color:#222;
+				font-size:1.1em;
+				}
+				#builder{
+				margin:2px;
+				height:auto;
+				display: block;
+				color:#222;
+				font-size:1.1em;
+				}
+				#level{
+				margin:2px;
+				height:auto;
+				display: block;
+				color:#222;
+				font-size:1.1em;
+				}
+				#membernumber{
+				margin:2px;
+				display: block;
+				color:#222;
+				font-size:1.1em;
+				}
+				#major{
+				margin:2px;
+				display: block;
+				color:#222;
+				font-size:1.1em;
+				}
+				#teamintro{
+				margin:2px;
+				display: block;
+				color:#222;
+				font-size:1.1em;
+				}				
+			}
+			#join{
+			width: 80px;
+			height:25px;
+			text-align: center;
+			border:solid 2px #432;
+			border-radius: 0.2em;
+			margin:1px;
+			cursor: pointer;
+				&:hover{
+				color:#fff;
+				background-color: #222;
+				}
+			}
+		}
+		#search-person{
+			float:left;
+			display: block;
+			#personImg{
+			float:left;
+			display: block;
+			width: 100px;
+			height: 100px;
+				img{
+				width: 100%;
+				height: 100%;
+				}
+			}
+			#pinfo{
+				float:left;
+				display: block;
+				width:90%;
+				.inf{
+				margin:2px;
+				display: block;
+				height:auto;
+				color:#222;
+				font-size:1.1em;
+				}
+				#nickname{
+					.inf;
+				}
+				#sex{
+					.inf;
+				}
+				#hobby{
+					.inf;
+				}
+				#personIntro{
+					.inf;
+				}
+			}
+			#send{
+			width:70px;
+			height:25px;
+			margin:2px;
+			border:solid 2px #323;
+			border-radius: 0.2em;
+			text-align: center;
+			cursor: pointer;
+				&:hover{
+				color:#fff;
+				background-color: #222;
+				}
+			}
+			#star{
+			width:70px;
+			height:25px;
+			margin:2px;
+			border:solid 2px #323;
+			border-radius: 0.2em;
+			text-align: center;
+			cursor: pointer;
+				&:hover{
+				color:#fff;
+				background-color: #222;
+				}
+			}
+			#sms{
+			display: block;
+			width:90%;
+			background:transparent;
+			height:0;
+			overflow: hidden;
+				textarea{
+				display: block;
+				border:solid 2px #777;
+				height:80px;
+				min-width:98%;
+				max-width:98%;
+				min-height:80px;
+				max-height:80px;
+				padding:0.5em;
+				}
+				#tosend{
+				width:98%;
+				height:30px;
+				font-size: 1.2em;
+				border:solid 2px #434;
+				border-radius: 0.2em;
+				text-align: center;
+				cursor: pointer;
+				background-color: #E6EBF2;
+				&:hover{
+					color:#036497;
+					background-color: #f6EBF3;
+				}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+#messOption{
+	display: inline-block;
+	height:35px;
+	width:100%;
+	border:solid 1px #999;
+	border-bottom:none;
+}
+.sOption{
+	text-align: center;
+	line-height: 250%;
+	border-right:solid 1px #777;
+	width:33.3%;
+	height:90%;
+	float:left;
+	display: inline-block;
+	cursor:pointer;
+	color:#222;
+	background-color:#fff;
+	&:hover{
+		opacity: 0.2;
+	}
+	
+}
+#selecting{
+	height:100%;
+	width:50%;
+	background:transparent;
+	display: inline-block;
+}
+#starOption{
+	background :transparent;
+	color :#222;
+}
+#strangeOption{
+	border:none;
+}
+#teamOption{
+}
+
+#messContent{
+	float:left;
+	display: inline-block;
+	height:560px;
+	width:100%;
+}
+
+.sContent{
+	background:transparent;
+	height:100%;
+	width:100%;
+	/*overflow-y:scroll;*/
+	ul{
+		li{
+			border-bottom: solid 1px #999;
+			text-decoration: none;
+			list-style: none;
+			cursor: pointer;
+		}
+	}
+}
+
+#starContent{
+	display: block;
+	ul{
+		li{
+			padding-left: 0.3em;
+			height:60px;
+		}
+	}
+	info{
+		display: inline-block;
+		float: left;
+		width:70%;
+		height:100%;
+	}
+	div{
+		height:30%;
+	}
+	nickname{
+		font-size: 1.1em;
+		display: inline-block;
+		height:100%;
+	}
+	username{
+		margin-left: 0.5em;
+		font-size: 0.9em;
+		display: inline-block;
+		height:100%;
+		opacity: 0.8;
+	}
+	introduce{
+		font-size:0.9em;
+		display: block;
+		height:74%;
+	}
+	avator{
+		display: inline-block;
+		float: right;
+		height:100%;
+		width:60px;
+	}
+	img{
+		border-radius: 50%;
+		width:100%;
+		height:100%;
+	}
+}
+#teamContent{
+	display: none;
+	li{
+		height:120px;
+		width:98%;
+		&:hover{
+			opacity: 0.8;
+		}
+	}
+	info{
+		display: inline-block;
+		padding-left: 2px;
+		float: left;
+		width:66%;
+		height:98%;
+		div{
+			height:30%;
+			teamname{
+				font-size: 1.2em;
+				display: inline-block;
+				height:98%;
+			}
+			id{
+				margin-left: 0.5em;
+				font-size: 0.9em;
+				display: inline-block;
+				height:98%;
+				opacity: 0.8;
+			}
+		}
+		introduce{
+			display: block;
+			height:65%;
+		}
+	}
+	avator{
+		display: inline-block;
+		padding-top:2px;
+		float: right;
+		width:33%;
+		height:100%;
+		img{
+			width:100%;
+			height:100%;
+		}
+	}
+}
+#strangeContent{
+	display: none;
+	ul{
+		li{
+			width:100%;
+			height:40px;
+			overflow: hidden;
+			nickname{
+				display: block;
+				float: left;
+				width:100%;
+				height:20px;
+			}
+			content{
+				display: block;
+				float: left;
+				width:100%;
+				height:290px;
+				overflow-y: scroll;
+				padding-top:10px;
+			}
+			close{
+				display: inline-block;
+				float: right;
+				font-size:1.3em;
+				&:hover{
+					color:#aaa;
+				}
+			}
+			div{
+				display: block;
+				float:left;
+				width:100%;
+				height: auto;
+
+				input{
+					display: inline-block;
+					float:left;
+					width:70%;
+					height:100%;
+					margin-right: 2px;
+					padding-left: 2px;
+					border:solid 1px #222;
+					border-radius: 0.2em;
+				}
+				sub_btn{
+					display: inline-block;
+					float: left;
+					width:25%;
+					height:100%;
+					background: #fff;
+					padding: 0 0.2em;
+					border:solid 1px #111;
+					border-radius: 0.2em;
+					font-style: 0.9em;
+					text-align: center;
+				}
+			}
+
+		}
+	}
+
+}
+
+
+messageframe{
+	border:solid 1px #888;
+	border-radius: 10px;
+	overflow: hidden;
+	display: inline-block;
+	position:absolute;
+	top: 135px;
+	left: 350px;
+	background: rgba(240,240,240,0.8);
+	width:600px;
+	height:500px;
+	@media (max-width:600px){
+		position: fixed;
+		top: 0px;
+		left:0px;
+		width:100%;
+		height: 100%;
+		background: rgba(240,240,240,0.8);
+	}
+	top{
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
+		display: block;
+		height:8%;
+		background: #222;
+		@media (max-width:600px){
+		display: block;
+		height:30px;
+		background: #222;
+		border-bottom:solid 2px #987;
+		}
+		close{
+			text-align: center;
+			cursor: pointer;
+			font-size: 2em;
+			float: left;
+			display:inline-block;
+			background: #eee;
+			width:10%;
+			height:100%;
+			&:hover{
+				color:#ccc;
+				background-color:#222;
+			}
+			@media (max-width:600px){
+				font-size: 1.4em;
+			}
+
+		}
+		div{
+			color:#ddd;
+			font-size: 1.5em;
+			float: left;
+			text-align: center;
+			display: inline-block;
+			width:80%;
+			height:100%;
+			nickname{
+				display: inline-block;
+			}
+			username{
+				margin-left: 1em;
+				display: inline-block;
+				opacity: 0.8;
+				font-size:0.7em;
+			}
+			teamname{
+				display: inline-block;
+			}
+			id{
+				color:#ddd;
+				margin-left: 1em;
+				display: inline-block;
+				opacity: 0.8;
+				font-size:0.7em;
+			}
+		}
+		info{
+			text-align: center;
+			line-height: 200%;
+			float: right;
+			cursor: pointer;
+			font-size: 1.2em;
+			display: inline-block;
+			background: #ddd;
+			width:10%;
+			height:100%;
+			&:hover{
+				color:#ddd;
+				background-color:#222;
+			}
+			@media (max-width:600px){
+				font-size: 1em;
+			}
+		}
+		}
+	}
+	cont{
+		display: block;
+		width:100%;
+		height: 84.3%;
+		overflow-y:scroll; 
+		@media (max-width:600px){
+			height:76%;
+		}
+	}
+	say{
+		display: block;
+		height:8%;
+		background: transparent;
+		border-bottom-left-radius: 10px;
+		border-bottom-left-radius: 10px;
+		#media (max-width:600px){
+			height:30px;
+		}
+		face{
+			display: inline-block;
+			float: left;
+			background: #111;
+			height:95%;
+			width:10%;
+			cursor: pointer;
+		}
+		input{
+			padding-left: 0.2em;
+			display: inline-block;
+			float: left;
+			height:95%;
+			width:80%;
+			font-size: 1.2em;
+			background: #FFFFee; 
+			@media (max-width:600px){
+				width:75%;
+			}
+		}
+		subm{
+			display: inline-block;
+			font-size: 1.5em;
+			text-align: center;
+			line-height: 150%;
+			color:#fff;
+			float: left;
+			height:95%;
+			width:10%;
+			background: #111;
+			cursor: pointer;
+			&:hover{
+				background:#fff;
+				color:#344;
+			}
+			@media (max-width:600px){
+			font-size: 1.2em;
+			width:15%;
+			}
+		}
+	}

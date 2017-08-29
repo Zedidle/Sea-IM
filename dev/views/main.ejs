@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>登录成功</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
+<![endif]-->
+<!--[if gte IE 9]><!-->
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!--<![endif]-->
+	<!-- <link href="https://cdn.bootcss.com/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" rel="stylesheet"> -->
+	<link rel="stylesheet" href="/css/main.css">
+	<audio id='tipvoice' src="voice/7499.wav"></audio>
+</head>
+<body>
+
+
+<div class='container'>
+
+	<div id="content">
+		<div id='getRender'></div>
+		<div id='domore'>
+			<div id="logOff">注销</div>
+			<div id='person' class='ele' data-toggle="tooltip" data-placement="left" title="个人信息">
+			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			</div>
+			<div id='myteam' class='ele' data-toggle="tooltip" data-placement="top" title="团队">
+			<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+			</div>
+			<div id="buildTeam" class='ele' data-toggle="tooltip" data-placement="bottom" title="创建团队"><span class="glyphicon glyphicon-grain" aria-hidden="true"></span></div>
+		</div>
+		<div id="checkMess">
+			<div id='user_info'></div>
+			<div id='search-content'>
+				<div id='search'>
+					<button id='sub'>
+        			<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+					查找
+					</button>
+					<input type="text" id='search-id' name='search-id' placeholder="请输入团队或用户的ID">
+					<close>
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</close>
+				</div>
+			</div>
+			<div id="messOption">
+				<div id='starOption' class='sOption'>
+				<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+				朋友</div>
+				<div id='teamOption' class='sOption'>
+				<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+				团队</div>
+				<div id='strangeOption' class='sOption'>
+				<span class="glyphicon glyphicon-pawn" aria-hidden="true"></span>
+				陌生人</div>
+			</div>
+			<div id="messContent">
+				<div id="starContent" class='sContent'>
+				<ul></ul>
+				</div>
+				<div id="teamContent" class='sContent'>
+				<ul></ul>
+				</div>
+				<div id="strangeContent" class='sContent'>
+				<ul></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+
+
+
+
+
+
+
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<![endif]-->
+<!-- <script src="https://cdn.bootcss.com/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script> -->
+<script src="/socket.io/socket.io.js"></script>
+<script src='/js/main.js'></script>
+<script>
+var socket = io();
+
+var 
+	username = '<%=username%>',
+	user_info = '<%= user_info%>',
+	star = '<%=star%>',
+	stars = star.split(',');
+
+var	
+	mess = '<%=mess%>',
+	tmess = '<%=tmess%>';
+
+getUserInfo(username,user_info);
+search(username);
+getPeopleMess(username,mess,stars);
+getTeamMess(username,tmess);
+basic(username);
+
+</script>
+<!-- <script>
+    (function($){
+        $(window).on("load",function(){
+            $("#checkMess").mCustomScrollbar({
+            	theme:"dark-thin",
+            	axis:'y',
+            	scrollInertia: 5,
+            });
+        });
+    })(jQuery);
+    
+</script> -->
+
+	
+
+</body>
+</html>
