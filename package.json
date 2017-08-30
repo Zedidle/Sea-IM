@@ -22,19 +22,21 @@
     "socket.io": "^2.0.3"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
     "gulp-autoprefixer": "^4.0.0",
-    "gulp-jshint": "^2.0.4",
-    "rename": "^1.0.4",
     "gulp-cache": "^0.4.6",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
     "gulp-imagemin": "^3.3.0",
+    "gulp-jshint": "^2.0.4",
     "gulp-less": "^3.3.2",
     "gulp-livereload": "^3.8.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-notify": "^3.0.0",
     "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^3.0.0"
+    "gulp-uglify": "^3.0.0",
+    "jshint": "^2.9.5",
+    "rename": "^1.0.4"
   },
   "scripts": {
     "start": "supervisor app.js",

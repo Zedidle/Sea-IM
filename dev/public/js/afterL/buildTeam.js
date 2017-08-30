@@ -1,32 +1,10 @@
-function formPostUrl(url,object){
-     var form = document.createElement('form');
-     form.action = url;
-     form.method = 'post';
-     form.target = "_self";
-     form.style.display = "none";
-     if(typeof object==='object'){
-          for(var para in object){
-               var input = document.createElement('input');
-               input.name = para;
-               input.value = object[para];
-               console.log(input)
-               form.appendChild(input);
-          }
-     }else{
-          console.log('Not paraments');
-     }
-     document.querySelector('body').appendChild(form);
-     form.submit();
-}
-
-function render(username){
+function buildTeam(username){
 	$('#back').click(function(){
 		var data = {
 			username:username
 		}
 		formPostUrl('/main',data);
 	})
-
 	var teamname = $('#teamname'),
 		password = $('#password'),
 		passworda = $('#passworda'),
@@ -49,6 +27,8 @@ function render(username){
 			$('#tipmajor').html('<p>Your team is major in:?(length between 2 and 20)</p>');
 		})
 
+
+$('#sub').click(tip);
 function tip(){
 	var teamname_v = teamname.val().trim(),
 		password_v = password.val().trim(),
@@ -112,8 +92,5 @@ function tip(){
 	function ifSame(pw,pwa){
 		return pw===pwa?true:false;
 	}
-
-	}
-
-	$('#sub').click(tip);
-} 
+}
+}

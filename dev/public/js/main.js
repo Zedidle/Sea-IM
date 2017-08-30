@@ -1,29 +1,5 @@
-function ytime(){
-     var time = new Date();
-     var month = parseInt(time.getMonth())+1;
-     time = time.getFullYear()+'.'+month+ '.' +time.getDate()+'   '+time.getHours()+':'+time.getMinutes();
-     return time;
-}
-function formPostUrl(url,object){
-     var form = document.createElement('form');
-     form.action = url;
-     form.method = 'post';
-     form.target = "_self";
-     form.style.display = "none";
-     if(typeof object==='object'){
-          for(var para in object){
-               var input = document.createElement('input');
-               input.name = para;
-               input.value = object[para];
-               form.appendChild(input);
-          }
-     }else{
-     }
-     $('body').append(form);
-     form.submit();
-}
-
-
+function main(username,user_info,mess,stars,tmess){
+     basic(username);
 function basic(username){
 var userN = username;
      $('#logOff').click(function(){
@@ -48,18 +24,6 @@ var userN = username;
           formPostUrl('/buildTeam',data);
 	})
 
-
-
-
-function reset(){
-     for(var i=0;i<$('.sOption').length;i++){
-          $('.sOption').eq(i).css('background','#333');
-          $('.sOption').eq(i).css('background','#fff');
-     }
-     for(var j=0;j<$('.sContent').length;j++){
-         $('.sContent').eq(j).css('display','none');
-     }
-}
      $('#starOption').click(function(){
           reset();
           $(this).css('background','transparent');
@@ -78,6 +42,16 @@ function reset(){
           $(this).css('color','#222');
           $('#strangeContent').css('display','block');
      })
+
+     function reset(){
+     for(var i=0;i<$('.sOption').length;i++){
+          $('.sOption').eq(i).css('background','#333');
+          $('.sOption').eq(i).css('background','#fff');
+     }
+     for(var j=0;j<$('.sContent').length;j++){
+         $('.sContent').eq(j).css('display','none');
+     }
+}
 }
 
 
@@ -86,6 +60,19 @@ function reset(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+getUserInfo(username,user_info);
 function getUserInfo(username,user_info){
 var 
      userN = username,
@@ -104,90 +91,14 @@ var
           }
           if(domore.judge){
                $('#domore').css('width','0px');
-               // $('#set').text('+');
           }else{
                $('#domore').css('width','60px');
-               // $('#set').text('-');
           }
           domore.__proto__.judge = !domore.__proto__.judge;
      })
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function createStarLi(userN,m){
-
-     $('#starContent ul').append('<li></li>');
-     var last_li = $('#starContent ul').find('li').last();
-     last_li.append('<info><div><nickname></nickname><username></username></div><introduce></introduce></info><avator><img></avator>');
-     last_li.find('nickname').text(m.nickname);
-     last_li.find('username').text(m.username);
-     last_li.find('introduce').text(m.introduce);
-     last_li.find('avator img').attr('src',m.headImg);
-
-     //set function
-     last_li.click(function(){
-          $(this).find('.badge').remove();
-          if(!$(this.parentNode).find('.badge').length){
-               $('#starOption').find('.badge').remove();
-          }
-     //Initial star's messageframe
-     if($('messageframe')){
-          $('messageframe').remove();
-     } 
-     $('#content').append('<messageframe></messageframe>');
-     $('messageframe').append('<top></top><cont></cont><say></say>');
-     $('messageframe top').append('<close><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></close><div><nickname></nickname><username></username></div><info><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></info>');
-     $('messageframe say').append('<face></face><input></input><subm><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></subm>');
-          
-     $('messageframe top div nickname').text($(this).find('nickname').text());
-     $('messageframe top div username').text($(this).find('username').text());
-
-          var star_username = $(this).find('username').text();
-          var data = {
-               username:userN,
-               star_username:star_username
-          }
-          var J_data = JSON.stringify(data);
-          $.post("/get_star_mess",'J_data='+J_data,function(Data){
-               Data.forEach(function(a){
-                    var p = document.createElement('p');
-                    p.innerText = '['+a.body.time+'] -:' + a.body.content;
-                    var cont = $('messageframe cont');
-                    cont.append(p);
-                    cont[0].scrollTop = cont[0].scrollHeight;
-               })
-          })
-
-          //set function
-          $('messageframe close').click(function(){
-               $('messageframe').remove();
-          })
-
-          $('messageframe input').keyup(function(e){
-               var keyCode = e.keyCode||e.which||e.charCode;
-               if(keyCode===13){
-                    starMessageEmit(userN);
-               }else{
-                    return false;
-               }
-          })
-
-     $('messageframe subm').click(function(){
-          starMessageEmit(userN)
-     });
-
+     $('.sContent').click(function(){
+          $('#domore').css('width','0px');
+          domore.__proto__.judge = false;
      })
 }
 
@@ -206,47 +117,37 @@ function createStarLi(userN,m){
 
 
 
-function starMessageEmit(userN){
-     var 
-          messageframe = $('messageframe'),
-          cont = messageframe.find('cont'),
-          to = messageframe.find('username').text(),
-          mess_content = messageframe.find('input').val();
-          if(!mess_content.length){
-               return;
-          }else{
-                var msg = {
-                    content:mess_content,
-                    to:to,
-                    from:userN
-               }
-               var J_msg = JSON.stringify(msg);
-               socket.emit('peopleChat',J_msg);
-               var p = document.createElement('p');
-               p.innerText = '['+ytime()+'] ME:' + mess_content;
-               cont.append(p);
-               cont.scrollTop(cont[0].scrollHeight);
-               messageframe.find('input').val('');
-          }
-}
 
 
-
-
-
-
-
-
-
+search(username);
 function search(username){
 var userN = username;
+
+     $('#search-content close').click(function(){
+          $('#search-id').val('');
+	    $('#search-id').css('width','70%');
+	    removeSearchInfo();
+     });
+
+	$('#sub').click(function(){
+          removeSearchInfo();
+          getResponse();
+     });
+
+    $('#search-id').keyup(function(e){
+     var keyCode = e.keyCode||e.which||e.charCode;
+          if(keyCode===13){
+               removeSearchInfo()
+               getResponse();
+          }
+     });
+
 
      function removeSearchInfo(){
           if($('#search-content #search-info')){
                $('#search-content #search-info').remove();
           }
      }
-
      function getResponse(){
           var id = $('#search-id').val().trim();
           if(!id||id===userN){
@@ -274,7 +175,7 @@ var userN = username;
           $('#tinfo').append("<div id='major'>主修: "+t.major+"</div>");
           $('#tinfo').append("<div id='teamintro'>简介: "+t.introduce+"</div>");
 
-               $('#join').click(function(){
+          $('#join').click(function(){
                     var data = {
                          username:userN,
                          id:id
@@ -288,7 +189,7 @@ var userN = username;
                          $('#search-team').append("<li class='alert alert-info' role='alert'>已经加入过这个团队</li>");
                     }
                })
-               }) 
+          }) 
 
                }else{
                     $('#search-info').append("<li  class='alert alert-warning' role='alert'>没有该团队</li>");
@@ -371,25 +272,6 @@ var userN = username;
                     }
           })
      }
-
-     $('#search-content close').click(function(){
-          $('#search-id').val('');
-	    $('#search-id').css('width','70%');
-	    removeSearchInfo();
-     });
-
-	$('#sub').click(function(){
-          removeSearchInfo();
-          getResponse();
-     });
-
-    $('#search-id').keyup(function(e){
-     var keyCode = e.keyCode||e.which||e.charCode;
-          if(keyCode===13){
-               removeSearchInfo()
-               getResponse();
-          }
-     });
 }
 
 
@@ -407,7 +289,7 @@ var userN = username;
 
 
 
-
+getPeopleMess(username,mess,stars);
 function getPeopleMess(username,mess,stars){
 var 
      userN = username,
@@ -562,9 +444,6 @@ var messageframe = $('messageframe');
 
 
 
-
-
-
 //Star and Strange message
 var reg = /&#34;/g;
 var mess = JSON.parse(mess.replace(reg,"\""));
@@ -573,9 +452,6 @@ var mess = JSON.parse(mess.replace(reg,"\""));
 for(var i in mess.sta){
      var m = mess.sta[i];
      createStarLi(userN,m);
-}
-function createStrangeLi(userN,m){
-
 }
 
 //stranger
@@ -637,7 +513,7 @@ last_li.find('sub_btn').click(function(){
 
 function strangeMessageEmit(that,mess_content,to){
      if(!mess_content.length){
-               return;
+          return;
      }else{
           var p = document.createElement('p');
            p.innerText ='['+ ytime() +'] ' + 'ME: ' + mess_content;
@@ -655,7 +531,6 @@ function strangeMessageEmit(that,mess_content,to){
 }
 //stranger|
 
-}
 
 
 
@@ -672,7 +547,7 @@ function strangeMessageEmit(that,mess_content,to){
 
 
 
-//Team message
+getTeamMess(username,tmess);
 function getTeamMess(username,tmess){
 var 
      userN = username,
@@ -823,9 +698,121 @@ var last_li = teamul.find('li').last();
      })
 };
 
+}
+
+}
 
 
 
 
 
-// checkMess
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function createStarLi(userN,m){
+
+     $('#starContent ul').append('<li></li>');
+     var last_li = $('#starContent ul').find('li').last();
+     last_li.append('<info><div><nickname></nickname><username></username></div><introduce></introduce></info><avator><img></avator>');
+     last_li.find('nickname').text(m.nickname);
+     last_li.find('username').text(m.username);
+     last_li.find('introduce').text(m.introduce);
+     last_li.find('avator img').attr('src',m.headImg);
+
+     //set function
+     last_li.click(function(){
+          $(this).find('.badge').remove();
+          if(!$(this.parentNode).find('.badge').length){
+               $('#starOption').find('.badge').remove();
+          }
+     //Initial star's messageframe
+     if($('messageframe')){
+          $('messageframe').remove();
+     } 
+     $('#content').append('<messageframe></messageframe>');
+     $('messageframe').append('<top></top><cont></cont><say></say>');
+     $('messageframe top').append('<close><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></close><div><nickname></nickname><username></username></div><info><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span></info>');
+     $('messageframe say').append('<face></face><input></input><subm><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></subm>');
+          
+     $('messageframe top div nickname').text($(this).find('nickname').text());
+     $('messageframe top div username').text($(this).find('username').text());
+
+          var star_username = $(this).find('username').text();
+          var data = {
+               username:userN,
+               star_username:star_username
+          }
+          var J_data = JSON.stringify(data);
+          $.post("/get_star_mess",'J_data='+J_data,function(Data){
+               Data.forEach(function(a){
+                    var p = document.createElement('p');
+                    p.innerText = '['+a.body.time+'] -:' + a.body.content;
+                    var cont = $('messageframe cont');
+                    cont.append(p);
+                    cont[0].scrollTop = cont[0].scrollHeight;
+               })
+          })
+
+          //set function
+          $('messageframe close').click(function(){
+               $('messageframe').remove();
+          })
+
+          $('messageframe input').keyup(function(e){
+               var keyCode = e.keyCode||e.which||e.charCode;
+               if(keyCode===13){
+                    starMessageEmit(userN);
+               }else{
+                    return false;
+               }
+          })
+
+     $('messageframe subm').click(function(){
+          starMessageEmit(userN)
+     });
+
+     })
+}
+
+
+
+
+
+
+
+
+
+function starMessageEmit(userN){
+     var 
+          messageframe = $('messageframe'),
+          cont = messageframe.find('cont'),
+          to = messageframe.find('username').text(),
+          mess_content = messageframe.find('input').val();
+          if(!mess_content.length){
+               return;
+          }else{
+                var msg = {
+                    content:mess_content,
+                    to:to,
+                    from:userN
+               }
+               var J_msg = JSON.stringify(msg);
+               socket.emit('peopleChat',J_msg);
+               var p = document.createElement('p');
+               p.innerText = '['+ytime()+'] ME:' + mess_content;
+               cont.append(p);
+               cont.scrollTop(cont[0].scrollHeight);
+               messageframe.find('input').val('');
+          }
+}

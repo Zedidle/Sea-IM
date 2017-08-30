@@ -36,7 +36,8 @@
         max-width: 500px;
     }
     #loginForm{
-        background: rgba(255,255,255,0.3);
+        background: rgba(255,255,255,0.8);
+        border-radius: 0.5em;
         display: block;
         padding:20px;
         height:auto;
@@ -66,8 +67,15 @@
         height:40px;
         font-size:1.2em;
     }
-    #regist,#forget{
-        width:40%;
+    #regist{
+        margin-top:5px;
+        width:65%;
+        height:25px;
+    }
+    #forget{
+        margin-top:5px;
+        float: right;
+        width:30%;
         height:25px;
     }
 
@@ -94,10 +102,9 @@
             <input type="password" class="form-control"  name="password" id="password" placeholder="密码">
         </div>
         <div id='chooseRL'>
-		  <input type="submit" id="submit" class="btn btn-success" value="登录">
-		  <input type="button" id="regist" class="btn btn-link" value="注册">
-          /
-          <input type="button" id='forget' class="btn btn-link" value='忘记密码？'>
+		  <input type="submit" id="submit" class="btn btn-primary" value="登录">
+		  <input type="button" id="regist" class="btn btn-success" value="注册">
+          <input type="button" id='forget' class="btn btn-warning" value='忘记密码？'>
         </div>
     </form>
 </div>

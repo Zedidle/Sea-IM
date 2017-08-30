@@ -144,6 +144,7 @@ jteam ul li{
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<![endif]-->
+<script src='js/lib.js'></script>
 <script src='js/afterL/myteam.js'></script>
 <script>
     var 
@@ -153,7 +154,7 @@ jteam ul li{
         buildtip = '<%= buildtip %>',
         jointip = '<%= jointip %>';
 
-    render(username,buildteam,jointeam,buildtip,jointip);
+myteam(username,buildteam,jointeam,buildtip,jointip);
 </script>
 </body>
 </html>

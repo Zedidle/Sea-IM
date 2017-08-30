@@ -89,6 +89,7 @@
 <!--<![endif]-->
 <!-- <script src="https://cdn.bootcss.com/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script> -->
 <script src="/socket.io/socket.io.js"></script>
+<script src='js/lib.js'></script>	
 <script src='/js/main.js'></script>
 <script>
 var socket = io();
@@ -97,32 +98,18 @@ var
 	username = '<%=username%>',
 	user_info = '<%= user_info%>',
 	star = '<%=star%>',
-	stars = star.split(',');
-
-var	
+	stars = star.split(','),
 	mess = '<%=mess%>',
 	tmess = '<%=tmess%>';
 
-getUserInfo(username,user_info);
-search(username);
-getPeopleMess(username,mess,stars);
-getTeamMess(username,tmess);
-basic(username);
+main(username,user_info,mess,stars,tmess);
+// basic(username);
+// getUserInfo(username,user_info);
+// search(username);
+// getPeopleMess(username,mess,stars);
+// getTeamMess(username,tmess);
 
 </script>
-<!-- <script>
-    (function($){
-        $(window).on("load",function(){
-            $("#checkMess").mCustomScrollbar({
-            	theme:"dark-thin",
-            	axis:'y',
-            	scrollInertia: 5,
-            });
-        });
-    })(jQuery);
-    
-</script> -->
-
 	
 
 </body>

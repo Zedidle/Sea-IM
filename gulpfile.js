@@ -3,31 +3,29 @@ var
 	less = require('gulp-less'),  // for less > css
     autoprefixer = require('gulp-autoprefixer'),
 	minifyCSS = require('gulp-minify-css'), //for css minify
+	jshint = require('gulp-jshint'),
 	uglify = require('gulp-uglify'),  //for js minify
 	imagemin = require('gulp-imagemin') //for images minify
 	clean = require('gulp-clean'),
+    concat = require('gulp-concat'),
+    rename = require('gulp-rename'),
     livereload = require('gulp-livereload');
 
 
 gulp.task('default',['clean'],function(){
 
-	gulp.start('db', 'lib', 'mongoModel','public_less','public_cropper','public_js','public_img','public_voice','routes','views','app');
+	gulp.start( 'lib', 'mongoModel','public_less','public_cropper','public_js','public_img','public_voice','routes','views','app');
 
 })
 gulp.task('clean', function() { 
   return gulp.src(['dist'], {read: false})
     .pipe(clean());
 });
- 
-gulp.task('db', function() {
-	gulp.src('./dev/db/*.js')
-	.pipe(uglify())
-	.pipe(gulp.dest('./dist/db'));
-}); 
+
 gulp.task('lib', function() {
-		gulp.src('./dev/lib/*.js')
+	gulp.src('./dev/lib/*.js')
 	.pipe(gulp.dest('./dist/lib'));
-});
+}); 
 gulp.task('mongoModel', function() {
 	gulp.src('./dev/mongoModel/*.js')
 	.pipe(gulp.dest('./dist/mongoModel'));
@@ -40,12 +38,15 @@ gulp.task('public_less', function() {
 	.pipe(gulp.dest('./dist/public/css'));
 });
 gulp.task('public_cropper', function() {
-		gulp.src('./dev/public/cropper/*.*')
+	gulp.src('./dev/public/cropper/*.*')
 	.pipe(gulp.dest('./dist/public/cropper'));
 });
 gulp.task('public_js', function() {
 	gulp.src('./dev/public/js/**/*.js')
+	// .pipe(jshint('.jshintrc'))
+    .pipe(jshint.reporter('default'))
 	.pipe(uglify())
+    // .pipe(concat('main.js'))
 	.pipe(gulp.dest('./dist/public/js'));
 });
 gulp.task('public_img', function() {
@@ -72,8 +73,7 @@ gulp.task('app', function() {
 	
 // 看守
 gulp.task('watch', function() {
-  gulp.watch('./dev/db/*.js', ['db']);
-  gulp.watch('./dev/lib/*.js', ['lib']);
+  gulp.watch('./dev/lib/*.js', ['db']);
   gulp.watch('./dev/mongoModel/*.js', ['mongoModel']);
   gulp.watch('./dev/public/less/*.less', ['public_less']);
   gulp.watch('./dev/public/cropper/*.*', ['public_cropper']);
