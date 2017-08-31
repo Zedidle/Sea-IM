@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>团队</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!--<![endif]-->
+    <style>
+    body{
+        background:url('../img/014.jpg') no-repeat ;
+        background-size:100%;
+    }
+    @media (max-width: 970px) {
+        body{
+            background-size:1000px 600px;
+        }
+    }
+.container{
+    margin:10% auto;
+    width:95%;
+    max-width:1300px;
+}
+
+bteam{
+    display: block;
+    width:100%;
+    height:auto;
+}
+avator{
+    display: inline-block;
+    float: left;
+    width:220px;
+    height:220px;
+    margin-right: 2em;
+}
+avator img{
+    width:100%;
+    height:100%;
+}
+info{
+    display: inline-block;
+    float: left;
+    width:60%;
+    min-width:200px;
+    padding-left: 1em;
+}
+id{
+    font-size:1.3em;
+    display: block;
+}
+teamname{
+    display: block;
+    font-size:1.3em;
+    margin:0.1em 0;
+}
+level{
+    display: block;
+    font-size:1.3em;
+}
+membernumber{
+    display: block;
+    font-size:1.3em;
+}
+major{
+    display: block;
+    font-size:1.3em;
+    margin:0.1em 0;
+}
+introduce{
+    display: block;
+    width:98%;
+    min-height:120px;
+    font-size:1.3em;
+    margin:0.2em 0;
+}
+
+jteam{
+    display: block;
+    width:100%;
+    height:auto;
+}
+
+jteam ul{
+    display: block;
+    width:100%;
+    height:auto;
+}
+
+jteam ul li{
+    display: block;
+    list-style: none;
+    float:left;
+}
+
+.transp{
+    background:rgba(240,240,240,0.5)
+}
+
+@media (max-width:450px){
+    jteam ul{
+        margin:0;padding: 0;
+    }
+    info,avator,.panel-body,.transp{
+        padding:0; margin:0;
+    }
+}
+
+</style>
+</head>
+<body>
+<div class="container transp">
+
+    <div class="panel-heading transp">
+    <button id='back' class="btn btn-default">返回主页</button>
+    <button id='update' class="btn btn-primary">更新</button>
+    <div class="panel-heading"><h2>我建立的团队</h2></div>
+    <div class="panel-body transp">
+        <buildtip></buildtip>
+        <bteam></bteam>
+    </div>
+    </div>
+
+    <div class="panel panel-default transp">
+    <div class="panel-heading"><h2>我加入的团队</h2></div>
+    <div class="panel-body transp">
+        <jointip></jointip>
+        <jteam><ul></ul></jteam>
+    </div>
+    </div>
+
+</div>
+
+
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<![endif]-->
+<script src='js/lib.js'></script>
+<script src='js/afterL/myteam.js'></script>
+<script>
+    var 
+        username = '<%= username%>',
+        buildteam = '<%= buildteam %>',
+        jointeam ='<%= jointeam %>',
+        buildtip = '<%= buildtip %>',
+        jointip = '<%= jointip %>';
+
+myteam(username,buildteam,jointeam,buildtip,jointip);
+</script>
+</body>
+</html>

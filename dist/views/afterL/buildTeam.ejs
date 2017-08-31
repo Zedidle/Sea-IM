@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>建立团队</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
+<![endif]-->
+<!--[if gte IE 9]><!-->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!--<![endif]-->
+    <style>
+    body{
+        background:url('../img/014.jpg') no-repeat ;
+        background-size:100%;
+    }
+    @media (max-width: 970px) {
+        body{
+            background-size:1000px 600px;
+        }
+    }
+.container{
+    margin-top:10%;
+}
+
+#teamForm{
+    display: block;
+    margin:0 auto;
+    padding:10px;
+    max-width: 500px;
+    border:2px solid #aaa;
+}
+#sub,#back{
+    display: inline-block;
+}
+    </style>
+</head>
+<body>
+
+<div class='container'>
+<form class="bs-example bs-example-form" id="teamForm"  action="/successB" role='form' method='post' >
+	<h2>创建团队:</h2>
+     	<div class="input-group">
+            <span class="input-group-addon">名称</span>
+            <input type="text" name='teamname' id='teamname' class="form-control">
+        </div>
+		<div id='tipteamname'></div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">口令</span>
+            <input type="password" name='password' id='password' class="form-control">
+        </div>
+		<div id='tippassword'></div>
+
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">重复口令</span>
+            <input type="password" name='passworda' id='passworda' class="form-control">
+        </div>
+		<div id='tippassworda'></div>
+
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">主攻方向</span>
+            <input type="text" name='major' id='major' class="form-control">
+        </div>
+		<div id='tipmajor'></div>
+
+        <br>
+        <input type="button" id='sub' value='Bulid'>
+        <button type='button' id='back'>Cancel</button>
+</form>
+</div>
+
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<![endif]-->
+<script src='/js/lib.js'></script>
+<script src='/js/afterL/buildTeam.js'></script>
+<script>
+    var username = '<%=username%>';
+    buildTeam(username);
+</script>
+</body>
+</html>

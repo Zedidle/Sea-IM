@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>解散团队</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!--[if lt IE 9]>
+<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
+<![endif]-->
+<!--[if gte IE 9]><!-->
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<!--<![endif]-->
+	<style>
+	body{
+        background:url('../img/014.jpg') no-repeat ;
+        background-size:100%;
+    }
+    @media (max-width: 970px) {
+        body{
+            background-size:1000px 600px;
+        }
+    }
+	.container{
+		display: block;
+		padding:10px;
+		margin:15% auto;
+		border:solid 2px #156894;
+		max-width:500px;
+		min-width:300px;
+	}
+	tipID,tipPW{
+		color:red;
+	}
+	#sub,#back{
+		display: inline-block;
+	}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<form action="/dismissTeam" method="post" id='dismissForm'>
+		<h3>请确认你的用户名和团队口令：</h3>
+		<p>用户名:</p>
+		<input type="text" id='ID' name="ID">
+		<tipID></tipID>
+		<p>团队口令：</p>
+		<input type="text" id='PW' name="PW">
+		<tipPW></tipPW>
+		<br>
+		<br>
+		</form>
+		<input id='sub' type="button" class="btn btn-danger" value='确认'>
+		<button id='back'>返回主页</button>
+	</div>
+	
+
+
+
+<!--[if lt IE 9]>
+<script src="https://cdn.staticfile.org/jquery/1.8.3/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!--<![endif]-->
+<script src='js/lib/formPostUrl.js'></script>
+<script>
+	var initailTeam = {
+		id:'<%=id%>',
+		pw:'<%=pw%>'
+	}
+	console.log(initailTeam)
+	document.getElementById('sub').onclick=function(){
+		var ID = document.getElementById('ID').value.trim();
+		var PW = document.getElementById('PW').value.trim();
+
+		var isSameID = isSame(ID,initailTeam.id),
+			isSamePW = isSame(PW,initailTeam.pw);
+		if(isSameID&&isSamePW){
+			document.getElementById('dismissForm').submit();
+		}else{
+			if(!isSameID){
+				document.querySelector('tipID').innerText = 'ID False';
+			}else{
+				document.querySelector('tipID').innerText = '';
+			}
+			if(!isSamePW){
+				document.querySelector('tipPW').innerText = 'Password False';
+			}else{
+				document.querySelector('tipPW').innerText = '';
+			}
+		}
+
+	}
+	function isSame(o,k){
+		return o===k?true:false;
+	}
+
+document.querySelector('#back').onclick = function(){
+	var data = {
+		username:initailTeam.id
+	}
+	formPostUrl('/main',data);
+}
+	
+</script>
+</body>
+</html>
