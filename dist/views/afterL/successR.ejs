@@ -17,7 +17,7 @@
     }
     @media (max-width: 970px) {
         body{
-            background-size:1000px 600px;
+            background-size:1000px 100%;
         }
     }
 		#container{
@@ -54,10 +54,12 @@
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<![endif]-->
-<script src='/js/lib/formPostUrl.js'></script>
+<!-- <script src='/js/lib.js'></script> -->
+<script src="js/index.js"></script>
+
 	<script>
 		var username = '<%=username%>';
-		document.getElementById('dont').onclick = function(){
+		document.getElementById('back').onclick = function(){
 			// window.location.href='/main';
 			var data = {
 				usrename:username
@@ -65,7 +67,11 @@
 			formPostUrl('/main',data)
 		}
 		document.getElementById('build').onclick =function(){
-			window.location.href = '/buildTeam';
+			// window.location.href = '/buildTeam';
+			var data = {
+				usrename:username
+			}
+			formPostUrl('/buildTeam',data)
 		}
 	</script>
 </body>

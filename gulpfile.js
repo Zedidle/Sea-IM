@@ -46,7 +46,7 @@ gulp.task('public_js', function() {
 	// .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'))
 	.pipe(uglify())
-    // .pipe(concat('main.js'))
+    .pipe(concat('index.js'))
 	.pipe(gulp.dest('./dist/public/js'));
 });
 gulp.task('public_img', function() {

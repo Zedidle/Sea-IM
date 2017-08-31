@@ -154,7 +154,6 @@ router.post('/buildTeam',urlencodedParser,(req,res)=>{
 })
 
 
-
 router.post('/successB',urlencodedParser,(req,res)=>{
 	var sess = req.session;
 	var data = req.body;
@@ -205,14 +204,14 @@ router.post('/dismissTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
 	console.log(data);
 
-	Team.find({id},(err,detail)=>{
+	Team.find({id:data.ID},(err,detail)=>{
 		var members = detail[0].member;
-		Peopleteam.update({username:data.id},{$set:{build:''}},err=>{
+		Peopleteam.update({username:data.ID},{$set:{build:''}},err=>{
 			members.forEach(a=>{
 		Peopleteam.find({username:a},(err,detail)=>{
 			var joins = detail[0].join;
 			for(let i=0;i<joins.length;i++){
-				if(join[i]===id){
+				if(join[i]===data.ID){
 					join.splice(i,1);
 		Peopleteam.update({username:a},{$set:{join:joins}},err=>{
 			if(err) throw err;
@@ -222,8 +221,10 @@ router.post('/dismissTeam',urlencodedParser,(req,res)=>{
 		});
 			});
 		});
-		Team.remove({id:data.id},(err)=>{
-			res.render('afterL/successR.ejs',{})
+		Team.remove({id:data.ID},(err)=>{
+			res.render('afterL/successR.ejs',{
+				username:data.ID
+			})
 		})
 	})
 })
