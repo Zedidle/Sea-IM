@@ -1,4 +1,4 @@
-const CHECK = require('../lib/check');
+const CHECK = require('./lib/check');
 const assert = require('assert');
 const crypto = require('crypto')
 const fs = require('fs')
@@ -8,7 +8,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
-const time = require('../lib/retime');
+const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
 const Message = require('../mongoModel/message');

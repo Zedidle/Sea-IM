@@ -1,4 +1,16 @@
 *{margin:0;padding:0;border:none;transition: all 0.3s;font-family: "微软雅黑";}
+.glyphicon-user{
+	color:#337ab7;
+}
+.glyphicon-grain{
+	color:#5cb85c;
+}
+.glyphicon-star{
+	color:#F4E722;
+}
+.glyphicon-fire{
+	color:#bB0e1e;
+}
 .badge{
 		background: #F4102E;
 	}
@@ -30,16 +42,15 @@ width:40px;
 height:40px;
 line-height:150%;
 border-radius: 10%;
-border:solid 1px #eee;
+border:solid 1px #444;
 margin:10px;
 font-size: 1.8em;
 text-align: center;
-background-color:#333;
 display: inline-block;
 color:#fff;
 cursor:pointer;
 	&:hover{
-	border:solid 1px #444;
+		box-shadow: 5px 5px 5px #444;
 	}
 }
 
@@ -75,7 +86,7 @@ cursor:pointer;
 	border-radius: 0.2em;
 	color:#fff;
 	background-color: #222;
-	height:20px;
+	height:30px;
 }
 #checkMess{
 	overflow-y: scroll;
@@ -146,7 +157,7 @@ background: transparent;
 	line-height: 270%;
 	cursor: pointer;
 		&:hover{
-		background-color: #333;
+		background-color: #5cb85c;
 		color:#fff;
 		transform:translate(30deg); 
 		}
@@ -166,18 +177,18 @@ height: auto;
 	display: inline-block;
 	float: right;
 	margin:2px 0;
-	height:30px;
-	background: rgba(0,0,0,0.2);
+	height:35px;
+	background:#447;
 	overflow: hidden;
 		close{
+		display: inline-block;
+		text-align: center;
 		overflow: hidden;
 		width:8%;
 		height:100%;
 		background: #fff;
 		cursor: pointer;
-		line-height: 150%;
-		font-size: 1.5em;
-		line-height: -50%;
+		font-size: 1.8em;
 		padding-bottom: 2px;
 			&:hover{
 			background: #555;
@@ -185,12 +196,12 @@ height: auto;
 			}
 		}
 		#search-id{
-		padding-left: 0.1em;
+		padding-left: 0.5em;
 		float: right;
 		overflow: hidden;
 		margin:0 2px;
 		height:100%;
-		width:70%;
+		width:78%;
 		}
 		#sub{
 		float: right;
@@ -210,6 +221,7 @@ height: auto;
 	height:auto;
 		li{
 			// width:10
+			display: block;
 			margin:1px 0;
 			padding:1px 5px;
 		}
@@ -392,7 +404,7 @@ height: auto;
 
 #messOption{
 	display: inline-block;
-	height:35px;
+	height:40px;
 	width:100%;
 	border:solid 1px #999;
 	border-bottom:none;
@@ -457,6 +469,8 @@ height: auto;
 		li{
 			padding-left: 0.3em;
 			height:60px;
+			border-bottom-width: 2px;
+			box-shadow:10px 10px 10px #111; 
 		}
 	}
 	info{
@@ -615,11 +629,12 @@ messageframe{
 	overflow: hidden;
 	display: inline-block;
 	position:absolute;
-	top: 135px;
+	top: 85px;
 	left: 350px;
 	background: rgba(240,240,240,0.8);
-	width:600px;
-	height:500px;
+	width:700px;
+	height:550px;
+	box-shadow: 10px 10px 10px #222;
 	@media (max-width:600px){
 		position: fixed;
 		top: 0px;
@@ -632,11 +647,10 @@ messageframe{
 		border-top-left-radius: 10px;
 		border-top-right-radius: 10px;
 		display: block;
-		height:8%;
+		height:40px;
 		background: #222;
 		@media (max-width:600px){
 		display: block;
-		height:30px;
 		background: #222;
 		border-bottom:solid 2px #987;
 		}
@@ -709,16 +723,16 @@ messageframe{
 	cont{
 		display: block;
 		width:100%;
-		height: 84.3%;
+		height:450px;
 		overflow-y:scroll; 
 		font-size:1.2em;
 		@media (max-width:600px){
-			height:76%;
+			height:60%;
 		}
 	}
 	say{
 		display: block;
-		height:8%;
+		height:40px;
 		background: transparent;
 		border-bottom-left-radius: 10px;
 		border-bottom-left-radius: 10px;
@@ -761,7 +775,6 @@ messageframe{
 				color:#344;
 			}
 			@media (max-width:600px){
-			font-size: 1.2em;
 			width:15%;
 			}
 		}

@@ -1,4 +1,3 @@
-const check = require('../lib/check');
 const start_RL = require('./start_RL');
 const people = require('./people');
 const team = require('./team');

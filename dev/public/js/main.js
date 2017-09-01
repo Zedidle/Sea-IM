@@ -125,7 +125,7 @@ var userN = username;
 
      $('#search-content close').click(function(){
           $('#search-id').val('');
-	    $('#search-id').css('width','70%');
+	    $('#search-id').css('width','78%');
 	    removeSearchInfo();
      });
 
@@ -153,7 +153,7 @@ var userN = username;
           if(!id||id===userN){
                return;
           }
-          $('#search-id').css('width','60%');
+          $('#search-id').css('width','70%');
 
           var data = {
                username:userN,
