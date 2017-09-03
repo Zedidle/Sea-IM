@@ -90,14 +90,15 @@ var
                domore.__proto__.judge = false;
           }
           if(domore.judge){
-               $('#domore').css('width','0px');
+               domore.css('width','0px');
           }else{
-               $('#domore').css('width','60px');
+               domore.css('width','60px');
           }
           domore.__proto__.judge = !domore.__proto__.judge;
      })
      $('.sContent').click(function(){
-          $('#domore').css('width','0px');
+          var domore = $('#domore');
+          domore.css('width','0px');
           domore.__proto__.judge = false;
      })
 }
@@ -326,7 +327,7 @@ var messageframe = $('messageframe');
                if(messageframe.find('username').text()===msg.from){
                     var cont = messageframe.find('cont');
                     var p = document.createElement('p');
-                    p.innerText = '['+ytime()+']-:'+msg.content;
+                    p.innerText = '['+ytime()+']-:\n\t'+msg.content;
                     cont.append(p);
                     cont[0].scrollTop = cont[0].scrollHeight;
                }else{
@@ -582,7 +583,7 @@ var last_li = teamul.find('li').last();
                     if(messageframe.find('id').text()===msg.to){
                          var cont = messageframe.find('cont');
                          var p = document.createElement('p');
-                         p.innerText = '['+msg.time+']'+msg.from+':'+msg.content;
+                         p.innerText = '['+msg.time+']'+msg.from+':\n\t'+msg.content;
                          cont.append(p);
                          cont[0].scrollTop=cont[0].scrollHeight;
                     }else{
@@ -642,7 +643,7 @@ var last_li = teamul.find('li').last();
                     if(team_messages.length){
                     for(var i=0;i<team_messages.length;i++){
                          var p = document.createElement('p');
-                         p.innerText = '['+team_messages[i].time+']'+team_messages[i].from+':\n'+team_messages[i].content;
+                         p.innerText = '['+team_messages[i].time+']'+team_messages[i].from+':\n\t'+team_messages[i].content;
                          $('messageframe cont').append(p);
                     }
                     }
@@ -679,7 +680,7 @@ var last_li = teamul.find('li').last();
                     var messageframe = $('messageframe');
                     var cont = messageframe.find('cont');
                     var p = document.createElement('p');
-                    p.innerText = '['+ytime()+'] ME:' + mess;
+                    p.innerText = '['+ytime()+'] ME:\n' + mess;
                     cont.append(p);
                     cont[0].scrollTop = cont[0].scrollHeight;
                     var msg = {
@@ -757,7 +758,7 @@ function createStarLi(userN,m){
           $.post("/get_star_mess",'J_data='+J_data,function(Data){
                Data.forEach(function(a){
                     var p = document.createElement('p');
-                    p.innerText = '['+a.body.time+'] -:' + a.body.content;
+                    p.innerText = '['+a.body.time+'] -:\n\t' + a.body.content;
                     var cont = $('messageframe cont');
                     cont.append(p);
                     cont[0].scrollTop = cont[0].scrollHeight;
@@ -810,7 +811,7 @@ function starMessageEmit(userN){
                var J_msg = JSON.stringify(msg);
                socket.emit('peopleChat',J_msg);
                var p = document.createElement('p');
-               p.innerText = '['+ytime()+'] ME:' + mess_content;
+               p.innerText = '['+ytime()+'] ME:\n' + mess_content;
                cont.append(p);
                cont.scrollTop(cont[0].scrollHeight);
                messageframe.find('input').val('');
