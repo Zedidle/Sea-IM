@@ -42,22 +42,23 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<![endif]-->
-	<!-- <script src='/js/lib.js'></script> -->
-<script src="js/index.js"></script>
+	<script src='/js/lib.js'></script>
+<!-- <script src="js/index.js"></script> -->
 	
 	<script>
-		var username = '<%=username%>';
+		var uid = '<%=uid%>';
 		var data = {
-				username:username
+				uid:uid
 			}
 		document.getElementById('dont').onclick = function(){
 			formPostUrl('/main',data)
 		}
 		document.getElementById('dismiss').onclick =function(){
-			formPostUrl('/dismiss',data)
+			formPostUrl('/dismissTeam',data)
 		}
 	</script>
 </body>

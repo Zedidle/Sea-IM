@@ -3,7 +3,7 @@ mongoose.connect('mongodb://localhost/test',{useMongoClient:true});
 var Schema = mongoose.Schema;
 
 var tmessageSchema = new Schema({
-    id:String,
+    uid:String,
     mess:Array,
 
     // var mess = {

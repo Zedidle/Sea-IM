@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>完善团队信息</title>
+	<title>团队信息</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <!--[if lt IE 9]>
 <link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
@@ -57,8 +57,12 @@
 	border:solid 1px #999;
 	border-radius: 0.4em;
 }
-#textUpdate,#id,#level,#membernumber{
-	display: block;
+#name,#major{
+	width:180px;
+	height:30px;
+	background:transparent; 
+	display: inline-block;
+	border-radius: 0.2em;
 }
 #introduce{
 	width:240px;
@@ -68,7 +72,7 @@
 	padding:0.5em;
 	border-radius: 0.4em;
 }
-#teamname,#major,#introduce:hover{
+#name,#major,#introduce:hover{
 	opacity: 0.8;
 }
     @media (max-width: 450px) {
@@ -84,61 +88,33 @@
 <body>
 
 
-<div class='container'>
-
+<div class='container' id='teams'>
+	<back-botton uid='<%=uid%>'></back-botton>
 	<div class="row">
-	<div class="col-md-6">
-	<button id='back' class="btn btn-default">返回主页</button>
+    <div class="col-md-4">
+			<head-form uid='<%=uid%>' headimg='<%=headImg%>'></head-form>
+      <div id='headImg' v-on:click='showTeamHeadform'> <img src= <%=headImg%> /> </div>
+    </div>
+		<div class="col-md-8">
+			<text-info uid='<%=uid%>' name='<%=name%>' major='<%=major%>' level='<%=level%>' membernumber='<%=membernumber%>' introduce='<%=introduce%>'></text-info>
+		</div>
 	</div>
-	</div>
-		
-	<div class="row">
-	<div class="col-md-4">
-
-	<form action="/teamsI" id='teamHeadForm' method='post' enctype='multipart/form-data'>
-	<p>更新头像:</p>
-	<input type="file" name='avator' class="btn btn-default" id='avator'>
-	<button type='button' id='headUpdate' class="btn btn-success">保存头像</button>
-	</form>
-
-	<div id='headImg' >
-	<img src=<%= headImg%>>
-	</div>
-	</div>
-
-	<div class="col-md-8">
-	<div id='brief'>
-	<div id='id'>(<%= id %>)</div>
-	<div>团队名称: <input id='teamname' value=<%= teamname%>></div>
-	<div>主攻：<input type="text" id='major' value=<%= major%>></div>
-	<div id='level'>等级:  <%= level%></div>
-	<div id='membernumber'>人数:  <%= membernumber%></div>
-	<h3>简介:</h3>
-	<textarea id='introduce'><%= introduce %></textarea>
-	<button id='textUpdate' class="btn btn-primary">更新</button>
-	</div>
-	</div>
-	
-	</div>
-
 </div>
 	
-	
+
 <!--[if lt IE 9]>
 <script src="https://cdn.staticfile.org/jquery/1.8.3/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<![endif]-->
-<!-- <script src='js/lib.js'></script> -->
-<!-- <script src='js/afterL/teams.js'></script> -->
-<script src="js/index.js"></script>
+<script src='js/lib.js'></script>
+<script src='js/afterL/teams.js'></script>
 
-<script>
-	var id = '<%=id%>';
-	teams(id);
-</script>
+<!-- <script src="js/index.js"></script> -->
+
 </body>
 </html>

@@ -36,7 +36,12 @@ gulp.task('public_less', function() {
 	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
 	.pipe(minifyCSS())
 	.pipe(gulp.dest('./dist/public/css'));
+
+	gulp.src('./dev/public/less/*.css')
+	.pipe(minifyCSS())
+	.pipe(gulp.dest('./dist/public/css'))
 });
+
 gulp.task('public_cropper', function() {
 	gulp.src('./dev/public/cropper/*.*')
 	.pipe(gulp.dest('./dist/public/cropper'));
@@ -45,8 +50,8 @@ gulp.task('public_js', function() {
 	gulp.src('./dev/public/js/**/*.js')
 	// .pipe(jshint('.jshintrc'))
     .pipe(jshint.reporter('default'))
-	.pipe(uglify())
-    .pipe(concat('index.js'))
+	// .pipe(uglify())
+    // .pipe(concat('index.js'))
 	.pipe(gulp.dest('./dist/public/js'));
 });
 gulp.task('public_img', function() {
@@ -77,11 +82,11 @@ gulp.task('watch', function() {
   gulp.watch('./dev/mongoModel/*.js', ['mongoModel']);
   gulp.watch('./dev/public/less/*.less', ['public_less']);
   gulp.watch('./dev/public/cropper/*.*', ['public_cropper']);
-  gulp.watch('./dev/public/js/*.js', ['public_js']);
+  gulp.watch('./dev/public/js/**/*.js', ['public_js']);
   gulp.watch('./dev/public/img/**/*.*', ['public_img']);
   gulp.watch('./dev/public/voice/*.*', ['public_voice']);
   gulp.watch('./dev/routes/**/*.js', ['routes']);
-  gulp.watch('./dev/views/**/*.*', ['views']);
+  gulp.watch('./dev/views/**/*.ejs', ['views']);
   gulp.watch('./dev/*.*', ['app']);
 
   // 看守所有位在 dist/  目录下的档案，一旦有更动，便进行重整

@@ -3,9 +3,9 @@ mongoose.connect('mongodb://localhost/test',{useMongoClient:true});
 var Schema = mongoose.Schema;
 
 var teamSchema = new Schema({
+	uid:String,
+    name: String,
 	headImg:String,
-	id:String,
-    teamname: String,
     password:String,
     level:Number,
     major: String,

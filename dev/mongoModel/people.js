@@ -3,13 +3,13 @@ mongoose.connect('mongodb://localhost/test',{useMongoClient:true});
 var Schema = mongoose.Schema;
 //骨架模版
 var peopleSchema = new Schema({
-	username:String,
+	uid:String,
 	headImg:String,
-    nickname : String,
+    name : String,
     introduce:String,
     hobby : String,
     birthday : String,
-    sex : String
+    sex : String,
 })
 
 var People = mongoose.model('People', peopleSchema);

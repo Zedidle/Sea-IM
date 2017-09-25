@@ -17,59 +17,75 @@
 <body>
 
 
-<div class='container'>
+<div class='container' id='main' >
+<input style='display: none;' id='getuid' value='<%=uid%>'>
+<input style='display: none;' id='getloginlist' value='<%=loginlist%>'>
 
-	<div id="content">
+	<div id="content" >
 		<div id='getRender'></div>
-		<div id='domore'>
-			<div id="logOff">注销</div>
-			<div id='person' class='ele' data-toggle="tooltip" data-placement="left" title="个人信息">
-			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-			</div>
-			<div id='myteam' class='ele' data-toggle="tooltip" data-placement="top" title="团队">
-			<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
-			</div>
-			<div id="buildTeam" class='ele' data-toggle="tooltip" data-placement="bottom" title="创建团队"><span class="glyphicon glyphicon-grain" aria-hidden="true"></span></div>
-		</div>
-		<div id="checkMess">
-			<div id='user_info'></div>
-			<div id='search-content'>
-				<div id='search'>
-					<button id='sub'>
-        			<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-					查找
-					</button>
-					<input type="text" id='search-id' name='search-id' placeholder="请输入团队或用户的ID">
-					<close>
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-					</close>
-				</div>
-			</div>
-			<div id="messOption">
-				<div id='starOption' class='sOption'>
+
+		<domore-part uid="<%=uid%>"></domore-part>
+
+		<div id="checkMess" >
+			
+			<user-info uid="<%=uid%>"  user_info="<%=user_info%>" ></user-info>
+			<search-content uid='<%=uid%>'></search-content>
+
+			<div id="messOption" v-on:click='hideDomore'>
+				<div v-on:click='recentContentSeen' id='recentOption' class='sOption'>
+				<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+				recent</div>
+				<div v-on:click='starContentSeen' id='starOption' class='sOption'>
 				<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
 				朋友</div>
-				<div id='teamOption' class='sOption'>
+				<div v-on:click='teamContentSeen' id='teamOption' class='sOption'>
 				<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
 				团队</div>
-				<div id='strangeOption' class='sOption'>
+				<div v-on:click='strangerContentSeen' id='strangerOption' class='sOption'>
 				<span class="glyphicon glyphicon-pawn" aria-hidden="true"></span>
 				陌生人</div>
 			</div>
-			<div id="messContent">
-				<div id="starContent" class='sContent'>
-				<ul></ul>
+
+			<div id="messContent" v-on:click='hideDomore'>
+				<div v-show='isMessContentSeen.recent' id="recentContent" class='sContent' >
+					<mess-lis type='recent' info='<%=recentinfo%>'></mess-lis>
 				</div>
-				<div id="teamContent" class='sContent'>
-				<ul></ul>
+				<div v-show='isMessContentSeen.star' id="starContent" class='sContent' >
+					<mess-lis type='star' info='<%=starinfo%>'></mess-lis>
 				</div>
-				<div id="strangeContent" class='sContent'>
-				<ul></ul>
+				<div v-show='isMessContentSeen.team' id="teamContent" class='sContent'>
+					<mess-lis type='team' info='<%=teaminfo%>'></mess-lis>
+				</div>
+				<div v-show='isMessContentSeen.stranger' id="strangerContent" class='sContent'>
+					<mess-lis type='stranger' info='<%=strangerinfo%>'></mess-lis>
 				</div>
 			</div>
 		</div>
 	</div>
 
+
+<div v-show='messageframeSeen' v-bind:class='{messageframe:true}'>
+    <div v-bind:class='{messageframe_top:true}'>
+      <div v-on:click='messageframe_close' v-bind:class='{messageframe_close:true}'>
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      </div>
+      <div>[{{messtype}}]{{nameOfmessageframe}}</div>
+      <div v-bind:class='{messageframe_info:true}'>
+        <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div id='messageframe_cont' v-bind:class='{messageframe_cont:true}'>
+    	<div class="getMoreMess" v-on:click='getMoreMess'>Get More Message</div>
+    </div>
+    <div v-bind:class='{messageframe_say:true}'>
+      <div v-bind:class='{messageframe_face:true}'></div>
+      <input id='messageframe_input' v-on:keyup.13='sendMessage'></input>
+      <button v-on:click='sendMessage' v-bind:class='{messageframe_subm:true}'>
+        <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+  
 </div>
 
 
@@ -84,26 +100,18 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<![endif]-->
 <!-- <script src="https://cdn.bootcss.com/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script> -->
 <script src="/socket.io/socket.io.js"></script>
-<!-- <script src='js/lib.js'></script>	 -->
-<!-- <script src='/js/main.js'></script> -->
-<script src="/js/index.js"></script>
-<script>
-var socket = io();
-var 
-	username = '<%=username%>',
-	user_info = '<%= user_info%>',
-	star = '<%=star%>',
-	stars = star.split(','),
-	mess = '<%=mess%>',
-	tmess = '<%=tmess%>';
-
-main(username,user_info,mess,stars,tmess);
-</script>
+<script>var socket = io();</script>
+<script src='js/lib.js'></script>	
+<script src='/js/main.js'></script>
+<!-- <script src='/js/main-socketon.js'></script> -->
+<!-- <script src='/js/main-function.js'></script> -->
+<!-- <script src="js/index.js"></script> -->
 
 </body>
 </html>

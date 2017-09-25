@@ -38,12 +38,13 @@
 
 </head>
 <body>
-	<div class="container">
+
+	<div class="container" id='join'>
 		<h4>请输入该团队的口令：</h4>
 		<p id='tip'></p>
-		<input id='pw' type="text">
-		<button id='ok'>确认</button>
-        <button id='back'>返回主页</button>
+		<input id='pw' />
+		<button v-on:click='ok'>确认</button>
+		<button v-on:click='test'>返回主页</button>
 	</div>
 
 
@@ -53,51 +54,50 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<![endif]-->
-<!-- <script src='js/lib/lib.js'></script> -->
-<script src="js/index.js"></script>
+<script src='js/lib.js'></script>
+<!-- <script src="js/index.js"></script> -->
 
 <script>
-	var doc = document;
-	var 
-		username = '<%=username%>',
-		id = '<%=id%>';
-
-	function backToMain(){
-		var data = {
-  			username:username
-  		}
-		formPostUrl('/main',data);
-	}
-  	doc.getElementById('back').onclick = backToMain;
-
-	doc.getElementById('ok').onclick=function(){
-		var pw = doc.getElementById('pw').value.trim();
- 		var data = {
- 			password:pw,
- 			username:username,
- 			id:id,
- 		}
- 		console.log(data);
-		var J_data = JSON.stringify(data);
-		var xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("POST","/join_ok",true);
-		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlhttp.send("J_data="+J_data);
-		xmlhttp.onreadystatechange=function(){
- 			if (xmlhttp.readyState==4 && xmlhttp.status==200){
- 				var judge = JSON.parse(xmlhttp.responseText);
- 				console.log(judge)
- 				if(judge){
- 					backToMain();
- 				}else{
-	 				doc.querySelector("#tip").innerText='Password error.';
+var join = new Vue({
+	el:'#join',
+	data:{
+		uidEnsure:{ uid:'<%=uid%>' },
+	},
+	methods:{
+		test:function(){
+			console.log(document.getElementById('pw').value.trim())
+			console.log(this.okEnsure.password)
+		},
+		back:function(){ formPostUrl('/main',this.uidEnsure); },
+		ok:function(){
+			var okEnsure = {
+				password:document.getElementById('pw').value.trim(),
+				uid:'<%=uid%>',
+				tid:'<%=tid%>',
+			}
+			console.log(okEnsure)
+			var J_data = JSON.stringify(okEnsure);
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.open("POST","/join_ok",true);
+			xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			xmlhttp.send("J_data="+J_data);
+			xmlhttp.onreadystatechange=function(){
+ 				if(xmlhttp.readyState==4 && xmlhttp.status==200){
+ 					var judge = JSON.parse(xmlhttp.responseText);
+ 					console.log(judge)
+ 					console.log(typeof judge)
+ 					if(judge){ join.back();}
+ 					else{  document.getElementById('tip').innerText='Password error.'; }
  				}
  			}
- 		}
+		}
 	}
+});
+
 
 </script>	
 </body>

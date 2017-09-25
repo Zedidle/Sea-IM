@@ -60,7 +60,7 @@
         margin-top:20px;
         width:100%;
     }
-    #username,#password{
+    #uid,#password{
         height:40px;
     }
     #submit{
@@ -84,15 +84,15 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id='login'>
     <form class="bs-example bs-example-form" id='loginForm' role="form" action="/" method="post">
         <h1><img src="img/016.png"></h1>
-        <p><%= tipInfo%></p>
+        <p><%=tipInfo%></p>
         <div class="input-group">
             <span class="input-group-addon">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
             用户名</span>
-            <input type="text" class="form-control" name="username" id="username" placeholder="用户名">
+            <input type="text" class="form-control" name="uid" id="uid" placeholder="用户名">
         </div>
         <br>
         <div class="input-group">
@@ -103,9 +103,9 @@
             <input type="password" class="form-control"  name="password" id="password" placeholder="密码">
         </div>
         <div id='chooseRL'>
-		  <input type="submit" id="submit" class="btn btn-primary" value="登录">
-		  <input type="button" id="regist" class="btn btn-success" value="注册">
-          <input type="button" id='forget' class="btn btn-warning" value='忘记密码？'>
+		  <input  type="submit" id="submit" class="btn btn-primary" value="登录">
+		  <input v-on:click='gettoregist' type="button" id="regist" class="btn btn-success" value="注册">
+          <input v-on:click='hehe' type="button" id='forget' class="btn btn-warning" value='忘记密码？'>
         </div>
     </form>
 </div>
@@ -115,10 +115,13 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
+
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<![endif]-->
-<!-- <script src="/js/login.js"></script> -->
-<script src="js/index.js"></script>
+<script src='js/lib.js'></script>
+<script src="/js/login.js"></script>
+<!-- <script src="js/index.js"></script> -->
 </body>
 </html>

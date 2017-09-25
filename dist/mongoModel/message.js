@@ -3,22 +3,22 @@ mongoose.connect('mongodb://localhost/test',{useMongoClient:true});
 var Schema = mongoose.Schema;
 
 var messageSchema = new Schema({
-    username:String,
-    mess:Array,
- 	// 	var mess={
-	// 	from:{
-	// 		username:String,
-	// 		nickname:String,
-	// 	},
-	// 	body:{
-	// 		content,
-	// 		time,
-	// 	},
-	// }
+    uid:String,
+    unReadNumber:Object,
+    TunReadNumber:Object,
+    mess:Object,
 
-	// var time = new Date();
-	// var month = parseInt(time.getMonth())+1;
-	// time = time.getFullYear()+'.'+month+ '.' +time.getDate()+' '+time.getHours()+':'+time.getMinutes();
+    // unReadNumber={
+    // 	u1:number,
+    // 	u2:number,
+    // 	...
+    // }
+
+    // mess={
+    // 	u1:[{content,time},...],
+    // 	u2:[{content,time},...],
+    // 	...
+    // }
 })
 
 var Message = mongoose.model('Message', messageSchema);

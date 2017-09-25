@@ -15,8 +15,7 @@ const Message = require('../mongoModel/message');
 const Tmessage = require('../mongoModel/tmessage');
 const People = require('../mongoModel/people');
 const Team = require('../mongoModel/team');
-const Peopleteam = require('../mongoModel/peopleteam');
-const StarMark = require('../mongoModel/starMark');
+const loginlist = require('../mongoModel/loginlist');
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
@@ -27,32 +26,31 @@ const router = express.Router()
 router.post('/people',urlencodedParser,(req,res)=>{
 	var sess = req.session;
 	var data = req.body;
-	if(sess.info[data.username]){
-		var info = sess.info[data.username];
+	if(sess.info[data.uid]){
+		var info = sess.info[data.uid];
 		res.render('afterL/people.ejs',{
-			username:info.username,
+			uid:info.uid,
 			headImg:info.headImg,
-			e_mail:sess.email[data.username],
-			nickname:info.nickname,
+			name:info.name,
 			sex:info.sex,
 			introduce:info.introduce,
 			hobby:info.hobby,
 			birthday:info.birthday,
 		})
 	}else{
-		People.find({username:data.username},(err,detail)=>{
+		People.find({uid:data.uid},(err,detail)=>{
 			if(!sess.info){
 				sess.info = {};
 			}
-			if(detail[0]&&!sess.info[data.username]){
-				sess.info[data.username] = detail[0];
+			if(detail[0]&&!sess.info[data.uid]){
+				sess.info[data.uid] = detail[0];
 			}
-			var info = sess.info[data.username];
+			var info = sess.info[data.uid];
 			res.render('afterL/people.ejs',{
-				username:info.username,
+				uid:info.uid,
 				headImg:info.headImg,
-				e_mail:sess.email[data.username],
-				nickname:info.nickname,
+				e_mail:sess.email[data.uid],
+				name:info.name,
 				sex:info.sex,
 				introduce:info.introduce,
 				hobby:info.hobby,
@@ -69,18 +67,17 @@ router.post('/peopleI',upload.any(),(req,res)=>{
 	var data = req.body;
 	var image = files[0];
 
-	var info = sess.info[data.username];
+	var info = sess.info[data.uid];
 
 	var filename = '/img/uploads/'+image.filename;
 	
-	People.update({username:data.username},{$set:{headImg:filename}},(err)=>{
+	People.update({uid:data.uid},{$set:{headImg:filename}},(err)=>{
 		if(err) throw err;
-		sess.info[data.username].headImg = filename;
+		sess.info[data.uid].headImg = filename;
 		res.render('afterL/people.ejs',{
-			username:info.username,
+			uid:info.uid,
 			headImg:info.headImg,
-			e_mail:sess.email[data.username],
-			nickname:info.nickname,
+			name:info.name,
 			sex:info.sex,
 			introduce:info.introduce,
 			hobby:info.hobby,
@@ -95,12 +92,12 @@ router.post('/peopleT',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 	CHECK(data);
 		for(var para in data){
-			sess.info[data.username][para] = data[para];
+			sess.info[data.uid][para] = data[para];
 		}
 
 		res.send(req.body.J_data);
 
-	People.update({username:data.username},{$set:data},(err)=>{
+	People.update({uid:data.uid},{$set:data},(err)=>{
 		if(err) throw err;
 	});
 })

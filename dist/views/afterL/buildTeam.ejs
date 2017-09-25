@@ -38,38 +38,38 @@
 </head>
 <body>
 
-<div class='container'>
+<div class='container' id='buildTeam'>
 <form class="bs-example bs-example-form" id="teamForm"  action="/successB" role='form' method='post' >
 	<h2>创建团队:</h2>
      	<div class="input-group">
             <span class="input-group-addon">名称</span>
-            <input type="text" name='teamname' id='teamname' class="form-control">
+            <input v-on:focus='tipname' type="text" name='name' id='name' class="form-control">
         </div>
-		<div id='tipteamname'></div>
+		<div id='tipname'></div>
         <br>
         <div class="input-group">
             <span class="input-group-addon">口令</span>
-            <input type="password" name='password' id='password' class="form-control">
+            <input v-on:focus='tipPassword' type="password" name='password' id='password' class="form-control">
         </div>
 		<div id='tippassword'></div>
 
         <br>
         <div class="input-group">
             <span class="input-group-addon">重复口令</span>
-            <input type="password" name='passworda' id='passworda' class="form-control">
+            <input v-on:focus='tipPasswordA' type="password" name='passworda' id='passworda' class="form-control">
         </div>
 		<div id='tippassworda'></div>
 
         <br>
         <div class="input-group">
-            <span class="input-group-addon">主攻方向</span>
-            <input type="text" name='major' id='major' class="form-control">
+            <span class="input-group-addon">Destination</span>
+            <input v-on:focus='tipMajor' type="text" name='major' id='major' class="form-control">
         </div>
 		<div id='tipmajor'></div>
 
         <br>
-        <input type="button" id='sub' value='Bulid'>
-        <button type='button' id='back'>Cancel</button>
+        <submit-button uid='<%=uid%>'></submit-button>
+        <back-button uid='<%=uid%>'></back-button>
 </form>
 </div>
 
@@ -78,16 +78,13 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
+<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--<![endif]-->
-<!-- <script src='/js/lib.js'></script> -->
-<!-- <script src='/js/afterL/buildTeam.js'></script> -->
-<script src="js/index.js"></script>
+<script src='/js/lib.js'></script>
+<script src='/js/afterL/buildTeam.js'></script>
+<!-- <script src="js/index.js"></script> -->
 
-<script>
-    var username = '<%=username%>';
-    buildTeam(username);
-</script>
 </body>
 </html>

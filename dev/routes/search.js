@@ -15,8 +15,8 @@ const Message = require('../mongoModel/message');
 const Tmessage = require('../mongoModel/tmessage');
 const People = require('../mongoModel/people');
 const Team = require('../mongoModel/team');
-const Peopleteam = require('../mongoModel/peopleteam');
-const StarMark = require('../mongoModel/starMark');
+const Loginlist = require('../mongoModel/loginlist');
+
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const jsonParser = bodyParser.json();
@@ -24,61 +24,50 @@ const router = express.Router();
 
 
 router.post('/search',urlencodedParser,(req,res)=>{
-	var sess = req.session,
+	var 
+		sess = req.session,
 		data = JSON.parse(req.body.J_data),
 		d = {};
-        
-        CHECK(data);
-        if(!sess.tpid){
-        	sess.tpid = {};
-        }
-	    sess.tpid[data.username] = data.id;
 
-		Team.find({id:data.id},(err,detail)=>{
-			detail.length?d.team = detail[0]:d.team = '';
-		People.find({username:data.id},(err,detail)=>{
-			detail.length?d.person=detail[0]:d.person = '';
-		console.log(d);
+  CHECK(data,'search');
+
+	Team.find({uid:data.uid},(err,detail)=>{
+		detail.length?d.team = detail[0]:d.team = '';
+	People.find({uid:data.uid},(err,detail)=>{
+		detail.length?d.person=detail[0]:d.person = '';
 		res.send(d);
-		});
-		});
+	});
+	});
 });
 
 
 router.post('/join_judge',urlencodedParser,(req,res)=>{
 	var sess = req.session;
 	var data = JSON.parse(req.body.J_data);
+	CHECK(data,'join_judge')
 
-	Peopleteam.find({username:data.username},(err,detail)=>{
-
-	var jointeams = detail[0].join;
-	var judge='ok';
-
-		if(detail[0].join.length<3){
-			for(var jointeam of jointeams){
-				if(jointeam===data.id){
+	Loginlist.find({uid:data.uid},(err,detail)=>{
+		var judge='ok';
+		CHECK(detail[0],'join_judge_Loginlist')
+		if(detail[0].team.length<4){
+			for(var j of detail[0].team){
+				if(j===data.tuid){
 					judge = 'You had already joined.';
 					break;
 				}
 			}
 		}else{
-			judge = 'Most 3 teams.';
+			judge = 'Most 4 teams.';
 		}
-
-	res.send(judge);
-
+		res.send(judge);
 	});
 });
 
 router.post('/join',urlencodedParser,(req,res)=>{
 	var sess = req.session;
 	var data = req.body;
-
-	res.render('afterL/join.ejs',{
-		username:data.username,
-		id:data.id,
-	});
-
+	CHECK(data,'join')
+	res.render('afterL/join.ejs',{ uid:data.uid, tid:data.tid, });
 });
 
 
@@ -86,20 +75,15 @@ router.post('/join_ok',urlencodedParser,(req,res)=>{
 	var sess = req.sesstion;
 	var data = JSON.parse(req.body.J_data);
 
-	CHECK(data);
-	Team.find({id:data.id,password:data.password},(err,detail)=>{
-		CHECK(detail[0]);
+	CHECK(data,'join_ok');
+	Team.find({uid:data.tid,password:data.password},(err,detail)=>{
 		if(detail[0]){
-			console.log(602)
-			Team.update({id:data.id},{$inc:{membernumber:1},$push:{member:data.username}},(err)=>{
-				if(err) throw err;
-			Peopleteam.update({username:data.username},{$push:{join:data.id}},(err)=>{
-				if(err) throw err;
+			Team.update({uid:data.tid},{$inc:{membernumber:1},$push:{member:data.uid}},(err)=>{
+			Loginlist.update({uid:data.uid},{$push:{team:data.tid}},(err)=>{
 				res.send(true);
 			});
 			});
 		}else{
-			console.log(603)
 			res.send(false);
 		}
 	});
@@ -110,36 +94,28 @@ router.post('/join_ok',urlencodedParser,(req,res)=>{
 router.post('/star',urlencodedParser,(req,res)=>{
 	var sess = req.session;
 	var data = JSON.parse(req.body.J_data);
-	var id = sess.tpid[data.username]||data.id;
-	StarMark.find({username:data.username},(err,detail)=>{
-		var stars = detail[0].stars;
-		for(let i of stars){
-			if(i===id){
-				res.send(false)
-				return;
-			}
+	CHECK(data,'star check ok?')
+	Loginlist.find({uid:data.uid},(err,detail)=>{
+		for(let i of detail[0].star){
+			if(i===data.sid){ res.send(false); return false; }
 		}
-	StarMark.update({username:data.username},{$push:{stars:id}},(err)=>{
-		if(err) throw err;
-		// res.send(true);
-	People.find({username:id},(err,detail)=>{
-		if(err) throw err;
-		CHECK(detail[0],9527);
-		var data = {
-			nickname:detail[0].nickname,
-			username:detail[0].username,
-			headImg:detail[0].headImg,
-			introduce:detail[0].introduce
-		}
-		var J_data = JSON.stringify(data);
-		res.send(J_data);
+	Loginlist.update({uid:data.uid},{$push:{star:data.sid}},(err)=>{
+		People.find({uid:data.sid},(err,detail)=>{
+			CHECK(detail[0],'star_people');
+			var J_data = JSON.stringify(detail[0]);
+			res.send(J_data);
+			Message.find({uid:data.uid},(err,detail)=>{
+				CHECK(detail[0],'star_message');
+				var unReadNumber = detail[0]['unReadNumber'];
+				if(!unReadNumber[data.sid]){
+			 	  unReadNumber[data.sid] = 0;
+					Message.update({uid:data.uid},{$set:{unReadNumber}},(err)=>{});
+				}
+			})
+		});
 	});
 	});
-	});
-
 });
-
-
 
 //message on search
 router.post('/mess',urlencodedParser,(req,res)=>{
@@ -147,20 +123,19 @@ router.post('/mess',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 	CHECK(data,'mess')
 
-
-	People.find({username:sess.tpid[data.username]},(err,detail)=>{
+	People.find({uid:sess.tpid[data.uid]},(err,detail)=>{
 		if(detail.length){
 			var mess={
 				from:{
-					username:data.username,
-					nickname:detail[0].nickname,
+					uid:data.uid,
+					name:detail[0].name,
 				},
 				body:{
 					content:data.message,
 					time:time.ytime(),
 				},
 			}
-	Message.update({username:data.to},{$push:{mess}},(err)=>{
+	Message.update({uid:data.to},{$push:{mess}},(err)=>{
 		res.send('Send!.')
 	});
 		}else{
