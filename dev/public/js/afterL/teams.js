@@ -38,7 +38,7 @@ var teams = new Vue({
       template:`  
       <div class="row">
         <div class="col-md-12">
-          <button style='float:right' v-on:click='back' class="btn btn-default">返回主页</button>
+          <button style='float:right;margin:5px;' v-on:click='back' class="btn btn-default">返回主页</button>
         </div>
       </div>`,
       data:function(){
@@ -56,24 +56,24 @@ var teams = new Vue({
     },
 
      'text-info':{
-      props:['uid','name','major','level','membernumber','introduce'],
+      props:['uid','name','level','membernumber','introduce'],
       template:`
       <div id='brief'>
         <div id='uid'>ID: {{uid}}</div>
         <div>团队名称: <textarea id='name'>{{name}}</textarea></div>
-        <div>主：<textarea id='major'>{{major}}</textarea></div>
+
         <div id='level'>等级:  {{level}}</div>
         <div id='membernumber'>人数:  {{membernumber}}</div>
         <h3>简介:</h3>
         <textarea id='introduce'>{{introduce}}</textarea>
-        <button id='textUpdate' style='float:right' v-on:click='textUpdate' class="btn btn-primary">更新</button>
+        <button id='textUpdate' style='float:right;width:80px;height:30px;margin:10px 0;' v-on:click='textUpdate' class="btn btn-primary">更新</button>
       </div>
       `,
       methods:{
         textUpdate:function(){
           var
             name = $('#name').val().trim(),
-            major = $('#major').val().trim(),
+
             introduce = $('#introduce').val().trim();
 
           if(introduce.length>80){
@@ -82,7 +82,7 @@ var teams = new Vue({
             setTimeout(function(){ $('button#textUpdate').text('更新'); },2000);
             return false;
           }else{
-            var data = {uid:this.uid, name:name, major:major, introduce:introduce, }
+            var data = {uid:this.uid, name:name, introduce:introduce, }
             text_filter(data);
             console.log(data.introduce)
             postChangeText('/teamsT',data,this.textUpdate_callback);
@@ -90,7 +90,7 @@ var teams = new Vue({
         },
         textUpdate_callback(data){
           $('#name').val(data.name);
-          $('#major').val(data.major);
+
           $('#introduce').val(data.introduce);
         }
       }

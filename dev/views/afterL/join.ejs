@@ -12,27 +12,21 @@
 <!--<![endif]-->
 	<style>
 	body{
-        background:url('../img/014.jpg') no-repeat ;
         background-size:100%;
     }
-    @media (max-width: 970px) {
-        body{
-            background-size:1000px 600px;
-        }
-    }
 		.container{
-			border:solid 2px #6a5;
-			width:400px;
-			height:150px;
+			border:solid 2px #008D8E;
+			border-radius: 0.5em;
+			width:370px;
 			display: block;
 			margin:20% auto;
 			padding:1em;
-		}
-		tip{
-			display: block;
+			box-shadow: 0 0 2px #596F8C;
 		}
 		#tip{
 			color:red;
+		}
+		.btn{
 		}
 	</style>
 
@@ -40,11 +34,11 @@
 <body>
 
 	<div class="container" id='join'>
-		<h4>请输入该团队的口令：</h4>
+		<h4>请输入团队口令：</h4>
 		<p id='tip'></p>
 		<input id='pw' />
-		<button v-on:click='ok'>确认</button>
-		<button v-on:click='test'>返回主页</button>
+		<button v-on:click='ok' style='box-shadow: 0 0 2px #305598;' class='btn btn-primary'>确认</button>
+		<button v-on:click='back' style='box-shadow: 0 0 2px #BD931C;' class='btn btn-warning'>返回主页</button>
 	</div>
 
 
@@ -54,9 +48,13 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
-<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
+<script src='js/use/vue.js'></script>
+<script src='js/use/jquery.js'></script>
+<script src='js/use/bootstrap.min.js'></script>
 <!--<![endif]-->
 <script src='js/lib.js'></script>
 <!-- <script src="js/index.js"></script> -->
@@ -68,10 +66,6 @@ var join = new Vue({
 		uidEnsure:{ uid:'<%=uid%>' },
 	},
 	methods:{
-		test:function(){
-			console.log(document.getElementById('pw').value.trim())
-			console.log(this.okEnsure.password)
-		},
 		back:function(){ formPostUrl('/main',this.uidEnsure); },
 		ok:function(){
 			var okEnsure = {
@@ -79,7 +73,7 @@ var join = new Vue({
 				uid:'<%=uid%>',
 				tid:'<%=tid%>',
 			}
-			console.log(okEnsure)
+			console.log(okEnsure);
 			var J_data = JSON.stringify(okEnsure);
 			var xmlhttp = new XMLHttpRequest();
 			xmlhttp.open("POST","/join_ok",true);
@@ -89,9 +83,8 @@ var join = new Vue({
  				if(xmlhttp.readyState==4 && xmlhttp.status==200){
  					var judge = JSON.parse(xmlhttp.responseText);
  					console.log(judge)
- 					console.log(typeof judge)
  					if(judge){ join.back();}
- 					else{  document.getElementById('tip').innerText='Password error.'; }
+ 					else{  document.getElementById('tip').innerText='口令不对!'; }
  				}
  			}
 		}

@@ -78,6 +78,10 @@ function filter(data){
           $('#sex').val(data.sex);
           $('#hobby').val(data.hobby);
           $('#birthday').val(data.birthday);
+          $('button#textUpdate').text('更新成功');
+          setTimeout(function(){
+               $('button#textUpdate').text('更新');
+          },2000);
      }
 })
 

@@ -13,36 +13,58 @@
 <!--<![endif]-->
 
     <style>
-    body{
-        background:url('img/014.jpg') no-repeat ;
-        background-size:100%;
+    *{
+        transition:all 0.3s;
     }
-    @media (max-width: 960px) {
-        body{
-            background-size:1000px 700px;
-        }
+    body{
+        background: url(img/dot2.png);
+        background-repeat: repeat;
+
+    }
+
+    .container{
+        z-index:100;
+        border-radius:0.5em; 
+        overflow: hidden;
+        margin:10% auto;
+        height:348px;
+        width: 830px;
+        background: url(img/haitun.png);
+    }
+
+    #loginForm{
+        border: solid 2px #fff;
+        box-shadow: 0 0 3px #fff;
+        border-radius: 0.5em;
+        display: block;
+        margin:10px auto 50px auto;
+        background: rgba(250,250,250,0.4);
+        visibility: hidden;
+        opacity: 0.1;
+        padding:20px;
+        max-width:400px;
+    }
+
+    #login:hover #loginForm{
+        visibility: visible;
+    }
+
+    #loginForm:hover{
+        opacity: 1;
     }
     @media (max-width: 450px) {
         .container{
+            width: 100%;
             margin-top: 20%;
             padding:0;
+            border-radius: 0;
         }
         #loginForm{
             width:100%;
-            height:100%;
+            visibility: visible;
+            opacity: 1;
+            padding:5px;
         }
-    }
-    .container{
-        padding-top:10%;
-        max-width: 500px;
-    }
-    #loginForm{
-        background: rgba(255,255,255,0.8);
-        border-radius: 0.5em;
-        display: block;
-        padding:20px;
-        height:auto;
-        max-width:400px;
     }
     @media (max-width: 768px) {
         #loginForm{
@@ -56,6 +78,10 @@
         width:100%;
         height:50%;
     }
+    #tipinfo{
+        text-align: center;
+        color:#FFF63E;
+    }
     #chooseRL{
         margin-top:20px;
         width:100%;
@@ -64,39 +90,73 @@
         height:40px;
     }
     #submit{
+        font-weight: 600;
         width:100%;
         height:40px;
-        font-size:1.2em;
+        font-size:1.4em;
     }
     #regist{
+        line-height: 10px;
+        font-weight: 600;
         margin-top:5px;
         width:65%;
         height:25px;
     }
     #forget{
+        padding-left: 20px;
         margin-top:5px;
+        line-height: 10px;
         float: right;
         width:30%;
         height:25px;
     }
 
-    </style>
+
+/*#test{
+    margin:50px;
+    width:11px;
+    height:11px;
+    border:solid 5px #C2E0EF;
+    background-color:#fff;
+}*/
+h1{
+    /*#00526C*/
+    font:48px "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
+    color:rgba(0,82,108,0.05);
+}
+#login:hover h1{
+    color:#fff;
+}
+
+@media (max-width: 768px){
+    h1{
+        color:#fff;
+        font-size:36px;
+        margin:10px 0 0 0;
+    }
+}
+
+.mw90{
+    min-width: 90px;
+}
+</style>
 </head>
 <body>
 
+<!-- <div id="test"></div> -->
 <div class="container" id='login'>
-    <form class="bs-example bs-example-form" id='loginForm' role="form" action="/" method="post">
-        <h1><img src="img/016.png"></h1>
-        <p><%=tipInfo%></p>
+<h1 style='margin:0;'>海&nbsp聊</h1>
+    <form id='loginForm' class="bs-example bs-example-form"  role="form" action="/" method="post">
+        <h4 id='tipinfo'><%=tipInfo%></h4>
         <div class="input-group">
-            <span class="input-group-addon">
+            <span class="mw90 input-group-addon">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
             用户名</span>
             <input type="text" class="form-control" name="uid" id="uid" placeholder="用户名">
         </div>
         <br>
         <div class="input-group">
-            <span class="input-group-addon">
+            <span class="mw90 input-group-addon">
             <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
             密码
             </span>
@@ -116,12 +176,16 @@
 <![endif]-->
 <!--[if gte IE 9]><!-->
 
-<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src='js/use/vue.js'></script>
+<script src='js/use/jquery.js'></script>
+<script src='js/use/bootstrap.min.js'></script>
 <!--<![endif]-->
 <script src='js/lib.js'></script>
-<script src="/js/login.js"></script>
+<script src="js/login.js"></script>
 <!-- <script src="js/index.js"></script> -->
+
 </body>
 </html>

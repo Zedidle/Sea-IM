@@ -12,10 +12,7 @@ function mtime(){
 	return time;
 }
 
-
-
-
-	module.exports = {
-		ytime,
-		mtime,
-	}
+module.exports = {
+	ytime,
+	mtime,
+}

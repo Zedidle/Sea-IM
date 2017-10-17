@@ -17,7 +17,7 @@ Vue.component('team-info',{
             <div class="teamname">Teamname: {{build.name}}</div>
             <div class="level">Level: {{build.level}}</div>
             <div class="membernumber">Member number: {{build.membernumber}}</div>
-            <div class="major">'Major: {{build.major}}</div>
+
             <div class="introduce">Introduce: {{build.introduce}}</div>
           </div>
         </div>
@@ -34,7 +34,7 @@ Vue.component('team-info',{
             <div class="teamname">Teamname: {{i.name}}</div>
             <div class="level">Level: {{i.level}}</div>
             <div class="membernumber">Member number: {{i.membernumber}}</div>
-            <div class="major">'Major: {{i.major}}</div>
+
             <div class="introduce">Introduce: {{i.introduce}}</div>
           </div>
         </div>
@@ -87,63 +87,3 @@ var app = new Vue({
   }
   
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-    // var jteamul = doc.querySelector('jteam ul');
-    // var jointeam = jointeam.replace(reg,"\"");
-    //     jointeam = JSON.parse(jointeam);
-    
-    //     jointeam.forEach(function(a){
-
-    //         var 
-    //             li = doc.createElement('li'),
-    //             info = doc.createElement('info'),
-    //             id = doc.createElement('id'),
-    //             teamname = doc.createElement('teamname'),
-    //             level = doc.createElement('level'),
-    //             membernumber = doc.createElement('membernumber'),
-    //             major = doc.createElement('major'),
-    //             introduce = doc.createElement('introduce'),
-    //             avator = doc.createElement('avator'),
-    //             img = doc.createElement('img');
-
-    //         avator.appendChild(img);
-    //         info.appendChild(id);
-    //         info.appendChild(teamname);
-    //         info.appendChild(level);
-    //         info.appendChild(membernumber);
-    //         info.appendChild(major);
-    //         info.appendChild(introduce);
-
-    //         li.appendChild(avator);
-    //         li.appendChild(info);
-
-    //         jteamul.appendChild(li);
-
-    //         img.src = a.headImg;
-    //         id.innerText = 'ID: '+a.id;
-    //         teamname.innerText = 'Teamname: '+a.teamname;
-    //         level.innerText = 'Level: '+a.level;
-    //         membernumber.innerText = 'Member number: '+a.membernumber;
-    //         major.innerText = 'Major: '+a.major;
-    //         introduce.innerText = 'Introduce: '+a.introduce;
-
-    //     })

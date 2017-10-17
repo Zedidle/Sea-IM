@@ -12,7 +12,6 @@
 <!--<![endif]-->
 	<style>
 	body{
-        background:url('../img/014.jpg') no-repeat ;
         background-size:100%;
     }
     @media (max-width: 970px) {
@@ -21,30 +20,39 @@
         }
     }
 	.container{
+		width:320px;
 		display: block;
 		padding:10px;
 		margin:15% auto;
-		border:solid 2px #156894;
-		max-width:500px;
-		min-width:300px;
+		border:solid 2px #B71210;
 	}
 	.tipID,.tipPW{
 		color:red;
 	}
 	#sub,#back{
+		margin-left: 20px;
+		width:100px;
+		height:33px;
 		display: inline-block;
+	}
+	#dismissForm{
+		height:130px;
+	}
+	#dismissForm h5{
+		display: inline-block;
+		padding-right: 10px;
+		width:70px;
+		text-align: right;
 	}
 	</style>
 </head>
 <body>
 	<div class="container" id='dismissTeam'>
-		<form action="/success_dismissTeam" method="post" id='dismissForm'>
-		<h3>请确认你的用户名和团队口令：</h3>
-		<p>用户名:</p>
-		<input type="text" id='ID' name="ID">
+		<form id='dismissForm' action="/success_dismissTeam" method="post">
+		<h4 style='padding-left: 15px;'>请确认团队的UID和口令：</h4>
+		<div><h5>UID:</h5><input type="text" id='ID' name="ID"></div>
 		<h4 class='tipID'></h4>
-		<p>团队口令：</p>
-		<input type="text" id='PW' name="PW">
+		<div><h5>团队口令:</h5><input type="text" id='PW' name="PW"></div>
 		<h4 class='tipPW'></h4>
 		<br>
 		<br>
@@ -57,9 +65,13 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
-<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
+<!-- <script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
+<script src='js/use/vue.js'></script>
+<script src='js/use/jquery.js'></script>
+<script src='js/use/bootstrap.min.js'></script>
 <!--<![endif]-->
 <script src='/js/lib.js'></script> 
 <!-- <script src='js/index.js'></script> -->

@@ -10,6 +10,7 @@ const upload = multer({ dest: 'public/img/uploads/' });
 const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
+const Unread = require('../mongoModel/unread');
 const Message = require('../mongoModel/message');
 const Tmessage = require('../mongoModel/tmessage');
 const People = require('../mongoModel/people');
@@ -73,11 +74,11 @@ router.post('/teamsI',upload.any(),(req,res)=>{
 	fs.readFile(image.path,(err,DATA)=>{
 		var headImgPath = '/img/uploads/'+image.filename+'.jpg';
 		fs.writeFile('public'+headImgPath,DATA,(err)=>{
-			Team.update({uid:data.uid},{$set:{headImg:headImgPath}},(err)=>{
-				var info = sess.teaminfo[data.uid];
-				CHECK(info,'teamsI')
-				sess.teaminfo[data.uid].headImg = headImgPath;
-				res.render('afterL/teams.ejs',sess.teaminfo[data.uid] );
+			Team.update({uid:data.uid},{$set:{headImg:headImgPath}},(err,a)=>{
+				Team.find({uid:data.uid},(err,detail)=>{
+					CHECK(detail[0],'TeamsIFind');
+					res.render('afterL/teams.ejs',detail[0]);
+				})
 			});
 		});	
 	});
@@ -89,7 +90,6 @@ router.post('/teamsT',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 	CHECK(data,'teamsT')
 	res.send(req.body.J_data);
-	
 	Team.update({uid:data.uid},{$set:data},(err)=>{})
 })
 
@@ -128,16 +128,19 @@ router.post('/successB',urlencodedParser,(req,res)=>{
 		level:1,
 		member:[data.uid],
 		membernumber:1,
-		major:data.major,
 		introduce:'This team does not have a introduce presently',
 	});
 	var tmessage = new Tmessage({ uid:data.uid, mess:[], });
-	Loginlist.update({uid:data.uid},{$push:{team:data.uid}},(err)=>{
-		team.save((err)=>{
-			tmessage.save();
-			res.render('afterL/successB.ejs',{ uid:data.uid, })
-		})
+	Loginlist.update({uid:data.uid},{$push:{team:data.uid}},(err)=>{})
+	Message.find({uid:data.uid},(err,detail)=>{
+		var tunr = detail[0]['tunReadNumber'];
+		CHECK(tunr,'messagetunr')
+		tunr[data.uid]=0;
+		Message.update({uid:data.uid},{$set:{tunReadNumber:tunr}},(err)=>{});
 	})
+	team.save();
+	tmessage.save();
+	res.render('afterL/successB.ejs',{ uid:data.uid, })
 })
 
 

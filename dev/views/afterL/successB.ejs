@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
+	<title>成功建立</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <!--[if lt IE 9]>
 <link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
@@ -9,10 +10,8 @@
 <!--[if gte IE 9]><!-->
 	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 <!--<![endif]-->
-	<title>成功建立</title>
 	<style>
 	body{
-        background:url('../img/014.jpg') no-repeat ;
         background-size:100%;
     }
     @media (max-width: 970px) {
@@ -22,19 +21,23 @@
     }
 		.container{
 			margin:15% auto;
-			border:solid 2px #158435;
-			width:400px;
-			height:250px;
+			border:solid 5px #40C38A;
+			width:350px;
+			border-radius:0.5em;
+			height:130px;
 			display: block;
 			padding:1em;
+		}
+		#back{
+			width: 100px;
+			height: 30px;
 		}
 	</style>
 </head>
 <body>
 	<div class="container">
-		<h1>恭喜！</h1>
-		<h3>你已经建立了一个团队，赶快把团队口令告诉你的朋友吧．</h3>
-		<button id='back'>返回主页</button>
+		<h4 style='color:#333;'>成功建立团队!<br>把口令告诉你的朋友,方便他们加入哦!</h4>
+		<button id='back' class='btn btn-success'>返回主页</button>
 	</div>
 
 <!--[if lt IE 9]>
@@ -42,9 +45,12 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
-<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src='js/use/vue.js'></script>
+<script src='js/use/jquery.js'></script>
+<script src='js/use/bootstrap.min.js'></script>
 <!--<![endif]-->
 <script src='/js/lib.js'></script>
 <!-- <script src="js/index.js"></script> -->

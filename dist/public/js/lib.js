@@ -1,9 +1,12 @@
 function getTime(){
   var time = new Date();
+  return time.getHours()+':'+time.getMinutes();
+}
+function getDayTime(){
+  var time = new Date();
   var month = parseInt(time.getMonth())+1;
   return month+ '.' +time.getDate()+'  '+time.getHours()+':'+time.getMinutes();
 }
-
 function issame(v1,v2){
   return (v1===v2)?true:false;
 }
@@ -20,6 +23,11 @@ function text_filter(data){
     console.log('No Object')
   }
 };
+
+var data = {
+  n:1,
+  b:2
+}
 
 function formPostUrl(url,object){
   var form = document.createElement('form');
@@ -43,17 +51,17 @@ function formPostUrl(url,object){
 }
 
 function postChange(url,data,callback){
-     var J_data = JSON.stringify(data);
-          var xmlhttp = new XMLHttpRequest();
-          xmlhttp.open('POST',url,true);
-          xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-          xmlhttp.send('J_data='+J_data);
-          xmlhttp.onreadystatechange = function(){
-               if(xmlhttp.readyState===4&&xmlhttp.status===200){
-                    var data = JSON.parse(xmlhttp.responseText);
-                    callback(data);
-               }
-          }
+  var J_data = JSON.stringify(data);
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open('POST',url,true);
+  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  xmlhttp.send('J_data='+J_data);
+  xmlhttp.onreadystatechange = function(){
+    if(xmlhttp.readyState===4&&xmlhttp.status===200){
+      var data = JSON.parse(xmlhttp.responseText);
+      callback(data);
+    }
+  }
 }
 
 // 'multipart/form-data'

@@ -11,12 +11,12 @@ const upload = multer({ dest: 'public/img/uploads/' });
 const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
+const Unread = require('../mongoModel/unread');
 const Message = require('../mongoModel/message');
 const Tmessage = require('../mongoModel/tmessage');
 const People = require('../mongoModel/people');
 const Team = require('../mongoModel/team');
-const loginlist = require('../mongoModel/loginlist');
-
+const Loginlist = require('../mongoModel/loginlist');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
 const router = express.Router()
@@ -118,9 +118,6 @@ router.post('/peopleT',urlencodedParser,(req,res)=>{
 // 	// })
 // 	// res.send(req.body.J_data);
 // })
-
-
-
 
 
 

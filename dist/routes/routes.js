@@ -1,10 +1,10 @@
 const start_RL = require('./start_RL');
 const people = require('./people');
+const back = require('./back');
+const unreadnumber = require('./unreadnumber');
 const team = require('./team');
 const search = require('./search');
 const message = require('./message');
-const back = require('./back');
-
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -14,12 +14,16 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 
 module.exports = function(app){
-app.use(session({  
+	app.use(session({
         resave: false,  
         saveUninitialized: true,  
-        cookie: {maxAge:3600000},  
+        cookie: {maxAge:36000000},  
         secret: 'test',  
-})); 
+	})); 
+
+// console.log('Session in router:' +session);
+
+
 
 	app.use('/',start_RL);
 	app.use('/',people);
@@ -27,4 +31,5 @@ app.use(session({
 	app.use('/',search);
 	app.use('/',message);
 	app.use('/',back);
+	app.use('/',unreadnumber);
 }

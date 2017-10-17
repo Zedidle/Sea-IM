@@ -11,13 +11,12 @@ const upload = multer({ dest: 'public/img/uploads/' });
 const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
+const Unread = require('../mongoModel/unread');
 const Message = require('../mongoModel/message');
 const Tmessage = require('../mongoModel/tmessage');
 const People = require('../mongoModel/people');
 const Team = require('../mongoModel/team');
 const Loginlist = require('../mongoModel/loginlist');
-
-
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const jsonParser = bodyParser.json();
 const router = express.Router();
@@ -51,7 +50,7 @@ router.post('/join_judge',urlencodedParser,(req,res)=>{
 		CHECK(detail[0],'join_judge_Loginlist')
 		if(detail[0].team.length<4){
 			for(var j of detail[0].team){
-				if(j===data.tuid){
+				if(j===data.tid){
 					judge = 'You had already joined.';
 					break;
 				}
@@ -76,12 +75,17 @@ router.post('/join_ok',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 
 	CHECK(data,'join_ok');
-	Team.find({uid:data.tid,password:data.password},(err,detail)=>{
-		if(detail[0]){
+	Team.find({uid:data.tid},(err,detail)=>{
+		if(detail[0].password===data.password){
 			Team.update({uid:data.tid},{$inc:{membernumber:1},$push:{member:data.uid}},(err)=>{
-			Loginlist.update({uid:data.uid},{$push:{team:data.tid}},(err)=>{
-				res.send(true);
-			});
+				Message.find({uid:data.uid},(err,detail)=>{
+					var tunr = detail[0]['tunReadNumber'];
+					CHECK(tunr,'search_join_ok')
+					tunr[data.tid] = 0;
+					Message.update({uid:data.uid},{$set:{tunReadNumber:tunr}},(err)=>{});
+				});
+				Loginlist.update({uid:data.uid},{$push:{team:data.tid}},(err)=>{});
+				res.send(true); 
 			});
 		}else{
 			res.send(false);
@@ -141,12 +145,8 @@ router.post('/mess',urlencodedParser,(req,res)=>{
 		}else{
 			res.send('Failure!')
 		}
-
 	});
-
 });
-
-
 
 
 

@@ -8,11 +8,14 @@ var login = new Vue({
 			window.location.href='/regist';
 		},
 		hehe:function(){
-			alert('HeHe,HuoGai!')
+			alert('呵呵，活该！');
 		}
 	}
 
 });
+setTimeout(function(){
+	document.getElementById('tipinfo').innerText = '';
+},3000)
 
 
 	

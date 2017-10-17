@@ -1,12 +1,4 @@
-function test1(){
-	username=100;
+window.onbeforeunload = function()
+{
+    return "真的离开?";
 }
-
-
-function main(){
-	var username = 1000;
-	test1();
-	console.log(username)
-}
-
-main()

@@ -4,10 +4,16 @@ var Schema = mongoose.Schema;
 
 var loginlistSchema = new Schema({
     uid:String,
-    recent:Array,
+    recent:Object,
     star:Array,
     team:Array,
-    stranger:Array,
+
+
+
+    //recent : {
+    // 	people:Array,
+    // 	team:Array,
+    //}
 })
 
 var Loginlist = mongoose.model('Loginlist', loginlistSchema);

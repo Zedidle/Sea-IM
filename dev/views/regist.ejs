@@ -13,33 +13,40 @@
 <!--<![endif]-->
 	<style>
     body{
-        background:url('../img/014.jpg') no-repeat ;
-        background-size:100%;
-    }
-    @media (max-width: 970px) {
-        body{
-            background-size:1000px 100%;
-        }
+        background: url(img/dot2.png);
+        /*background-size: 8px 8px;*/
+        background-repeat: repeat;
     }
     @media (max-width: 450px) {
         .container{
             padding:0;
         }
     }
+    h1{
+        color:#1E515E;
+        text-align: center;
+    }
     #registForm{
-        border:solid 1px #352466;
+        border:solid 2px #00A2AF;
+        box-shadow: 0 0 2px #55FFD6
+        width:300px;
+        border-radius: 0.5em;
         background: rgba(255,255,255,0.3);
         padding:10px;
     }
     .container{
         padding-top:10%;
-        max-width:500px;
+        max-width:400px;
     }
     .redBorder{
         border:solid 1px red;
     }
     .btn{
-        width:30%;
+        margin:0 2%;
+        width:45%;
+    }
+    .mw100{
+        min-width:100px;
     }
     </style>
 </head>
@@ -48,25 +55,25 @@
 <div class="container" id='regist'>
 
     <form v-on:keyup.13="formSubmit" class="bs-example bs-example-form" role="form" id='registForm' action="/registInfo" method="post">
-    <h1>注册</h1>
+    <h1>海聊注册</h1>
     <div id='tip'></div>
     <div class="input-group">
-        <span class="input-group-addon">
+        <span class="mw100 input-group-addon">
         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
         用户名</span>
-        <input  v-on:focus='uid'   type="text" class="form-control" name="uid" id="uid" placeholder="用户名">
+        <input  v-on:focus='uid'  type="text" class="form-control" name="uid" id="uid" placeholder="用户名">
     </div>
     <div><%= tipuid%></div>
     <br>
     <div class="input-group">
-    <span class="input-group-addon">
+    <span class="mw100 input-group-addon">
     <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
     密码</span>
-         <input v-on:focus="Pw" type="password" class="form-control"  name="password" id="password" placeholder="密码">
+         <input v-on:focus="Pw" type="password" class="form-control" name="password" id="password" placeholder="密码">
     </div>   
 	<br>
 	<div class="input-group">
-    <span class="input-group-addon">
+    <span class="mw100 input-group-addon">
     <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
         确认密码</span>
         <input v-on:focus="Pww" type="password" class="form-control" name="passwordCheck" id="passwordCheck" >
@@ -74,8 +81,7 @@
     <br>
 
 	<input v-on:click="formSubmit" type="button" id="sub" class="btn btn-success" value="提交">
-    <input type="reset" id="reset" class="btn btn-warning" value="重置">
-	<input v-on:click='backtologin' type="button" id="backtologin" class="btn btn-primary" value="返回">
+	<input v-on:click='backtologin' type="button" id="backtologin" class="btn btn-default" value="返回">
     </form>
 
 
@@ -86,9 +92,12 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
-<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src='js/use/vue.js'></script>
+<script src='js/use/jquery.js'></script>
+<script src='js/use/bootstrap.min.js'></script>
 <!--<![endif]-->
 <script src='js/lib.js'></script>
 <script src="/js/regist.js"></script>

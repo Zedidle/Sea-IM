@@ -8,7 +8,6 @@ var teamSchema = new Schema({
 	headImg:String,
     password:String,
     level:Number,
-    major: String,
     member: Array,
     membernumber:Number,
     introduce:String,

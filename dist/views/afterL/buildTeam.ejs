@@ -12,7 +12,6 @@
 <!--<![endif]-->
     <style>
     body{
-        background:url('../img/014.jpg') no-repeat ;
         background-size:100%;
     }
     @media (max-width: 970px) {
@@ -28,10 +27,12 @@
     display: block;
     margin:0 auto;
     padding:10px;
-    max-width: 500px;
-    border:2px solid #aaa;
+    max-width: 320px;
+    border:2px solid #0A74D0;
 }
 #sub,#back{
+    width:100px;
+    height: 30px;
     display: inline-block;
 }
     </style>
@@ -42,34 +43,27 @@
 <form class="bs-example bs-example-form" id="teamForm"  action="/successB" role='form' method='post' >
 	<h2>创建团队:</h2>
      	<div class="input-group">
-            <span class="input-group-addon">名称</span>
-            <input v-on:focus='tipname' type="text" name='name' id='name' class="form-control">
+            <span class="input-group-addon" style='width:80px;'>名称</span>
+            <input  name='name' id='name' v-on:focus='tipname' type="text"  class="form-control">
         </div>
 		<div id='tipname'></div>
         <br>
         <div class="input-group">
-            <span class="input-group-addon">口令</span>
-            <input v-on:focus='tipPassword' type="password" name='password' id='password' class="form-control">
+            <span class="input-group-addon" style='width:80px;'>口令</span>
+            <input  name='password' v-on:focus='tipPassword' type="password"  id='password' class="form-control">
         </div>
 		<div id='tippassword'></div>
 
         <br>
         <div class="input-group">
-            <span class="input-group-addon">重复口令</span>
-            <input v-on:focus='tipPasswordA' type="password" name='passworda' id='passworda' class="form-control">
+            <span class="input-group-addon" style='width:80px;'>重复口令</span>
+            <input  id='passworda' v-on:focus='tipPasswordA' type="password"   class="form-control">
         </div>
 		<div id='tippassworda'></div>
 
         <br>
-        <div class="input-group">
-            <span class="input-group-addon">Destination</span>
-            <input v-on:focus='tipMajor' type="text" name='major' id='major' class="form-control">
-        </div>
-		<div id='tipmajor'></div>
-
-        <br>
-        <submit-button uid='<%=uid%>'></submit-button>
-        <back-button uid='<%=uid%>'></back-button>
+        <submit-button uid='<%=uid%>' class="btn btn-primary"></submit-button>
+        <back-button uid='<%=uid%>' class="btn btn-warning"></back-button>
 </form>
 </div>
 
@@ -78,9 +72,13 @@
 <script src="https://cdn.bootcss.com/bootstrap/2.0.1/bootstrap.min.js"></script>
 <![endif]-->
 <!--[if gte IE 9]><!-->
-<script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- <script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script> -->
+<!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script src='js/use/vue.js'></script>
+<script src='js/use/jquery.js'></script>
+<script src='js/use/bootstrap.min.js'></script>
 <!--<![endif]-->
 <script src='/js/lib.js'></script>
 <script src='/js/afterL/buildTeam.js'></script>
