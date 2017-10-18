@@ -22,34 +22,20 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Start
 router.get('/',(req,res)=>{
-	res.render('login.ejs', { 
-		tipInfo:'' 
+	res.render('login.ejs', {
+		tipInfo:''
 	})
-})
+});
 
 //Register
 router.get('/regist',(req,res)=>{
-	res.render('regist.ejs',{
-		tipuid:'',
-	});
-})
+	res.render('regist.ejs',{ 
+		tipuid:''
+	})
+});
+
 
 router.post('/registInfo', urlencodedParser, (req,res)=>{
 
@@ -124,12 +110,8 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 
 
 
-
-
-
 //Login
 router.post('/', urlencodedParser,(req,res)=>{
-
 
 	var 
 		hash = crypto.createHash('sha1'),

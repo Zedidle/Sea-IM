@@ -202,7 +202,6 @@ var main = new Vue({
           `);
         },
 
-
       setSearchPersonFunctions:function(){
         var searchComponent = this;
         $('#send').click(function(){
@@ -215,7 +214,10 @@ var main = new Vue({
         })
 
         $('#star').click(function(){
-          var data = { sid:searchComponent.searchId, uid:searchComponent.uid };
+          var data = { 
+            sid:searchComponent.searchId,
+            uid:searchComponent.uid
+          };
           var J_data = JSON.stringify(data);
             $.post('/star','J_data='+J_data,function(data){
               var judge = JSON.parse(data);
@@ -233,13 +235,26 @@ var main = new Vue({
                   </li>
                 `);
                 $('#star li').first().click(function(){
-                  main.moreinfoSeen = false;
-                  main.messageframeSeen = true;
-                  $('#messageframe_cont').html('');
-                  main.messtype = 'star';
+                  // var unread_badge = $(this).find('.badge')[0]||$(this).parent('li').find('span.badge')[0];
+                  // var unreadNumber = unread_badge.innerText;
+                  // console.log('This badge number is :'+ unreadNumber);
+                  // unread_badge.innerText = '';
+                  // unread_badge.style.display = 'none';
+                  main.moreinfoSeen=false;
+                  main.messtype='star';
+                  main.messageframeSeen=true;
                   main.isteam = false;
                   main.nameOfmessageframe = $(this).find('.name').text();
                   main.to = $(this).find('.uid').text();
+                  // main.getUnreadMess(main.to,unreadNumber,'recent');
+                  document.getElementById('messageframe_cont').innerHTML = '';
+                  // main.moreinfoSeen = false;
+                  // main.messageframeSeen = true;
+                  // $('#messageframe_cont').html('');
+                  // main.messtype = 'star';
+                  // main.isteam = false;
+                  // main.nameOfmessageframe = $(this).find('.name').text();
+                  // main.to = $(this).find('.uid').text();
                 })
               }
             })
