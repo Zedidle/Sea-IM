@@ -8,8 +8,6 @@ var loginlistSchema = new Schema({
     star:Array,
     team:Array,
 
-
-
     //recent : {
     // 	people:Array,
     // 	team:Array,
