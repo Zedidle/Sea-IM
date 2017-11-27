@@ -22,17 +22,13 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 
-//Start
-router.get('/',(req,res)=>{
-	res.render('login.ejs', { tipInfo:'' });
-});
+//start: login page,
+router.get('/',(req,res)=>{ res.render('login.ejs', { tipInfo:'' }); });
 
-//Register
-router.get('/regist',(req,res)=>{
-	res.render('regist.ejs',{  tipuid:'' });
-});
+//used by public/js/login.js g5,
+router.get('/regist',(req,res)=>{ res.render('regist.ejs',{  tipuid:'' }); });
 
-
+//used by views/regist.ejs g58,
 router.post('/registInfo', urlencodedParser, (req,res)=>{
 
 	var uid = req.body.uid;
@@ -40,7 +36,7 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 
 	new Promise((resolve)=>{
 		User.find({uid},null,{limit:1},(err, detail)=>{
-			resolve((detail[0])?true:false);
+			resolve(detail[0]?true:false);
 		});
   	}).then(isUserExist=>{
 		if(isUserExist){
@@ -57,18 +53,14 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 			});
 			var unread = new Unread({
 				uid,
-				punReadNumber:{
-					"0":"0",			
-				},
-				tunReadNumber:{
-					"0":"0",
-				},
+				punRead:{"0":"0",},
+				tunRead:{"0":"0",},
 			}); 
 			var people = new People({
 				uid,
 				headImg:'/img/defaultHead.jpg',
 				sex : '保密',
-		    	name : '未命名',
+		    	name : 'User'+Math.random()*Math.random()*10000,
 		    	introduce:'这家伙很懒,什么也没有写．',
 		    	hobby : '保密',
 		    	birthday : '保密',
@@ -79,20 +71,13 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 				recent_team:[],
 				star:[], 
 				team:[]
-				// recent:{
-				// 	people:[],team:[]
-				// }, 
 			});
 			var message = new Message({
 				uid,
 				mess:{'0':'0'},
 			});
 
-			user.save((err)=>{
-				res.render('registInfo.ejs', { 
-					tipInfo:'注册成功！' 
-				})
-			});
+			user.save((err)=>{ res.render('registInfo.ejs', {  tipInfo:'注册成功！'  }) });
 			unread.save();
 			people.save();
 			loginlist.save();
@@ -106,115 +91,77 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 
 
 
-//Login
+//Login: used by views/login.ejd g150
 router.post('/', urlencodedParser,(req,res)=>{
-
+	
+	console.log('login: get the data');
 	var 
 		hash = crypto.createHash('sha1'),
-		sess = req.session,
 		uid = req.body.uid,
 		password = req.body.password;
-		console.log(1);
 
+	console.log('login: ensure uid and password not empty')
 	if(!uid.length||!password.length){
-		res.render('login.ejs',{ 
-			tipInfo:"用户名或密码不能为空！", 
-		})
+		res.render('login.ejs',{  tipInfo:"用户名或密码不能为空！",  });
 	}
-		console.log(2);
-
 	hash.update(password);
 	var pwd = hash.digest('hex');
-		console.log(3);
 
-	User.find({uid},'login',{ limit: 1 },(err,detail)=>{
-		console.log(4);
-		if(!sess.login){ sess.login = {}};
-		var islogin = sess.login[uid];
-		// if(detail[0]){ islogin = detail[0].login; }
-
-		if(islogin){
-			console.log(5);
+	User.find({uid},null,{ limit: 1 },(err,detail)=>{
+		console.log('login: judge login status of the user');
+		if(detail[0].login){
 			console.log('(user)'+uid+" had already logined!");
-			res.render('login.ejs',{
-				tipInfo:"用户已经登录！", 
-			})
+			res.render('login.ejs',{ tipInfo:"用户已经登录！",  });
 		}else{
-	User.find({uid,password:pwd},null,{ limit : 1 },(err,detail)=>{
-		if(!detail.length){
-			res.render('login.ejs',{ 
-				tipInfo:"用户名不存在或密码错误！", 
-			})
-			return false;
-		}
-		console.log(6);
+			User.find({uid,password:pwd},null,{ limit : 1 },(err,detail)=>{
+				if(!detail.length){
+					res.render('login.ejs',{ tipInfo:"用户名不存在或密码错误！", });
+					return false;
+				}
 
-
-
-
-//main too
-	var login_process = new Promise((resolve,reject)=>{
-		console.log(7);
-
-		//获取用户的个人信息
-		People.find({uid},(err,peopleInfo)=>{
-			if(!sess.info){ 
-				sess.info={}; 
-			}
-			sess.info[uid] = peopleInfo[0];
-			//为用户获得未读信息的数目
-			Unread.find({uid},(err,unread)=>{
-				resolve({
-					user_info:sess.info[uid],
-					unread:unread[0],
+			console.log('Enter the process to get information about the user to login');
+			//main too
+			var login_process = new Promise((resolve,reject)=>{
+				People.find({uid},null,{limit:1},(err,peopleInfo)=>{
+					Unread.find({uid},null,{limit:1},(err,unread)=>{
+						resolve({ user_info:peopleInfo[0], unread:unread[0] });
+					})
 				});
-			})
-		});
-	}).then((uu)=>{
-		console.log(8);
+			}).then((infoForLogin)=>{
 
-		var 
-			user_info = uu.user_info,
-			punReadNumber = uu.unread.punReadNumber,
-			tunReadNumber = uu.unread.tunReadNumber;
-			CHECK(user_info,'user_info');
+				var 
+					user_info = infoForLogin.user_info,
+					punRead = infoForLogin.unread.punRead,
+					tunRead = infoForLogin.unread.tunRead;
 
-			//获取登录后的联系对象列表
-	Loginlist.find({uid},(err,detail)=>{
-		let loginlist = JSON.stringify(detail[0]);
-		console.log(9);
+				console.log('login: get the loginlist of the user');
+				
+				Loginlist.find({uid},null,{limit:1},(err,detail)=>{
 
-		CHECK(detail[0],"loginlist");
-		var 
-			recent_people = detail[0].recent_people,
-			recent_team = detail[0].recent_team,
-			star = detail[0].star,
-			team = detail[0].team;
+					var J_loginlist = JSON.stringify(detail[0]),
+						recent_people = detail[0].recent_people,
+						recent_team = detail[0].recent_team,
+						star = detail[0].star,
+						team = detail[0].team;
 
-			// CHECK(recent_people,"recent_poeple");
-			// CHECK(recent_team,"recent_team");
 
 var getinfo = Promise.all([
 	new Promise(function(resolve,rejected){
-		console.log(10);
 
-	//获取最近联系对象信息列表
-			// console.log("recent_people.length: "+recent_people.length);
-			// console.log("recent_team.length: "+recent_team.length);
+	//get the list of recent chat information
 		if(recent_people.length || recent_team.length){
 			var recentinfo = [];
 			var total_length = recent_people.length + recent_team.length;
-			console.log("total_length: "+total_length);
 			recent_people.forEach(a=>{
-				People.find({uid:a},(err,detail)=>{
-					recentinfo.push(detail[0]);
+				People.find({uid:a},(err,peopleInfo)=>{
+					recentinfo.push(peopleInfo[0]);
 					if(recentinfo.length===recent_people.length){
 						if(recentinfo.length === total_length){
 							resolve(recentinfo);
 						}else{
 							recent_team.forEach(b=>{
-								Team.find({uid:b},(err,detail)=>{
-									recentinfo.unshift(detail[0]);
+								Team.find({uid:b},(err,teamInfo)=>{
+									recentinfo.unshift(teamInfo[0]);
 									if(recentinfo.length === total_length){
 										resolve(recentinfo);
 									}
@@ -227,9 +174,8 @@ var getinfo = Promise.all([
 		}else{ resolve([]) };
 	}),
 	new Promise(function(resolve,rejected){
-		console.log(12);
 
-		//获取朋友信息列表
+		console.log('login: get the star information:');
 		if(star.length){
 			var	starinfo = [];
 			star.forEach(a=>{
@@ -241,13 +187,11 @@ var getinfo = Promise.all([
 		}else{ resolve([]); }
 	}),
 	new Promise(function(resolve,rejected){
-		//获取团队信息列表
-		console.log(13);
-
+		console.log('login: get the team information:');
 		if(team.length){
 			var	teaminfo = [];
-			team.forEach(a=>{
-				Team.find({uid:a},(err,detail)=>{
+			team.forEach(teamId=>{
+				Team.find({uid:teamId},null,{limit:1},(err,detail)=>{
 					teaminfo.push(detail[0]);
 					if(team.length===teaminfo.length){ resolve(teaminfo); }
 				})
@@ -255,60 +199,67 @@ var getinfo = Promise.all([
 		}else{ resolve([]) }
 	})
 	]).then(info=>{
-		console.log(14);
 		
+		console.log('login: summary the information');
 		var 
 			recentinfo = info[0],
 			starinfo = info[1],
 			teaminfo = info[2];
 
-			// CHECK(recentinfo,"recentinfo");
 		var 
 			J_user_info = JSON.stringify(user_info),
 			J_recentinfo = JSON.stringify(recentinfo),
 			J_starinfo = JSON.stringify(starinfo),
 			J_teaminfo = JSON.stringify(teaminfo),
-			J_punReadNumber = JSON.stringify(punReadNumber);
-			J_tunReadNumber = JSON.stringify(tunReadNumber);
-
+			J_punRead = JSON.stringify(punRead);
+			J_tunRead = JSON.stringify(tunRead);
 
 //设置用户登录状态为true
-User.update({uid},{$set:{login:true}},(err)=>{
-	console.log('(user)'+uid+' login ↑');
+User.update({uid},{$set:{login:true}},err=>{
+	console.log('(user)'+uid+' login');
 	//At the same time, make the session login of user true;
-	if(!sess.login){sess.login={}};
-	if(!sess.makeUserSessLogout){ sess.makeUserSessLogout = {} };
-	if(!sess.makeUserDBLogout){ sess.makeUserDBLogout = {} };
-	sess.login[uid] = true;
-	console.log(sess.login);
-	console.log(sess.makeUserSessLogout);
-	console.log(sess.makeUserDBLogout);
 	//After login, set a interval to make user logout if user has not any action.
-	sess.makeUserSessLogout[uid] = setInterval(function(){
-		//Every 5 minutes, make user logout , 
-		//It can do any action to make itself relogin.
-		console.log('Make (user)'+uid+' logout in session!');
-		sess.login[uid] = false;
-	},60000);//1min
-	sess.makeUserDBLogout[uid] = setInterval(function(){
-		if(!sess.login[uid]){
-			User.update({uid},{$set:{login:false}},(err)=>{
-				console.log('Make (user)'+uid+' logout in DB!');
-				clearInterval(sess.makeUserSessLogout[uid]);
-				clearInterval(sess.makeUserDBLogout[uid]);
-			})
-		}
-	},1800000)//30min
-	// console.log(sess.makeUserSessLogout[uid]);
-	// console.log(sess.makeUserDBLogout[uid]);
+
+	void function(){
+		function makeUserLogout(){
+			setTimeout(function(){
+				User.find({uid},'login',{limit:1},(err,detail)=>{
+					if(detail[0].login){
+						User.update({uid},{$set:{login:false}},(err)=>{
+							console.log('(user)'+uid+' logout');
+							makeUserLogout = null;
+						})
+					}
+					if(makeUserLogout){ makeUserLogout(); };
+				})
+			},300000);
+		};
+		makeUserLogout();
+	}();
+	// sess.makeUserSessLogout = setInterval(function(){
+	// 	//make user logout every 5 minutes,and user can do any action to relogin.
+	// 	console.log('Make (user)'+uid+' logout in session!');
+	// 	sess.login = false;
+	// },300000);//5min
+	
+	// sess.makeUserDBLogout = setInterval(function(){
+	// 	if(!sess.login){
+	// 		User.update({uid},{$set:{login:false}},(err)=>{
+	// 			console.log('Make (user)'+uid+' logout in DB!');
+	// 			clearInterval(sess.makeUserSessLogout);
+	// 			clearInterval(sess.makeUserDBLogout);
+	// 			delete sess.login;
+	// 		})
+	// 	}
+	// },1800000)//30min
 });
 
 		res.render('main.ejs',{
 			uid,
-			punReadNumber:J_punReadNumber,
-			tunReadNumber:J_tunReadNumber,
+			punRead:J_punRead,
+			tunRead:J_tunRead,
 			user_info:J_user_info,
-			loginlist,
+			loginlist:J_loginlist,
 			recentinfo:J_recentinfo,
 			starinfo:J_starinfo,
 			teaminfo:J_teaminfo,
@@ -327,17 +278,9 @@ User.update({uid},{$set:{login:true}},(err)=>{
 router.post('/logOff',urlencodedParser,(req,res)=>{
 	var uid = req.body.uid;
 	var sess = req.session;
-	// console.log(sess.makeUserSessLogout); //undefined
-	// console.log(sess.makeUserDBLogout); //undefined
-	// clearInterval(sess.makeUserSessLogout[uid]);
-	// clearInterval(sess.makeUserDBLogout[uid]);
-	User.update({uid},{$set:{login:false}},(err)=>{
-		console.log('(user)'+uid+" logoff ↓");
-	});
-	// CHECK(sess.login,'All status of login');
-	res.render('login.ejs',{
-		tipInfo:''
-	});
+	console.log(req.session);
+	User.update({uid},{$set:{login:false}},(err)=>{ console.log('(user)'+uid+" logoff ↓"); });
+	res.render('login.ejs',{ tipInfo:'' });
 });
 
 // router.post('/exit',urlencodedParser,(req,res)=>{

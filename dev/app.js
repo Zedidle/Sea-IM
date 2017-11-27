@@ -44,10 +44,10 @@ socket.on('chat',function(J_msg){
 
 
 
-// 判断接收方是否在线
-// 如果接收方处于离线状态，为其 unreadnumber+1
-// This part has the limit that it can not use session, 
-//  So we could use db to record if the use login.
+// judge if the receiver is online, 
+// if the recevier is outline, make the unreadnumber +1.
+// this part has the limit that it can not use session, 
+// so I use db to record login status of the user,
     User.find({uid:msg.to}, 'login', { limit: 1 }, (err,detail)=>{
       var islogin = detail[0].login;
       if(islogin){
@@ -55,16 +55,14 @@ socket.on('chat',function(J_msg){
         console.log('(user)'+msg.from+' send a message to (user)'+msg.to);
         io.emit(msg.to,J_m);
       }else{
-        Unread.find({uid:msg.to},'punReadNumber',{limit:1},(err,detail)=>{
-          //Get the unread number of message of msg.from of msg.to and +1 
-          var punread = detail[0].punReadNumber;
-          CHECK(punread,'(1)(user)'+msg.to+' punread:');
-          if(!punread[msg.from]){
-            punread[msg.from] = 0;
-          }
-          punread[msg.from] = punread[msg.from] + 1;
-          CHECK(punread,'(2)(user)'+msg.to+' punread:');
-          Unread.update({uid:msg.to},{$set:{punReadNumber:punread}},(err)=>{
+        Unread.find({uid:msg.to},'punRead',{limit:1},(err,detail)=>{
+          //Get the unread number of message and make it +1, 
+          var punRead = detail[0].punRead;
+          CHECK(punRead,'(1)(user)'+msg.to+' punread:');
+          if(!punRead[msg.from]){ punRead[msg.from] = 0; }
+          punRead[msg.from] = punRead[msg.from] + 1;
+          CHECK(punRead,'(2)(user)'+msg.to+' punread:');
+          Unread.update({uid:msg.to},{$set:{punRead}},(err)=>{
             console.log('Make (user)'+msg.to+ ' unread of (user)'+msg.from+' +1 !');
           });
         })
@@ -72,100 +70,51 @@ socket.on('chat',function(J_msg){
     })
 
 
-
-
       io.emit(msg.from,J_m);
 
       //为msg.from和msg.to添加消息
-      Message.find({uid:msg.to},(err,detail)=>{
+      Message.find({uid:msg.to},null,{limit:1},(err,detail)=>{
         let mess = detail[0].mess;
         if(!mess[msg.from]){ mess[msg.from]=[]; }
         mess[msg.from].push(m);
         Message.update({uid:msg.to},{$set:{mess}},(err)=>{})
       })
-      Message.find({uid:msg.from},(err,detail)=>{
+      Message.find({uid:msg.from},null,{limit:1},(err,detail)=>{
         let mess = detail[0].mess;
         if(!mess[msg.to]){ mess[msg.to]=[]; }
         mess[msg.to].push(m);
         Message.update({uid:msg.from},{$set:{mess}},(err)=>{})
       });
 
-
-
-
-
-
-
-      //当出现一条msg，
-      //让msg.from的loginlist.recent增加msg.to;
-      Loginlist.find({uid:msg.from},(err,detail)=>{
-        for(let i of detail[0].recent.people){
-          if(i===msg.to){ 
-            console.log("msg.from already had the msg in recent!");
-            return false; 
-          } 
-        }
-        var recent = detail[0].recent;
-        recent.people.push(msg.to);
-        console.log("recent.people of msg.from:")
-        console.log(recent.people);
-        Loginlist.update({uid:msg.from},{$set:{recent}},(err)=>{
-          console.log("Update loginlist in recent for " +msg.from+" !");
-        })
-      });
-    
-      //让msg.to的loginlist.recent增加msg.from;
-      Loginlist.find({uid:msg.to},(err,detail)=>{
-        for(let i of detail[0].recent.people){
-          if(i===msg.from){ 
-            console.log("msg.to already had the msg in recent!");
-            return false;
-          }
-        }
-        var recent = detail[0].recent;
-        recent.people.push(msg.from);
-        console.log("recent.people of msg.to:")
-        console.log(recent.people);
-        Loginlist.update({uid:msg.to},{$set:{recent}},(err)=>{
-          console.log("Update loginlist in recent for msg.to!");
-        })
-      })
-
-
+      //make loginlist.recent_people of msg.from addToSet msg.to,
+      //the third argument of update is used to decide whether update all contents that is meeting the condition,
+      Loginlist.update({uid:msg.from},{$addToSet:{recent_people:msg.to}},{multi:false},(err)=>{});
+      //make loginlist.recent_people of msg.to addToSet msg.from,
+      Loginlist.update({uid:msg.to},{$addToSet:{recent_people:msg.from}},{multi:false},(err)=>{});
 
   }else{
     //如果这个消息是来自某个团队
     Tmessage.update({uid:msg.to},{$push:{mess:m}},(err)=>{});
-    Team.find({uid:msg.to},(err,detail)=>{
+    // Team.find({uid:msg.to},(err,detail)=>{
+    Team.find({uid:msg.to},['member'],(err,detail)=>{
       CHECK(detail[0],'Chat_Team');
-      var member = detail[0].member;
-      // var m = {
-      //   uid:msg.from,
-      //   to:msg.to,
-      //   type:msg.type,
-      //   headImg:detail[0].headImg,
-      //   name:detail[0].name,
-      //   time:msg.time,
-      //   content:msg.content,
-      //   introduce:detail[0].introduce,
-      // };
+      var members = detail[0].member;
 
       var tm = m;
-      //because msg.to is the uid of this team;
+      //msg.to is the uid of the team,
       tm.uid = msg.to;
-      //msg.from is who say the msg:
-      tm.from = msg.from;
-      CHECK(tm,'team_messssss');
-      member.forEach(a=>{
-        tm.to = a;
-        var J_tm = JSON.stringify(tm);
-        io.emit(a,J_tm);
-      })
+      //msg.from is the person who said the message,
+      tm.from_user = msg.from;
+
+      CHECK(tm,'messages of the team:');
+
+      teamBroadcast(members,tm);
     })
   }
 });
 });
 });
+
 
 
 const ip = '127.0.0.1';
@@ -174,3 +123,13 @@ const port = 8000;
 server.listen(port,ip,function(){
   console.log(ip+':'+port);
 })
+
+
+
+function teamBroadcast(members,msgToTeam){
+  members.forEach(toWhom=>{
+    msgToTeam.to = toWhom;
+    var J_tm = JSON.stringify(msgToTeam);
+    io.emit(toWhom,J_tm);
+  })
+}

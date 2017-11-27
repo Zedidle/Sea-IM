@@ -28,7 +28,8 @@ var messageSchema = new Schema({
     //             "time" : "10.7  11:7",
     //             "content" : "听广你好串窝",
     //             "introduce" : "这家伙很懒,什么也没有写."
-    //         }...
+    //         },
+    //         ...
     //     ],
     //     "z00002" : [
     //         {

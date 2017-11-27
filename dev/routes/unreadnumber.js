@@ -25,14 +25,6 @@ const router = express.Router();
 
 
 
-
-
-
-
-
-
-
-
 router.post('/test',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 	CHECK(data,'test');
@@ -43,122 +35,76 @@ router.post('/test',urlencodedParser,(req,res)=>{
 })
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+//used by public/js/main.js g387
 router.post('/dealwithunread',urlencodedParser,(req,res)=>{
 	var sess = req.sesstion;
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'detalwithunread');
-	CHECK(data.checked,'checked:');
-	// data = {
-	// 	type:string,
-	// 	uid:string,
-	// 	to:string,
-	// 	checked:boolean,
-	// }
-	//data.uid is the host of this msg, the mean is who send the msg.
-	Unread.find({uid:data.to},(err,detail)=>{
-		var u;
+	CHECK(data,'deal with unread:');
+
+	//data.uid is the host of this message who send the msg.
+	Unread.find({uid:data.to},null,{limit:1},(err,detail)=>{
+		//judge if typeof the data is team, 
 		if(data.type!=='team'){
-			u = detail[0].punReadNumber;
-			if(!u[data.uid]){ u[data.uid]=0; };
-			if(data.checked){
-				u[data.uid] = '';
-			}else{
-				u[data.uid] += 1;
-			}
-			Unread.update({uid:data.to},{$set:{punReadNumber:u}},(err)=>{});
+			var _unread = detail[0].punRead;
+			if(!_unread[data.uid]){ _unread[data.uid]=0; };
+			_unread[data.uid] = data.checked?'':_unread[data.uid]+1;
+			Unread.update({uid:data.to},{$set:{punRead:_unread}},(err)=>{});
 		}else{
-			u = detail[0].tunReadNumber;
-			if(!u[data.uid]){ u[data.uid]=0; };
-			if(data.checked){
-				u[data.uid] = '';
-			}else{
-				u[data.uid] += 1;
-			}
-			Unread.update({uid:data.to},{$set:{tunReadNumber:u}},(err)=>{});
+			var _unread = detail[0].tunRead;
+			if(!_unread[data.uid]){ _unread[data.uid]=0; };
+			_unread[data.uid] = data.checked?'':_unread[data.uid]+1;
+			Unread.update({uid:data.to},{$set:{tunRead:_unread}},(err)=>{});
 		}
-		console.log(data.to + ' unread update!');
 	})
 });
 
 
 
-
+//used by public/js/main.js g629,
 router.post('/justGetInfo',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'justGetInfo');
-
+	CHECK(data,'the information of the user:');
 	if(data.type==='team'){
-		Team.find({uid:data.uid},(err,detail)=>{
-			res.send(detail[0]);
-		})
+		Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
 	}else{
-		People.find({uid:data.uid},(err,detail)=>{
-			res.send(detail[0]);
-		})
+		People.find({uid:data.uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
 	}
 })
 
 
-
-
-
-
+//used by public/js/main.js g451,
 router.post('/getMoreinfo',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 	CHECK(data,'getMoreinfo');
-	var 
-		type = data.type,
-		check_uid = data.check_uid;
-
-	if(type==='team'){
-		Team.find({uid:check_uid},(err,detail)=>{
-			CHECK(detail[0],'getMoreTeaminfo');
-			res.send(detail[0]);
-		})
+	var check_uid = data.check_uid;
+	if(data.type==='team'){
+		Team.find({uid:check_uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
 	}else{
-		People.find({uid:check_uid},(err,detail)=>{
-			CHECK(detail[0],'getMorePeopleinfo');
-			res.send(detail[0]);
-		})
+		People.find({uid:check_uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
 	}
-
-
 })
 
 
-
+//used by public/js/main.js g584,
 router.post('/getUnreadMess',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'getUnreadMess');
+	CHECK(data,'get unread messages:');
 	var unrN = data.unreadNumber;
+	var mess = [];
 	if(data.type==='team'){
-		Tmessage.find({uid:data.get_uid},(err,detail)=>{
-			CHECK(detail[0],'getUnread_team_mess');
+		Tmessage.find({uid:data.get_uid},null,{limit:1},(err,detail)=>{
+			CHECK(detail[0],'get unread messages of team');
 			var m = detail[0].mess;
-			var mess = [];
 			while(unrN){
 				mess.unshift(m.pop());
-				unrN = unrN-1;
+				unrN -= 1;
 			}
 			res.send(mess);
 		})
 	}else{
-		Message.find({uid:data.uid},(err,detail)=>{
-			CHECK(detail[0],'getUnread_people_mess');
+		Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+			CHECK(detail[0],'get unread messages of people: ');
 			var mf = detail[0].mess[data.get_uid];
-			var mess = [];
 			while(unrN){
 				mess.unshift(mf.pop());
 				unrN = unrN-1;
@@ -166,7 +112,6 @@ router.post('/getUnreadMess',urlencodedParser,(req,res)=>{
 			res.send(mess);
 		})
 	}
-
 })
 
 

@@ -4,10 +4,13 @@ var Schema = mongoose.Schema;
 
 var loginlistSchema = new Schema({
     uid:String,
-    recent:Object,
+    recent_people:Array,
+    recent_team:Array,
     star:Array,
     team:Array,
 
+
+    //recent:Object,
     //recent : {
     // 	people:Array,
     // 	team:Array,

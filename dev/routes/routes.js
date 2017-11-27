@@ -1,4 +1,4 @@
-const start_RL = require('./start_RL');
+const start = require('./start');
 const people = require('./people');
 const back = require('./back');
 const unreadnumber = require('./unreadnumber');
@@ -23,9 +23,7 @@ module.exports = function(app){
 
 // console.log('Session in router:' +session);
 
-
-
-	app.use('/',start_RL);
+	app.use('/',start);
 	app.use('/',people);
 	app.use('/',team);
 	app.use('/',search);

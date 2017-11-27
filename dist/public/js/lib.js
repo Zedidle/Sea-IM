@@ -24,11 +24,6 @@ function text_filter(data){
   }
 };
 
-var data = {
-  n:1,
-  b:2
-}
-
 function formPostUrl(url,object){
   var form = document.createElement('form');
   form.action = url;

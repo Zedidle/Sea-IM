@@ -4,14 +4,10 @@
 	<meta charset="UTF-8">
 	<title>登录成功</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!--[if lt IE 9]>
-<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
-<![endif]-->
-<!--[if gte IE 9]><!-->
 	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-<!--<![endif]-->
 	<!-- <link href="https://cdn.bootcss.com/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" rel="stylesheet"> -->
-	<link rel="stylesheet" href="css/main.css">
+	<!-- <link rel="stylesheet" href="css/main.css"> -->
+	<link rel="stylesheet" href="css/main1.css">
 	<audio id='tipvoice' src="voice/7499.wav"></audio>
 </head>
 <body >
@@ -20,8 +16,8 @@
 <div class='container' id='main' >
 <input style='display: none;' id='getuid' value='<%=uid%>'>
 <input style='display: none;' id='getloginlist' value='<%=loginlist%>'>
-<input style='display: none;' id='getpunReadNumber' value='<%=punReadNumber%>'>
-<input style='display: none;' id='gettunReadNumber' value='<%=tunReadNumber%>'>
+<input style='display: none;' id='getpunRead' value='<%=punRead%>'>
+<input style='display: none;' id='gettunRead' value='<%=tunRead%>'>
 
 
 	<div id="content" >
@@ -48,13 +44,13 @@
 
 			<div id="messContent" v-on:click='hideDomore'>
 				<div v-show='isMessContentSeen.recent' id="recentContent" class='sContent' >
-					<mess-lis type='recent' info='<%=recentinfo%>' punreadnumber='<%=punReadNumber%>' tunreadnumber='<%=tunReadNumber%>'></mess-lis>
+					<mess-lis type='recent' info='<%=recentinfo%>' punread='<%=punRead%>' tunread='<%=tunRead%>'></mess-lis>
 				</div>
 				<div v-show='isMessContentSeen.star' id="starContent" class='sContent' >
-					<mess-lis type='star' info='<%=starinfo%>'></mess-lis>
+					<mess-lis type='star' info='<%=starinfo%>'  punread='<%=punRead%>' tunread='<%=tunRead%>'></mess-lis>
 				</div>
 				<div v-show='isMessContentSeen.team' id="teamContent" class='sContent'>
-					<mess-lis type='team' info='<%=teaminfo%>'></mess-lis>
+					<mess-lis type='team' info='<%=teaminfo%>' punread='<%=punRead%>' tunread='<%=tunRead%>'></mess-lis>
 				</div>
 			</div>
 		</div>
@@ -73,7 +69,7 @@
         <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
       </div>
     </div>
-	<div class="getMoreMess" v-on:click='getMoreMess'>Get More Message</div>
+	<div class="getMoreMessageOnFrame_btn" v-on:click='getMoreMessageOnFrame'>Get More Message</div>
     <div id='messageframe_cont' class='messageframe_cont'>
     </div>
     <div class='messageframe_say'>

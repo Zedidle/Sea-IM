@@ -22,12 +22,12 @@ const jsonParser = bodyParser.json();
 const router = express.Router()
 
 
-//people
+//used by public/js/main.js g77
 router.post('/people',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = req.body;
-	if(sess.info[data.uid]){
-		var info = sess.info[data.uid];
+
+	People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+		var info = detail[0];
 		res.render('afterL/people.ejs',{
 			uid:info.uid,
 			headImg:info.headImg,
@@ -37,29 +37,10 @@ router.post('/people',urlencodedParser,(req,res)=>{
 			hobby:info.hobby,
 			birthday:info.birthday,
 		})
-	}else{
-		People.find({uid:data.uid},(err,detail)=>{
-			if(!sess.info){
-				sess.info = {};
-			}
-			if(detail[0]&&!sess.info[data.uid]){
-				sess.info[data.uid] = detail[0];
-			}
-			var info = sess.info[data.uid];
-			res.render('afterL/people.ejs',{
-				uid:info.uid,
-				headImg:info.headImg,
-				e_mail:sess.email[data.uid],
-				name:info.name,
-				sex:info.sex,
-				introduce:info.introduce,
-				hobby:info.hobby,
-				birthday:info.birthday,
-			})
-		})
-	}
+	})
 })
 
+//used by views/afterL/people.ejd g158
 //peoples images uploads
 router.post('/peopleI',upload.any(),(req,res)=>{
 	var sess = req.session;
@@ -86,25 +67,14 @@ router.post('/peopleI',upload.any(),(req,res)=>{
 	})
 })
 
+//used by public/js/afterL/people.js
 //peoples text uploads
 router.post('/peopleT',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data);
-		for(var para in data){
-			sess.info[data.uid][para] = data[para];
-		}
-
-		res.send(req.body.J_data);
-
-	People.update({uid:data.uid},{$set:data},(err)=>{
-		if(err) throw err;
-	});
+	CHECK(data,'text information of people to change:');
+	res.send(req.body.J_data);
+	People.update({uid:data.uid},{$set:data},(err)=>{});
 })
-
-
-
-
 
 // router.post('/Blob_test',urlencodedParser,(req,res)=>{
 // 	var sess = req.session;
@@ -120,8 +90,6 @@ router.post('/peopleT',urlencodedParser,(req,res)=>{
 // })
 
 
-
-
 // router.post('/dataURL_test',urlencodedParser,(req,res)=>{
 // 	var sess = req.session;
 // 	var data = JSON.parse(req.body.J_data);
@@ -132,11 +100,5 @@ router.post('/peopleT',urlencodedParser,(req,res)=>{
 // 	})
 // 	res.send(req.body.J_data);
 // })
-
-
-
-
-
-
 
 module.exports = router;  

@@ -40,7 +40,6 @@ Vue.component('team-info',{
         </div>
       </div>
       </div>
-
     </div>
   `,
   data:function(){
@@ -74,16 +73,8 @@ Vue.component('team-info',{
   }
 })
 
-
-
 var app = new Vue({
   el:'#myteam',
-  data:{
-        
-  },
-
-  methods:{
-
-  }
-  
+  data:{},
+  methods:{}
 })

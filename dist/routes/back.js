@@ -56,8 +56,8 @@ router.post('/main',urlencodedParser,(req,res)=>{
 
 		CHECK(detail[0],"loginlist");
 		var 
-			recent_people = detail[0].recent.people,
-			recent_team = detail[0].recent.team,
+			recent_people = detail[0].recent_people,
+			recent_team = detail[0].recent_team,
 			star = detail[0].star,
 			team = detail[0].team;
 

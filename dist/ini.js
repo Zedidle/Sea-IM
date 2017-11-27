@@ -27,11 +27,11 @@ for(let i = 0; i<10; i++){
 
 	let unread = new Unread({
 		uid,
-		punReadNumber:{
+		punRead:{
 			"z00001":3,
             "z00002":2,
 		},
-		tunReadNumber:{
+		tunRead:{
 			"z00001":3,
             "z00002":4,
 			"z00003":5
@@ -48,12 +48,10 @@ for(let i = 0; i<10; i++){
 	});
 	let loginlist = new Loginlist({
 		uid,
-		recent:{
-            people:["z00001","z00002"],
-            team:["z00001","z00002","z00003"],
-        },
+        recent_people:["z00001","z00002"],
+        recent_team:["z00001","z00002","z00003"],
 		star:[],
-		team:[],
+		team:["z00001","z00000"],
 	});
 	let message = new Message({
 		uid,
@@ -137,21 +135,21 @@ for(let i = 0; i<10; i++){
                 headImg:"/img/defaultHead.jpg",
                 name:"POKER",
                 time:"12:00",
-                content:"我是傻吊!"
+                content:"44444!"
             },
             {
                 uid:'z00001',
                 headImg:"/img/defaultHead.jpg",
                 name:"JTALKER",
                 time:"12:01",
-                content:"我是傻吊!我是傻吊!"
+                content:"55555!"
             },
             {
                 uid:'z00001',
                 headImg:"/img/defaultHead.jpg",
                 name:"JOKER",
                 time:"12:02",
-                content:"我是傻吊!我是傻吊!我是傻吊!"
+                content:"666666!"
             },
         ]
     });

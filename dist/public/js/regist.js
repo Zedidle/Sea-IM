@@ -44,9 +44,6 @@ var regist = new Vue({
 				tipText += '<p>两次密码不一样</p>';
 			} 
 			$('#tip').html(tipText);
-
-
-},
-
-}
+		},
+	}
 })

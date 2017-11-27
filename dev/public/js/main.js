@@ -37,11 +37,8 @@ console.log(loginlist)
 // }
 
 
-
-var punReadNumber = JSON.parse(document.getElementById('getpunReadNumber').value);
-var tunReadNumber = JSON.parse(document.getElementById('gettunReadNumber').value);
-
-
+var punRead = JSON.parse(document.getElementById('getpunRead').value);
+var tunRead = JSON.parse(document.getElementById('gettunRead').value);
 
 var main = new Vue({
 
@@ -96,7 +93,7 @@ var main = new Vue({
             <span class='glyphicon glyphicon-list' aria-hidden='true'></span>
           </div>
         </div>
-      `,    
+      `,
       data:function(){
         return {
           reg:/&#34;/g,
@@ -133,7 +130,6 @@ var main = new Vue({
       `,
       methods:{
         removeSearchInfo:function(){ 
-          // if($('#search-info')){
           if(document.getElementById('search-info')){
             $('#search-info').remove(); 
           }
@@ -141,8 +137,6 @@ var main = new Vue({
         closeCheckInfo:function(){
           document.getElementById('search_uid').value = '';
           document.getElementById('search_uid').style.width = '78%';
-          // $('#search_uid').val('');
-          // $('#search_uid').css('width','78%');
           this.removeSearchInfo();
         },
         searchSubmit:function(){ 
@@ -166,7 +160,6 @@ var main = new Vue({
             </div>
           `);
         },
-
         setSearchTeamFunctions:function(){
           var searchContent = this;
           $('#join').click(function(){
@@ -302,7 +295,7 @@ var main = new Vue({
 
 
     'mess-lis':{
-      props:['type','info','punreadnumber','tunreadnumber'],
+      props:['type','info','punread','tunread'],
       template:`
         <ul v-bind:id='type'>
         <li v-for='i in _info' v-on:click='show_messageFrame($event,i.uid,i.level)' :style='li_height(i.level)'>
@@ -325,11 +318,11 @@ var main = new Vue({
       computed:{
         punR:function(){
           var reg = /&#34;/g;
-          return JSON.parse(this.punreadnumber.replace(reg,"\""));
+          return JSON.parse(this.punread.replace(reg,"\""));
         },
         tunR:function(){
           var reg = /&#34;/g;
-          return JSON.parse(this.tunreadnumber.replace(reg,"\""));
+          return JSON.parse(this.tunread.replace(reg,"\""));
         },
         _info:function(){
           var reg = /&#34;/g;
@@ -379,7 +372,7 @@ var main = new Vue({
           unread_badge.style.display = 'none';
           //sub the unreadNumber in DB
           var data = {
-            type:(haslevel)?'team':'people',
+            type:haslevel?'team':'people',
             uid:li_uid,
             to:uid,
             checked:true
@@ -413,8 +406,8 @@ var main = new Vue({
     
   el:'#main',
   data:{
-    punReadNumber:punReadNumber,
-    tunReadNumber:tunReadNumber,
+    punRead:punRead,
+    tunRead:tunRead,
     messInfo:{
       headImg:'???',
       uid: '???',
@@ -448,15 +441,11 @@ var main = new Vue({
         type:this.messtype,
         check_uid:this.to
       }
-      postChange("/getMoreinfo",data,function(d){
-        console.log(d);
-        console.log(main.messInfo);
-        main.messInfo = d;
-      });
-      this.moreinfoSeen=true;
+      postChange("/getMoreinfo",data,function(d){ main.messInfo = d; });
       console.log("CheckMoreinfo");
+      this.moreinfoSeen=true;
     },
-    getMoreMess:function(){
+    getMoreMessageOnFrame:function(){
       console.log('getMoreMess');
       $('#messageframe_cont').append();
     },
@@ -484,11 +473,7 @@ var main = new Vue({
         var li_type = recent_lis.eq(i).find('.info .li_type span').text();
         var li_uid = recent_lis.eq(i).find('.info span.uid').text();
         var unread_badge = recent_lis.eq(i).find('.name span.badge')[0];
-        console.log(msg_type===li_type && msg_uid===li_uid);
         if(msg_type===li_type && msg_uid===li_uid){
-        //如果消息类型和uid都符合条件的话
-          // console.log('Your uid: '+uid);
-          // console.log('Li uid: '+li_uid);
           console.log('Unread badge text is: '+unread_badge.innerText);
 
           if(!unread_badge.innerText){
@@ -505,12 +490,9 @@ var main = new Vue({
       this.addUnReadInDB(msg_type,msg_uid,msg_to);
     }, 
     createMessDiv:function(msg){
-      console.log("The message to be created is about:");
-      console.log(msg);
       var f;
-
       if(msg.type==='team'){
-        f=(msg.from===uid)?"style='float:right'":"style='float:left'";
+        f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
       }else{
         f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
       }
@@ -528,7 +510,7 @@ var main = new Vue({
       cont.scrollTop = cont.scrollHeight;
     },
     addRecentLi:function(info){
-      console.log('AddRecentLi Base On Info:');
+      console.log('add recentLi base on :');
       console.log(info);
       var con = {
         h:'55px',
@@ -571,7 +553,6 @@ var main = new Vue({
         main.to = $(this).find('.uid').text();
         main.getUnreadMess(main.to,unreadNumber,'recent');
         document.getElementById('messageframe_cont').innerHTML = '';
-        // $('#messageframe_cont').html('');
       })
     },
     getUnreadMess:function(get_uid,unreadNumber,type){
@@ -583,69 +564,48 @@ var main = new Vue({
       }
       postChange('/getUnreadMess',data,function(d){
         console.log("Get unread messages:");
-        // for(var i=0;i<d.length;i++){
-        //   console.log(d[i]);
-        // }
         console.log('Unread number is:'+d.length);
-        for(let i=0;i<d.length;i++){
-          console.log(i);
-          main.createMessDiv(d[i]);
-        }
-      })      
+        for(let i=0;i<d.length;i++){ main.createMessDiv(d[i]); };
+      });
     },
-    judgeMess:function(msg){
-      if(msg.type===main.messtype&&(msg.uid===main.to||msg.uid===uid||msg.to===main.to)){ 
-        console.log("Add messli in messageframe");
+    messageCome:function(msg){
+
+      console.log('the message:');
+      console.log(msg);
+      console.log('the main chat type: '+main.messtype);
+      console.log('the main to: '+main.to);
+
+      if((msg.uid===main.to)&&(msg.type===main.messtype||msg.type!=='team'&&main.messtype==='star')){
         this.createMessDiv(msg);
       }else{
         this.addUnReadNumber(msg);
       }
+
       var exist;
-      console.log('Exist:???');
-      console.log('msg.to: '+msg.to);
-      console.log('msg.uid: '+msg.uid);
-      console.log('msg.from: '+msg.from);
-      console.log('uid: '+uid);
       if(msg.type==='team'){
-        console.log("The msg.type is team");
         //check whether the recent.team exist;
-        for(let i of loginlist['recent'].team){
-          if(i===msg.uid||i===msg.to){
-            console.log('Presently the loginlist.team is :');
-            console.log(loginlist['recent'].team);
-            exist = true;
-            break;
-          }
+        for(var i of loginlist['recent_team']){
+          if(i===msg.uid||i===msg.to){ exist = true; break; }
         }
       }else{
-        //check whether the recent.people exist;
-        for(let i of loginlist['recent'].people){
-          if(i===msg.uid||i===msg.to){
-          // if(i===msg.uid){
-            console.log("Presently the loginlist.people is :");
-            console.log(loginlist['recent'].people);
-            exist = true; 
-            break; 
-          }
+        //check whether the recent_people exist;
+        for(let i of loginlist['recent_people']){
+          if(i===msg.uid||i===msg.to){ exist = true; break; }
         }
       }
       if(!exist){
-        console.log("The recent li is not exist:");
-
+        console.log("The recent li is not exist,");
         if(msg.uid===uid){
           console.log('This msg is from yourself!');
+          //who send msg and who receive msg is the same;  
+          var d = {  uid:msg.to, type:msg.type };
 
-          //if who send msg and who receive msg is the same;  
-          var d = { 
-            uid:msg.to,
-            type:msg.type
-          };
-
+          //link with router/unreadnumber.js g64,
           postChange('/justGetInfo',d,function(data){
             if(msg.type==='team'){
-              loginlist['recent'].team.push(msg.uid);
+              loginlist['recent_team'].push(msg.uid);
             }else{
-              loginlist['recent'].people.push(msg.to);
+              loginlist['recent_people'].push(msg.to);
             }
             main.addRecentLi(data);
             var recentFirstLiUnreadnumber = $('ul#recent').find('li').eq(0).find('.name span.badge')[0];
@@ -655,23 +615,17 @@ var main = new Vue({
         }else{
           console.log('This msg is from others');
           if(msg.type==='team'){
-            loginlist['recent'].team.push(msg.uid);
+            loginlist['recent_team'].push(msg.uid);
           }else{
-            loginlist['recent'].people.push(msg.uid);
+            loginlist['recent_people'].push(msg.uid);
           }
           this.addRecentLi(msg);
         }
-
       }
-    },
-    messageCome:function(msg){
-      console.log('The msg is:');
-      console.log(msg);
-      this.judgeMess(msg);
     },
     sendMessage:function(){
       var v = $('#messageframe_input').val().trim();
-      if(!v.length){ return; }
+      if(!v.length){ return false; }
       else{
         var msg = {
           time:getTime(),

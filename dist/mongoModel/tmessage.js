@@ -11,7 +11,9 @@ var tmessageSchema = new Schema({
     //  name:String,
     // 	time:String,
     // 	content:String,
-    // }...]
+    // },
+    // ...
+    // ]
 })
 
 var Tmessage = mongoose.model('Tmessage', tmessageSchema);

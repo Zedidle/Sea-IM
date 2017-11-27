@@ -17,55 +17,48 @@ const People = require('../mongoModel/people');
 const Team = require('../mongoModel/team');
 const Loginlist = require('../mongoModel/loginlist');
 
-
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
 const router = express.Router();
 
-//myteam
+//used by public/js/main.js g78,
 router.post('/myteam',urlencodedParser,(req,res)=>{
 	var sess = req.session;
 	var data = req.body;
 	CHECK(data,'myteam')
 
 	new Promise((resolve,reject)=>{
-		Loginlist.find({uid:data.uid},(err,detail)=>{ 
-			resolve(detail[0].team);
-		})
-	}).then((team)=>{
-		CHECK(team,'myteam_promise.then')
+		Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{ resolve(detail[0].team);});
+	}).then((teamIds)=>{
+		CHECK(teamIds,'myteam in promise and then:')
 		var teaminfo = [];
-		team.forEach(a=>{
-			Team.find({uid:a},(err,detail)=>{ teaminfo.push(detail[0]); })
+		teamIds.forEach(teamid=>{ 
+			Team.find({uid:teamid},null,{limit:1},(err,detail)=>{ teaminfo.push(detail[0]); }) 
 		})
- 		render();
- 		function render(){
+		//use the recursion to check whether teaminfo satisfy the conditions to render the page,
+ 		(function render(){
  			setTimeout(function(){
  				if(team.length === teaminfo.length){
  					res.render('afterL/myteam.ejs',{ uid:data.uid, teaminfo:JSON.stringify(teaminfo), })
  				}else{ render(); }
  			},50);
- 		}
+ 		})();
 	});	
 })
 
 
-
-//teams finish Team's Information
+//used by public/js/afterL/myteam.js g73, 
+//the page of teams to finish the information of the team, 
 router.post('/teams',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = req.body;
-
-	Team.find({uid:data.uid},(err,detail)=>{
-		if(!sess.teaminfo){	sess.teaminfo={}; }
-		sess.teaminfo[data.uid] = detail[0];
-		res.render('afterL/teams.ejs',sess.teaminfo[data.uid])
-	})
-
+	Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{ 
+		res.render('afterL/teams.ejs',detail[0]);
+	});
 })
 
-//team headimg uploads
+//used by public/js/afterL/teams.js g4,
+//upload the portrait of the team,
 router.post('/teamsI',upload.any(),(req,res)=>{
 	var sess = req.session;
 	var data = req.body;
@@ -84,41 +77,45 @@ router.post('/teamsI',upload.any(),(req,res)=>{
 	});
 });
 
-//team text uploads
+
+//used by public/js/afterL/teams.js g88,
+//upload the content of the team,
 router.post('/teamsT',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'teamsT')
+	CHECK(data,'content of the team:');
 	res.send(req.body.J_data);
 	Team.update({uid:data.uid},{$set:data},(err)=>{})
 })
 
 
+
+//used by public/js/main.js g79,
 router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = req.body;
-	CHECK(data,'DealWithTeam')
-	Loginlist.find({uid:data.uid},(err,detail)=>{
-		var teams = detail[0].team; 
-	new Promise(resolve=>{
-		var j;
-		teams.forEach(a=>{
-			if(a===data.uid){ j=true; }
+	CHECK(data,'DealWithTeam');
+	//get the teams the user has joined in,
+	Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+		var teamIds = detail[0].team; 
+		new Promise(resolve=>{
+			var judge = false;
+			//judge if the team is set up by the user,
+			for(var teamid of teamIds){
+				if(teamid===data.uid){ judge = true; break; }
+			}
+			revolve(judge);
+		}).then((judge)=>{
+			var page_ejs = judge?'tipDealWithTeam.ejs':'buildTeam.ejs';
+			res.render('afterL/'+page_ejs,{ uid:data.uid });
 		})
-		resolve(j);
-	}).then((j)=>{
-		var ejs;
-		(j)?ejs='tipDealWithTeam.ejs':ejs='buildTeam.ejs';
-		res.render('afterL/'+ejs,{ uid:data.uid, })
-	})
 	})
 })
 
+
+//used by views/afterL/ubildTeam.ejs g38,
 router.post('/successB',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = req.body;
 
-	CHECK(data,'successB')
+	CHECK(data,'success to build a team:')
 
 	var team = new Team({
 		headImg:'/img/defaultHead.jpg',
@@ -132,11 +129,11 @@ router.post('/successB',urlencodedParser,(req,res)=>{
 	});
 	var tmessage = new Tmessage({ uid:data.uid, mess:[], });
 	Loginlist.update({uid:data.uid},{$push:{team:data.uid}},(err)=>{})
-	Message.find({uid:data.uid},(err,detail)=>{
-		var tunr = detail[0]['tunReadNumber'];
-		CHECK(tunr,'messagetunr')
-		tunr[data.uid]=0;
-		Message.update({uid:data.uid},{$set:{tunReadNumber:tunr}},(err)=>{});
+	Unread.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+		var tunRead = detail[0]['tunRead'];
+		CHECK(tunRead,'tunRead of the user: ');
+		tunRead[data.uid]=0;
+		Unread.update({uid:data.uid},{$set:{tunRead}},(err)=>{});
 	})
 	team.save();
 	tmessage.save();
@@ -144,14 +141,14 @@ router.post('/successB',urlencodedParser,(req,res)=>{
 })
 
 
-//dismiss my initial team
+//used by views/afterL/tipDealWithTeam.js g55,
+//dismiss my own team
 router.post('/dismissTeam',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = req.body;
 	CHECK(data,'dismissTeam');
 
-	Team.find({uid:data.uid},(err,detail)=>{
-		CHECK(detail[0],'teamteam')
+	Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+		CHECK(detail[0],'the information of the team:')
 		res.render('afterL/dismissTeam.ejs',{
 			uid:data.uid,
 			pw:detail[0].password,
@@ -160,27 +157,20 @@ router.post('/dismissTeam',urlencodedParser,(req,res)=>{
 })
 
 
+//used by views/afterL/dismissTeam.ejs g51,
 router.post('/success_dismissTeam',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = req.body;
 	console.log(data);
 
-	Team.find({uid:data.ID},(err,detail)=>{
+	Team.find({uid:data.ID},null,{limit:1},(err,detail)=>{
 		var members = detail[0].member;
-		Loginlist.update({uid:data.ID},{$pull:{build:data.ID}},err=>{
-			members.forEach(a=>{
-		Loginlist.find({uid:a},(err,detail)=>{
-			var team = detail[0].team;
-			for(let i=0;i<team.length;i++){
-				if(team[i]===data.ID){
-					team.splice(i,1);
-				}
-			}
-			Loginlist.update({uid:a},{$set:{team}},err=>{});
-		});
-		});
-		});
+		members.forEach(userid=>{
+			Loginlist.update({uid:userid},{$pull:{team:userid}},err=>{
+				console.log(userid + ' quit whit the team '+data.ID);				
+			});
+		})
 		Team.remove({uid:data.ID},(err)=>{
+			console.log('success to delete the team in DB');
 			res.render('afterL/success_dismissTeam.ejs',{ uid:data.ID })
 		})
 	})

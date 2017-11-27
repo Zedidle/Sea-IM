@@ -26,56 +26,39 @@ const router = express.Router();
 
 router.post('/getmess',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-
-	// data = {
-	// 	type:string,
-	// 	uid:string,
-	// 	mid:string,
-	// 	unReadNumber:number,
-	// }
-	// var m = {
- //        uid:msg.from,
- //        type:msg.type,
- //        headImg:detail[0].headImg,
- //        name:detail[0].name,
- //        time:msg.time,
- //        content:msg.content,
- //      },
-      
-	var 
-		mget, 
-		msend={
-			isteam:'',
+    CHECK(data,'Get mess : ');
+	var getMessages;
+	var msend = { 
+			isteam:false,
 			mess:[],
-		},
-		getMessNumber;
+		};
+	// var getMessNumber = data.unRead>20?data.unRead:20;
+	var getMessNumber = data.unRead;
 
-(data.unReadNumber>20)?getMessNumber = data.unReadNumber:getMessNumber = 20;
-
-new Promise((resolve,reject)=>{
-	if(data.type!=='team'){
-		Message.find({uid:data.uid},(err,detail)=>{
-			CHECK(detail[0],'getmess_NotTeam');
-			mget = detail[0]['mess'][data.mid];
-			msend.isteam = false;
-			resolve(mget);
-		})
-	}else{
-		Tmessage.find({uid:data.mid},(err,detail)=>{
-			CHECK(detail[0],'getmess_Team');
-			mget = detail[0].mess;
-			msend.isteam = true;
-			resolve(mget);
-		})
-	}
-}).then(mget=>{
-	while(getMessNumber&&mget.length){
-		msend.mess.unshift(mget.pop());
-		getMessNumber -= 1;
-	}
-	var J_msend = JSON.stringify(msend);
-	res.send(J_msend);
-})
+	new Promise((resolve,reject)=>{
+		if(data.type!=='team'){
+			Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+				CHECK(detail[0],'getmess_NotTeam');
+				getMessages = detail[0]['mess'][data.mid];
+				msend.isteam = false;
+				resolve(getMessages);
+			})
+		}else{
+			Tmessage.find({uid:data.mid},null,{limit:1},(err,detail)=>{
+				CHECK(detail[0],'getmess_Team');
+				getMessages = detail[0].mess;
+				msend.isteam = true;
+				resolve(getMessages);
+			})
+		}
+	}).then(getMessages=>{
+		while(getMessNumber&&getMessages.length){
+			msend.mess.unshift(getMessages.pop());
+			getMessNumber -= 1;
+		}
+		var J_msend = JSON.stringify(msend);
+		res.send(J_msend);
+	})
 
 })
 
