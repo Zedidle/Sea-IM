@@ -43,27 +43,23 @@ router.post('/people',urlencodedParser,(req,res)=>{
 //used by views/afterL/people.ejd g158
 //peoples images uploads
 router.post('/peopleI',upload.any(),(req,res)=>{
-	var sess = req.session;
 	var files = req.files;
 	var data = req.body;
 	var image = files[0];
-
-	var info = sess.info[data.uid];
-
 	var filename = '/img/uploads/'+image.filename;
-	
-	People.update({uid:data.uid},{$set:{headImg:filename}},(err)=>{
-		if(err) throw err;
-		sess.info[data.uid].headImg = filename;
+
+	People.update({uid:data.uid},{$set:{headImg:filename}},err=>{});
+	People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+		var info = detail[0];
 		res.render('afterL/people.ejs',{
 			uid:info.uid,
-			headImg:info.headImg,
+			headImg:filename,
 			name:info.name,
 			sex:info.sex,
 			introduce:info.introduce,
 			hobby:info.hobby,
 			birthday:info.birthday,
-		})
+		});
 	})
 })
 

@@ -22,17 +22,11 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 
-
-
 router.post('/getmess',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
     CHECK(data,'Get mess : ');
 	var getMessages;
-	var msend = { 
-			isteam:false,
-			mess:[],
-		};
-	// var getMessNumber = data.unRead>20?data.unRead:20;
+	var msend = { isteam:false, mess:[],};
 	var getMessNumber = data.unRead;
 
 	new Promise((resolve,reject)=>{
@@ -42,14 +36,14 @@ router.post('/getmess',urlencodedParser,(req,res)=>{
 				getMessages = detail[0]['mess'][data.mid];
 				msend.isteam = false;
 				resolve(getMessages);
-			})
+			});
 		}else{
 			Tmessage.find({uid:data.mid},null,{limit:1},(err,detail)=>{
 				CHECK(detail[0],'getmess_Team');
 				getMessages = detail[0].mess;
 				msend.isteam = true;
 				resolve(getMessages);
-			})
+			});
 		}
 	}).then(getMessages=>{
 		while(getMessNumber&&getMessages.length){
@@ -59,8 +53,6 @@ router.post('/getmess',urlencodedParser,(req,res)=>{
 		var J_msend = JSON.stringify(msend);
 		res.send(J_msend);
 	})
-
 })
-
 
 module.exports = router;

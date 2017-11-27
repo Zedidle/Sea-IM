@@ -232,7 +232,7 @@ User.update({uid},{$set:{login:true}},err=>{
 					}
 					if(makeUserLogout){ makeUserLogout(); };
 				})
-			},300000);
+			},60000); //1 min;
 		};
 		makeUserLogout();
 	}();

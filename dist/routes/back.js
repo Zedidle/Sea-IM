@@ -27,62 +27,46 @@ router.post('/main',urlencodedParser,(req,res)=>{
 	var uid = req.body.uid;
 	CHECK(uid,'main_uid');
 	//login too
-	new Promise((resolve,reject)=>{
-		//Get the information of this user,
-		People.find({uid},(err,peopleInfo)=>{
-			if(!sess.info){ sess.info={}; }
-			sess.info[uid] = peopleInfo[0];
-			//Get the punReadNumber and tunReadNumber for this user,  
-			Unread.find({uid},(err,unread)=>{
-				resolve({
-					user_info:sess.info[uid],
-					unread:unread[0],
-					// punReadNumber:unread[0].punReadNumber,
-					// tunReadNumber:unread[0].tunReadNumber,
-				});
+	var login_process = new Promise((resolve,reject)=>{
+		People.find({uid},null,{limit:1},(err,peopleInfo)=>{
+			Unread.find({uid},null,{limit:1},(err,unread)=>{
+				resolve({ user_info:peopleInfo[0], unread:unread[0] });
 			})
 		});
-	}).then((userinfoAndUnread)=>{
-
+	}).then((infoForLogin)=>{
 		var 
-			user_info = userinfoAndUnread.user_info,
-			punReadNumber = userinfoAndUnread.unread.punReadNumber,
-			tunReadNumber = userinfoAndUnread.unread.tunReadNumber;
-			CHECK(user_info,'user_info');
+			user_info = infoForLogin.user_info,
+			punRead = infoForLogin.unread.punRead,
+			tunRead = infoForLogin.unread.tunRead;
 
-			//Get the links of communication about this user,
-	Loginlist.find({uid},(err,detail)=>{
-		let loginlist = JSON.stringify(detail[0]);
+		console.log('login: get the loginlist of the user');
+				
+		Loginlist.find({uid},null,{limit:1},(err,detail)=>{
 
-		CHECK(detail[0],"loginlist");
-		var 
-			recent_people = detail[0].recent_people,
-			recent_team = detail[0].recent_team,
-			star = detail[0].star,
-			team = detail[0].team;
+			var J_loginlist = JSON.stringify(detail[0]),
+				recent_people = detail[0].recent_people,
+				recent_team = detail[0].recent_team,
+				star = detail[0].star,
+				team = detail[0].team;
 
-			CHECK(recent_people,"recent_poeple");
-			CHECK(recent_team,"recent_team");
 
 var getinfo = Promise.all([
-	//Get the recent list's people and team's information
 	new Promise(function(resolve,rejected){
-			console.log("recent_people.length: "+recent_people.length);
-			console.log("recent_team.length: "+recent_team.length);
+
+	//get the list of recent chat information
 		if(recent_people.length || recent_team.length){
 			var recentinfo = [];
 			var total_length = recent_people.length + recent_team.length;
-			console.log("total_length: "+total_length);
 			recent_people.forEach(a=>{
-				People.find({uid:a},(err,detail)=>{
-					recentinfo.push(detail[0]);
+				People.find({uid:a},(err,peopleInfo)=>{
+					recentinfo.push(peopleInfo[0]);
 					if(recentinfo.length===recent_people.length){
 						if(recentinfo.length === total_length){
 							resolve(recentinfo);
 						}else{
 							recent_team.forEach(b=>{
-								Team.find({uid:b},(err,detail)=>{
-									recentinfo.unshift(detail[0]);
+								Team.find({uid:b},(err,teamInfo)=>{
+									recentinfo.unshift(teamInfo[0]);
 									if(recentinfo.length === total_length){
 										resolve(recentinfo);
 									}
@@ -95,6 +79,8 @@ var getinfo = Promise.all([
 		}else{ resolve([]) };
 	}),
 	new Promise(function(resolve,rejected){
+
+		console.log('login: get the star information:');
 		if(star.length){
 			var	starinfo = [];
 			star.forEach(a=>{
@@ -106,10 +92,11 @@ var getinfo = Promise.all([
 		}else{ resolve([]); }
 	}),
 	new Promise(function(resolve,rejected){
+		console.log('login: get the team information:');
 		if(team.length){
 			var	teaminfo = [];
-			team.forEach(a=>{
-				Team.find({uid:a},(err,detail)=>{
+			team.forEach(teamId=>{
+				Team.find({uid:teamId},null,{limit:1},(err,detail)=>{
 					teaminfo.push(detail[0]);
 					if(team.length===teaminfo.length){ resolve(teaminfo); }
 				})
@@ -118,31 +105,70 @@ var getinfo = Promise.all([
 	})
 	]).then(info=>{
 		
+		console.log('login: summary the information');
 		var 
 			recentinfo = info[0],
 			starinfo = info[1],
 			teaminfo = info[2];
 
-			CHECK(recentinfo,"recentinfo");
 		var 
 			J_user_info = JSON.stringify(user_info),
 			J_recentinfo = JSON.stringify(recentinfo),
 			J_starinfo = JSON.stringify(starinfo),
 			J_teaminfo = JSON.stringify(teaminfo),
-			J_punReadNumber = JSON.stringify(punReadNumber);
-			J_tunReadNumber = JSON.stringify(tunReadNumber);
+			J_punRead = JSON.stringify(punRead);
+			J_tunRead = JSON.stringify(tunRead);
+
+//设置用户登录状态为true
+User.update({uid},{$set:{login:true}},err=>{
+	console.log('(user)'+uid+' login');
+	//At the same time, make the session login of user true;
+	//After login, set a interval to make user logout if user has not any action.
+
+	void function(){
+		function makeUserLogout(){
+			setTimeout(function(){
+				User.find({uid},'login',{limit:1},(err,detail)=>{
+					if(detail[0].login){
+						User.update({uid},{$set:{login:false}},(err)=>{
+							console.log('(user)'+uid+' logout');
+							makeUserLogout = null;
+						})
+					}
+					if(makeUserLogout){ makeUserLogout(); };
+				})
+			},60000); //1 min;
+		};
+		makeUserLogout();
+	}();
+	// sess.makeUserSessLogout = setInterval(function(){
+	// 	//make user logout every 5 minutes,and user can do any action to relogin.
+	// 	console.log('Make (user)'+uid+' logout in session!');
+	// 	sess.login = false;
+	// },300000);//5min
+	
+	// sess.makeUserDBLogout = setInterval(function(){
+	// 	if(!sess.login){
+	// 		User.update({uid},{$set:{login:false}},(err)=>{
+	// 			console.log('Make (user)'+uid+' logout in DB!');
+	// 			clearInterval(sess.makeUserSessLogout);
+	// 			clearInterval(sess.makeUserDBLogout);
+	// 			delete sess.login;
+	// 		})
+	// 	}
+	// },1800000)//30min
+});
 
 		res.render('main.ejs',{
 			uid,
-			punReadNumber:J_punReadNumber,
-			tunReadNumber:J_tunReadNumber,
+			punRead:J_punRead,
+			tunRead:J_tunRead,
 			user_info:J_user_info,
-			loginlist,
+			loginlist:J_loginlist,
 			recentinfo:J_recentinfo,
 			starinfo:J_starinfo,
 			teaminfo:J_teaminfo,
 		})
-		
 	});
 	});
 	});

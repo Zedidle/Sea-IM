@@ -85,7 +85,6 @@ var main = new Vue({
           <div id='intro' v-bind:class='{userinfo_intro:true}'>
             <div id='name' >
               <div id='nick_name'>{{info.name}}</div>
-              <div id='user_name'>{{uid}}</div>
             </div>
             <div id='introduce' v-bind:class='{userinfo_introduce:true}'>{{info.introduce}}</div>
           </div>
@@ -575,7 +574,8 @@ var main = new Vue({
       console.log('the main chat type: '+main.messtype);
       console.log('the main to: '+main.to);
 
-      if((msg.uid===main.to)&&(msg.type===main.messtype||msg.type!=='team'&&main.messtype==='star')){
+      if((msg.uid===main.to)&&(msg.type===main.messtype||msg.type!=='team'&&main.messtype==='star')||
+        msg.uid===uid&&msg.type!=='team'){
         this.createMessDiv(msg);
       }else{
         this.addUnReadNumber(msg);
@@ -641,6 +641,7 @@ var main = new Vue({
     messageframe_close:function(){
       this.messageframeSeen=false;
       this.messtype='';
+      this.to='';
       $('#messageframe_cont').html('');
       $('#messageframe_input').val('');
     },
