@@ -4,13 +4,8 @@
 	<meta charset="UTF-8">
 	<title>加入团队</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!--[if lt IE 9]>
-<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
-<![endif]-->
-<!--[if gte IE 9]><!-->
 	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-	
-<!--<![endif]-->
+
 	<style>
 	body{
         background-size:100%;
@@ -41,18 +36,16 @@
 		<button v-on:click='ok' style='box-shadow: 0 0 2px #305598;' class='btn btn-primary'>确认</button>
 		<button v-on:click='back' style='box-shadow: 0 0 2px #BD931C;' class='btn btn-warning'>返回主页</button>
 	</div>
-
-<script src='js/vue.js'></script>
-<script src='js/jquery.js'></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+    <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
+    <script src='https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js'></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src='js/lib.js'></script>
-<!-- <script src="js/index.js"></script> -->
-
 <script>
 var join = new Vue({
 	el:'#join',
-	data:{
-		uidEnsure:{ uid:'<%=uid%>' },
+	data:{ 
+		uidEnsure:{ uid:'<%=uid%>' }
 	},
 	methods:{
 		back:function(){ formPostUrl('/main',this.uidEnsure); },
@@ -79,7 +72,6 @@ var join = new Vue({
 		}
 	}
 });
-
 
 </script>	
 </body>

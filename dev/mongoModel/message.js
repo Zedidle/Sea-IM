@@ -10,7 +10,7 @@ var messageSchema = new Schema({
     //     "userId" : [
     //         {
     //             "uid" : "z00003",
-    //             "to" : "z00001",
+    //             "to" : Same as the receiver,
     //             "type" : "recent",
     //             "headImg" : "/img/uploads/9a5945c63c48bad2290a1c19c2dc0359",
     //             "name" : "未命名",

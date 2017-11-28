@@ -1,4 +1,4 @@
-const CHECK = require('./lib/check');
+const LIB = require('./lib');
 const assert = require('assert');
 const crypto = require('crypto')
 const fs = require('fs')
@@ -8,7 +8,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
-const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
 const Unread = require('../mongoModel/unread');
@@ -23,9 +22,8 @@ const router = express.Router();
 
 
 router.post('/main',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var uid = req.body.uid;
-	CHECK(uid,'main_uid');
+	LIB.check(uid,'main_uid');
 	//login too
 	var login_process = new Promise((resolve,reject)=>{
 		People.find({uid},null,{limit:1},(err,peopleInfo)=>{

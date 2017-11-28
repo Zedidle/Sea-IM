@@ -1,4 +1,4 @@
-const CHECK = require('./lib/check');
+const LIB = require('./lib');
 const assert = require('assert');
 const crypto = require('crypto')
 const fs = require('fs')
@@ -7,7 +7,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
-const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
 const Unread = require('../mongoModel/unread');
@@ -23,11 +22,9 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 
-
-
 router.post('/test',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'test');
+	LIB.check(data,'test');
 	var J_data = JSON.stringify({
 		answer:'finish to test',
 	});
@@ -37,9 +34,9 @@ router.post('/test',urlencodedParser,(req,res)=>{
 
 //used by public/js/main.js g387
 router.post('/dealwithunread',urlencodedParser,(req,res)=>{
-	var sess = req.sesstion;
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'deal with unread:');
+	LIB.userRelogin(User,data.uid);
+	LIB.check(data,'deal with unread:');
 
 	//data.uid is the host of this message who send the msg.
 	Unread.find({uid:data.to},null,{limit:1},(err,detail)=>{
@@ -63,7 +60,8 @@ router.post('/dealwithunread',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g629,
 router.post('/justGetInfo',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'the information of the user:');
+	LIB.userRelogin(User,data.uid);
+	LIB.check(data,'the information of the user:');
 	if(data.type==='team'){
 		Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
 	}else{
@@ -75,7 +73,8 @@ router.post('/justGetInfo',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g451,
 router.post('/getMoreinfo',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'getMoreinfo');
+	LIB.userRelogin(User,data.uid);
+	LIB.check(data,'getMoreinfo');
 	var check_uid = data.check_uid;
 	if(data.type==='team'){
 		Team.find({uid:check_uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
@@ -88,12 +87,13 @@ router.post('/getMoreinfo',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g584,
 router.post('/getUnreadMess',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'get unread messages:');
+	LIB.userRelogin(User,data.uid);
+	LIB.check(data,'get unread messages:');
 	var unrN = data.unreadNumber;
 	var mess = [];
 	if(data.type==='team'){
 		Tmessage.find({uid:data.get_uid},null,{limit:1},(err,detail)=>{
-			CHECK(detail[0],'get unread messages of team');
+			LIB.check(detail[0],'get unread messages of team');
 			var m = detail[0].mess;
 			while(unrN){
 				mess.unshift(m.pop());
@@ -103,7 +103,7 @@ router.post('/getUnreadMess',urlencodedParser,(req,res)=>{
 		})
 	}else{
 		Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-			CHECK(detail[0],'get unread messages of people: ');
+			LIB.check(detail[0],'get unread messages of people: ');
 			var mf = detail[0].mess[data.get_uid];
 			while(unrN){
 				mess.unshift(mf.pop());

@@ -1,4 +1,4 @@
-const CHECK = require('./lib/check');
+const LIB = require('./lib');
 const assert = require('assert');
 const crypto = require('crypto')
 const fs = require('fs')
@@ -7,7 +7,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
-const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
 const Unread = require('../mongoModel/unread');
@@ -24,19 +23,19 @@ const router = express.Router();
 
 //used by public/js/main.js g78,
 router.post('/myteam',urlencodedParser,(req,res)=>{
-	var sess = req.session;
 	var data = req.body;
-	CHECK(data,'myteam')
+	LIB.userFakeLogout(User,data.uid);
+	LIB.check(data,'myteam');
 
 	new Promise((resolve,reject)=>{
 		Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{ resolve(detail[0].team);});
 	}).then((teamIds)=>{
-		CHECK(teamIds,'myteam in promise and then:')
+		LIB.check(teamIds,'myteam in promise and then:')
 		var teaminfo = [];
 		teamIds.forEach(teamid=>{ 
 			Team.find({uid:teamid},null,{limit:1},(err,detail)=>{ teaminfo.push(detail[0]); }) 
 		})
-		//use the recursion to check whether teaminfo satisfy the conditions to render the page,
+		//use the recursion to LIB.check whether teaminfo satisfy the conditions to render the page,
  		(function render(){
  			setTimeout(function(){
  				if(team.length === teaminfo.length){
@@ -60,16 +59,15 @@ router.post('/teams',urlencodedParser,(req,res)=>{
 //used by public/js/afterL/teams.js g4,
 //upload the portrait of the team,
 router.post('/teamsI',upload.any(),(req,res)=>{
-	var sess = req.session;
 	var data = req.body;
 	var image = req.files[0];
-	CHECK(data,'d_teamsI')
+	LIB.check(data,'d_teamsI')
 	fs.readFile(image.path,(err,DATA)=>{
 		var headImgPath = '/img/uploads/'+image.filename+'.jpg';
 		fs.writeFile('public'+headImgPath,DATA,(err)=>{
 			Team.update({uid:data.uid},{$set:{headImg:headImgPath}},(err,a)=>{
 				Team.find({uid:data.uid},(err,detail)=>{
-					CHECK(detail[0],'TeamsIFind');
+					LIB.check(detail[0],'TeamsIFind');
 					res.render('afterL/teams.ejs',detail[0]);
 				})
 			});
@@ -82,7 +80,7 @@ router.post('/teamsI',upload.any(),(req,res)=>{
 //upload the content of the team,
 router.post('/teamsT',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'content of the team:');
+	LIB.check(data,'content of the team:');
 	res.send(req.body.J_data);
 	Team.update({uid:data.uid},{$set:data},(err)=>{})
 })
@@ -92,7 +90,7 @@ router.post('/teamsT',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g79,
 router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	CHECK(data,'DealWithTeam');
+	LIB.check(data,'DealWithTeam');
 	//get the teams the user has joined in,
 	Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		var teamIds = detail[0].team; 
@@ -115,7 +113,7 @@ router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 router.post('/successB',urlencodedParser,(req,res)=>{
 	var data = req.body;
 
-	CHECK(data,'success to build a team:')
+	LIB.check(data,'success to build a team:')
 
 	var team = new Team({
 		headImg:'/img/defaultHead.jpg',
@@ -131,7 +129,7 @@ router.post('/successB',urlencodedParser,(req,res)=>{
 	Loginlist.update({uid:data.uid},{$push:{team:data.uid}},(err)=>{})
 	Unread.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		var tunRead = detail[0]['tunRead'];
-		CHECK(tunRead,'tunRead of the user: ');
+		LIB.check(tunRead,'tunRead of the user: ');
 		tunRead[data.uid]=0;
 		Unread.update({uid:data.uid},{$set:{tunRead}},(err)=>{});
 	})
@@ -145,10 +143,10 @@ router.post('/successB',urlencodedParser,(req,res)=>{
 //dismiss my own team
 router.post('/dismissTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	CHECK(data,'dismissTeam');
+	LIB.check(data,'dismissTeam');
 
 	Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		CHECK(detail[0],'the information of the team:')
+		LIB.check(detail[0],'the information of the team:')
 		res.render('afterL/dismissTeam.ejs',{
 			uid:data.uid,
 			pw:detail[0].password,

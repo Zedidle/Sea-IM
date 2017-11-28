@@ -4,15 +4,8 @@
 	<meta charset="UTF-8">
 	<title>完善个人信息</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!--[if lt IE 9]>
-<link href="https://cdn.bootcss.com/bootstrap/2.0.4/css/bootstrap.min.css" rel="stylesheet">
-<![endif]-->
-<!--[if gte IE 9]><!-->
 	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-	<!-- <link href="cropper/cropper.min.css"  rel="stylesheet"> -->
-
-<!--<![endif]-->
-	<style>
+   <style>
 	body{
         background-size:100% 120%;
     }
@@ -32,8 +25,7 @@
 #textUpdate{
 	min-width:100px;
 	height:30px;
-	margin:10px;
-	margin-top:0;
+	margin:20px;
 }
 #peopleHeadForm{
 	margin-left:10px;
@@ -202,14 +194,11 @@
 
 </div>
 
-
-<script src='js/vue.js'></script>
-<script src='js/jquery.js'></script>
+<script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
+<script src='https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js'></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<!-- <script src='cropper/cropper.min.js'></script> -->
 <script src='js/lib.js'></script>
 <script src='js/afterL/people.js'></script>
-<!-- <script src="js/index.js"></script> -->
 <script>
 	var uid = '<%=uid%>';
 	people(uid);

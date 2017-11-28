@@ -1,5 +1,4 @@
-const CHECK = require('./lib/check');
-const assert = require('assert');
+const LIB = require('./lib');
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path');
@@ -8,7 +7,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
-const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
 const Unread = require('../mongoModel/unread');
@@ -25,8 +23,9 @@ const router = express.Router();
 //used by public/js/main.js g118,
 router.post('/search',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
+	LIB.userRelogin(User,data.uid);
+  	LIB.check(data,'search');
 	var info = {};
-  	CHECK(data,'search');
   	//get the information of the user and the team for search,
 	Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		info.team = detail.length?detail[0]:'';
@@ -41,11 +40,12 @@ router.post('/search',urlencodedParser,(req,res)=>{
 //if a person choice to join a team, must pass this part,
 router.post('/join_judge',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'to judge whether the person could join the team:')
+	LIB.userRelogin(User,data.uid);
+	LIB.check(data,'to judge whether the person could join the team:')
 
 	Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		var judge='ok';
-		CHECK(detail[0].team,'the teams that the user has joined in:');
+		LIB.check(detail[0].team,'the teams that the user has joined in:');
 		if(detail[0].team.length<4){
 			for(var teamid of detail[0].team){
 				if(teamid===data.tid){ judge = 'You had already joined.'; break; }
@@ -61,7 +61,8 @@ router.post('/join_judge',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g177,
 router.post('/join',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	CHECK(data,'join:');
+	LIB.userRelogin(User,data.uid);
+	LIB.check(data,'join:');
 	res.render('afterL/join.ejs',{ uid:data.uid, tid:data.tid, });
 });
 
@@ -69,14 +70,14 @@ router.post('/join',urlencodedParser,(req,res)=>{
 // used by views/afterL/join.ejs g68, 
 router.post('/join_ok',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-
-	CHECK(data,'ok to join:');
+	LIB.userRelogin(User,data.uid);
+	LIB.check(data,'ok to join:');
 	Team.find({uid:data.tid},null,{limit:1},(err,detail)=>{
 		if(detail[0].password===data.password){
 			Team.update({uid:data.tid},{$inc:{membernumber:1},$push:{member:data.uid}},(err)=>{
 				Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 					var tunRead = detail[0]['tunRead'];
-					CHECK(tunRead,'search the team and join it successfully:')
+					LIB.check(tunRead,'search the team and join it successfully:')
 					tunRead[data.tid] = 0;
 					Message.update({uid:data.uid},{$set:{tunRead}},(err)=>{});
 				});
@@ -92,12 +93,13 @@ router.post('/join_ok',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g222,
 router.post('/star',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'star check:');
+	LIB.userRelogin(User,data.uid);
+	LIB.check(data,'star check:');
 	//update the loginlist of the user,
 	Loginlist.update({uid:data.uid},{$addToSet:{star:data.sid}},(err)=>{});
 	//get the information of the star,and send to the page,
 	People.find({uid:data.sid},null,{limit:1},(err,detail)=>{
-		CHECK(detail[0],'the information of the star:');
+		LIB.check(detail[0],'the information of the star:');
 		var J_data = JSON.stringify(detail[0]);
 		//the J_data for render in main.ejs, add star information to the star list immediately,
 		res.send(J_data);
@@ -118,7 +120,7 @@ router.post('/star',urlencodedParser,(req,res)=>{
 //message on search,
 // router.post('/mess',urlencodedParser,(req,res)=>{
 // 	var data = JSON.parse(req.body.J_data);
-// 	CHECK(data,'mess')
+// 	LIB.check(data,'mess')
 
 // 	//this place has the error unknow
 // 	People.find({uid:},(err,detail)=>{

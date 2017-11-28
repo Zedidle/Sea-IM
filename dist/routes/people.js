@@ -1,4 +1,4 @@
-const CHECK = require('./lib/check');
+const LIB = require('./lib');
 const assert = require('assert');
 const crypto = require('crypto')
 const fs = require('fs')
@@ -8,7 +8,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
-const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
 const Unread = require('../mongoModel/unread');
@@ -25,7 +24,7 @@ const router = express.Router()
 //used by public/js/main.js g77
 router.post('/people',urlencodedParser,(req,res)=>{
 	var data = req.body;
-
+	LIB.userFakeLogout(User,data.uid);
 	People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		var info = detail[0];
 		res.render('afterL/people.ejs',{
@@ -47,7 +46,7 @@ router.post('/peopleI',upload.any(),(req,res)=>{
 	var data = req.body;
 	var image = files[0];
 	var filename = '/img/uploads/'+image.filename;
-
+	
 	People.update({uid:data.uid},{$set:{headImg:filename}},err=>{});
 	People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		var info = detail[0];

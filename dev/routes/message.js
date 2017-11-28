@@ -1,4 +1,4 @@
-const CHECK = require('./lib/check');
+const LIB = require('./lib');
 const assert = require('assert');
 const crypto = require('crypto')
 const fs = require('fs')
@@ -8,7 +8,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
-const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
 const Unread = require('../mongoModel/unread');
@@ -22,9 +21,12 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 
+//used by unkown,
 router.post('/getmess',urlencodedParser,(req,res)=>{
+
 	var data = JSON.parse(req.body.J_data);
-    CHECK(data,'Get mess : ');
+	LIB.userRelogin(User,data.uid);
+    LIB.check(data,'Get mess : ');
 	var getMessages;
 	var msend = { isteam:false, mess:[],};
 	var getMessNumber = data.unRead;
@@ -32,14 +34,14 @@ router.post('/getmess',urlencodedParser,(req,res)=>{
 	new Promise((resolve,reject)=>{
 		if(data.type!=='team'){
 			Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-				CHECK(detail[0],'getmess_NotTeam');
+				LIB.check(detail[0],'getmess_NotTeam');
 				getMessages = detail[0]['mess'][data.mid];
 				msend.isteam = false;
 				resolve(getMessages);
 			});
 		}else{
 			Tmessage.find({uid:data.mid},null,{limit:1},(err,detail)=>{
-				CHECK(detail[0],'getmess_Team');
+				LIB.check(detail[0],'getmess_Team');
 				getMessages = detail[0].mess;
 				msend.isteam = true;
 				resolve(getMessages);

@@ -21,6 +21,10 @@ const Loginlist = require('./mongoModel/loginlist');
 //设置公共静态路由
 app.use(express.static(path.join(__dirname, 'public')));
 
+//every 10 mins make login status of all users logout,  
+setInterval(function(){
+  User.update({},{$set:{login:false}},{multi:true},(err)=>{ console.log("All user logout!");})
+},600000);
 
 io.on('connection', function(socket){
 socket.on('chat',function(J_msg){
@@ -41,8 +45,6 @@ socket.on('chat',function(J_msg){
       J_m = JSON.stringify(m);
 
     if(msg.type!=='team'){
-
-
 
 // judge if the receiver is online, 
 // if the recevier is outline, make the unreadnumber +1.
@@ -69,7 +71,6 @@ socket.on('chat',function(J_msg){
       }
     })
 
-
       io.emit(msg.from,J_m);
 
       //为msg.from和msg.to添加消息
@@ -94,23 +95,19 @@ socket.on('chat',function(J_msg){
 
   }else{
     //如果这个消息是来自某个团队
-    Tmessage.update({uid:msg.to},{$push:{mess:m}},(err)=>{});
-    // Team.find({uid:msg.to},(err,detail)=>{
-    Team.find({uid:msg.to},['member'],(err,detail)=>{
-      CHECK(detail[0],'Chat_Team');
-      var members = detail[0].member;
-
-      var tm = m;
-      //msg.to is the uid of the team,
-      tm.uid = msg.to;
-      //msg.from is the person who said the message,
-      tm.from_user = msg.from;
-
-      CHECK(tm,'messages of the team:');
-
-      teamBroadcast(members,tm);
-    })
-  }
+      Team.find({uid:msg.to},'member',(err,detail)=>{
+        CHECK(detail[0],'Chat_Team');
+        var members = detail[0].member;
+        var tm = m;
+        //msg.to is the uid of the team,
+        tm.uid = msg.to;
+        //msg.from is the person who said the message,
+        tm.from_user = msg.from;
+        CHECK(tm,'messages of the team:');
+        teamBroadcast(members,tm);
+        Tmessage.update({uid:msg.to},{$push:{mess:tm}},(err)=>{});
+      })
+    }
 });
 });
 });
