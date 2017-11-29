@@ -8,7 +8,6 @@ const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
-const time = require('./lib/retime');
 const mongoose=require('mongoose');
 const User = require('../mongoModel/user');
 const Unread = require('../mongoModel/unread');
@@ -93,7 +92,6 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 
 //Login: used by views/login.ejs g134
 router.post('/', urlencodedParser,(req,res)=>{
-	console.log('login: get the data');
 	var 
 		hash = crypto.createHash('sha1'),
 		uid = req.body.uid,
@@ -107,29 +105,13 @@ router.post('/', urlencodedParser,(req,res)=>{
 	hash.update(password);
 	var pwd = hash.digest('hex');
 
-	// new Promise(function(resolve,rejected){
-	// 	User.find({uid},null,{ limit: 1 },(err,detail)=>{
-	// 		resolve(detail[0].login);
-	// 	});
-	// }).then(loginstatus=>{
-	// 	if(loginstatus){
-	// 		res.render('login.ejs',{ tipInfo:"系统忙，请稍后登录！",  });
-	// 	}else{
-	// 		User.find({uid,password:pwd},null,{ limit : 1 },(err,detail)=>{
-	// 			if(!detail.length){
-	// 				res.render('login.ejs',{ tipInfo:"用户名不存在或密码错误！", });
-	// 			}
-	// 		});
-	// 	}
-	// })
-
 	User.find({uid},null,{ limit: 1 },(err,detail)=>{
-		if(detail[0].login){
+		if(detail[0]&&detail[0].login){
 			console.log('(user)'+uid+" had already logined!");
 			res.render('login.ejs',{ tipInfo:"系统忙，请稍后登录！",  });
 		}else{
 			User.find({uid,password:pwd},null,{ limit : 1 },(err,detail)=>{
-				if(!detail.length){
+				if(!detail[0]){
 					res.render('login.ejs',{ tipInfo:"用户名不存在或密码错误！", });
 				}else{
 

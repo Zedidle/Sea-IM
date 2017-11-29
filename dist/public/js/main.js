@@ -340,7 +340,7 @@ var main = new Vue({
     messto:'',
     nameOfmessageframe:'',
     messageframeSeen:false,
-    isMessContentSeen:{
+    isMessageListSeen:{
       recent:true,
       star:false,
       team:false,
@@ -374,36 +374,36 @@ var main = new Vue({
     addUnReadNumber:function(msg){
       //check the list in recent,add unread in recent list;
 
-      console.log("run into the function of add unread number:");
       var msg_type = msg.type==='team'?'team':'people';
-      console.log('the type of message is '+msg_type);
+      console.log(' message type: '+msg_type);
 
-      var haveTheLiInRecent = false;
+      //there is two way to judge whether the li exist:
+      //1: check the loginlist; this way is easy and more quitely,
+      //2: check the ul#recent; this way is main to change the unread of the li,
+
+      // var haveTheLiInRecent = false;
       var recent_lis = $('ul#recent').find('li');
       for(var i=0;i<recent_lis.length;i++){
-        //循环获得每个li的消息类型,uid,未读数量
+        //get every li in recent's type,uid and unreadnumber;
         var li_type = recent_lis.eq(i).find('.info .li_type span').text();
         var li_uid = recent_lis.eq(i).find('.info span.uid').text();
-        var unread_badge = recent_lis.eq(i).find('.name span.badge')[0];
+        var unread = recent_lis.eq(i).find('.name span.badge')[0];
         if(msg_type===li_type && msg.uid===li_uid){
-          console.log('Unread badge text is: '+unread_badge.innerText);
-          if(!unread_badge.innerText){
-            console.log('make the badge change to 0');
-            unread_badge.innerText = 0;
-            unread_badge.style.display = 'inline-block';
+          if(!unread.innerText){
+            unread.innerText = 0;
+            unread.style.display = 'inline-block';
           }
-          unread_badge.innerText = parseInt(unread_badge.innerText)+1; 
-          haveTheLiInRecent = true;
+          unread.innerText = parseInt(unread.innerText)+1; 
+          // haveTheLiInRecent = true;
           break;
         }
       }
-      if(!haveTheLiInRecent){
-        msg.type = 'people';
-        this.addRecentLi(msg);
-      } 
+      // if(!haveTheLiInRecent){ this.addRecentLi(msg); }; 
       this.addUnReadInDB(msg_type,msg.uid,msg.to);
     },  
 
+    //when the mess come, if messageFrame is opning, check the messtype and messto, 
+    //if satisfy the condition, it will run this function to show the message.
     createMessDiv:function(msg){
       if(msg.type==='team'){
         var f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
@@ -429,10 +429,15 @@ var main = new Vue({
       console.log(info);
       var havelevel = info.level;
       var con = new Object();
-      con.h = havelevel?'55px':'80px';
-      con.borderR = havelevel?'50%':'0%';
-      con.avator_w = havelevel?'50px':'70px';
-      con.type = havelevel?'people':'team';
+      con.h = havelevel?'80px':'55px';
+      con.borderR = havelevel?'0%':'50%';
+      con.avator_w = havelevel?'70px':'50px';
+      con.type = havelevel?'team':'people';
+      console.log(havelevel);
+      console.log(con.h);
+      console.log(con.borderR);
+      console.log(con.avator_w);
+      console.log(con.type);
       $('#recent').prepend(`
         <li style='height:${con.h};'>
           <div class='info'>
@@ -478,12 +483,13 @@ var main = new Vue({
         for(let i=0;i<d.length;i++){ main.createMessDiv(d[i]); };
       });
     },
-    messageCome:function(msg){
 
+    //when user receive any message, run this function;
+    messageCome:function(msg){
       console.log('the message:');
       console.log(msg);
-      console.log('the main chat type: '+main.messtype);
-      console.log('the main to: '+main.messto);
+      console.log('the main chat type: '+ main.messtype);
+      console.log('the main to: '+ main.messto);
 
       if((msg.uid===main.messto)&&(msg.type===main.messtype||msg.type!=='team'&&main.messtype==='star')||
         msg.uid===uid&&msg.type!=='team'){
@@ -492,28 +498,31 @@ var main = new Vue({
           this.addUnReadNumber(msg);
         }
       }else{
+        var voiceSrc = msg.type!=='team'?'tmessageCome.wav':'pmessageCome.wav';
+        document.getElementById('tipvoice').src='voice/'+ voiceSrc;
         this.addUnReadNumber(msg);
       }
 
-      var exist;
+      //judge the type of message,
+      var exist = false;
       if(msg.type==='team'){
-        //check whether the recent.team exist;
+        //check whether the recent_team exist;
         for(var i of loginlist['recent_team']){
           if(i===msg.uid||i===msg.to){ exist = true; break; }
         }
       }else{
         //check whether the recent_people exist;
-        for(let i of loginlist['recent_people']){
+        for(var i of loginlist['recent_people']){
           if(i===msg.uid||i===msg.to){ exist = true; break; }
         }
       }
+      console.log(loginlist['recent_people']);
       if(!exist){
-        console.log("The recent li is not exist,");
+        console.log("the recent li is not exist,");
         if(msg.uid===uid){
-          console.log('This msg is from yourself!');
+          console.log('this message is from yourself or your team!');
           //who send msg and who receive msg is the same;  
           var d = {  uid:msg.to, type:msg.type };
-
           //link with router/unreadnumber.js g64,
           postChange('/justGetInfo',d,function(data){
             msg.type==='team'?
@@ -533,6 +542,7 @@ var main = new Vue({
       }
     },
 
+    //when user send any message, run this function,
     sendMessage:function(){
       var v = $('#messageframe_input').val().trim();
       if(v.length){
@@ -548,6 +558,7 @@ var main = new Vue({
       }
     },
 
+    //when the X of the top of left of the massageframe be clicked, run this function,
     messageframe_close:function(){
       this.messageframeSeen=false;
       this.messtype='';
@@ -556,28 +567,24 @@ var main = new Vue({
       $('#messageframe_input').val('');
     },
 
+    //hide the domore model,
     hideDomore:function(){
       $('#domore').css('width','0px');
       $('#domore').__proto__.j = false;
     },
 
-    resetOption:function(){
+    listSeen:function(event,type){
       $('.sOption').css('background','#FCFEF4').css('color','#333');
-      this.isMessContentSeen.recent=false;
-      this.isMessContentSeen.star=false;
-      this.isMessContentSeen.team=false;
-    },
-    contentSeen:function(event,type){
-      this.resetOption();
+      this.isMessageListSeen.recent=false;
+      this.isMessageListSeen.star=false;
+      this.isMessageListSeen.team=false;
       $(event.target).css('color','#70C1B9').css('background','transparent');
-      this.isMessContentSeen[type]=true;
+      this.isMessageListSeen[type]=true;
     },
   },
 });
 
-socket.on(uid,function(J_msg){
-  var msg = JSON.parse(J_msg);
-  main.messageCome(msg);
-});
+//listen the port of the user,
+socket.on(uid,function(J_msg){ main.messageCome(JSON.parse(J_msg)); });
 
 setInterval(function(){ socket.emit('loginjudge',uid); },10000);
