@@ -1,42 +1,5 @@
 const uid = document.getElementById('getuid').value;
 var loginlist = JSON.parse(document.getElementById('getloginlist').value);
-console.log('loginlist:');
-console.log(loginlist)
-
-// window.onbeforeunload = function(){
-//     //先撤销了登录状态,注意：这里不能直接执行Ajax(而要用setTimeout)，会导致直接跳转
-//     setTimeout(logOff,10);
-//     //50ms后让＂100ms后制作返回登录状态＂这个事件进入事件队列
-//     //为什么要这么做?
-//     //因为:
-//     //1.如果选择跳转页面，(100ms绝对会跳转)则定时器被撤销，导致＂返回登录状态＂　无法进入事件队列;
-//     //2.如果选择取消跳转，则能让定时器顺利计时完成，让"返回登录状态"进入事件队列
-//     setTimeout(relogin,50);
-//     return "真的退出?";
-// }
-// function logOff(){
-//     //撤销登录状态
-//     var data={
-//       uid:uid
-//     };
-//     postChange('/exit',data,function(d){
-//       console.log(d.uid);
-//     })
-// }
-// function relogin(){
-//   //100ms后让＂返回登录状态＂进入事件队列
-//   setTimeout(function(){
-//     //返回登录状态
-//     var data={
-//       uid:uid
-//     }
-//     postChange('/relogin',data,function(d){
-//       console.log(d.uid);
-//     });
-//   },100);
-// }
-
-
 var punRead = JSON.parse(document.getElementById('getpunRead').value);
 var tunRead = JSON.parse(document.getElementById('gettunRead').value);
 
@@ -44,6 +7,7 @@ var main = new Vue({
 
   components:{
 
+    //get more domore thing to do; 
     'domore-part':{
       props:['uid'],
       template:`
@@ -62,21 +26,20 @@ var main = new Vue({
     `,
       data:function(){
         return {
-          userEnsure:{ uid:uid, },
+          userEnsure:{ uid:uid },
         }
       },
       methods:{
-        logOff:function(){ 
-          if(confirm('确认注销？')){
-            formPostUrl('/logOff',this.userEnsure);
-          }
+        logOff:function(){
+          if(confirm('确认注销？')){ formPost('/logOff',this.userEnsure); }
         },
-        getPersonInfo:function(){ formPostUrl('/people',this.userEnsure);},
-        getTeamsInfo:function(){ formPostUrl('/myteam',this.userEnsure);},
-        toBuildATeam:function(){ formPostUrl('/DealWithTeam',this.userEnsure);},
+        getPersonInfo:function(){ formPost('/people',this.userEnsure);},
+        getTeamsInfo:function(){ formPost('/myteam',this.userEnsure);},
+        toBuildATeam:function(){ formPost('/DealWithTeam',this.userEnsure);},
       }
     },
 
+    //the user info
     'user-info':{
       props:['uid','user_info'],
       template:`
@@ -95,22 +58,20 @@ var main = new Vue({
       `,
       data:function(){
         return {
-          reg:/&#34;/g,
-          info:JSON.parse(this.user_info.replace(this.reg, '\"')),
+          info:JSON.parse(regKeepJSON(this.user_info)),
         }
       },
       methods:{
         toggleDomore:function(){
-          if($('#domore').__proto__.judge===undefined){
-            $('#domore').__proto__.judge = false;
-          }
-          if($('#domore').judge){ $('#domore').css('width','0px');
-          }else{ $('#domore').css('width','60px'); }
-          $('#domore').__proto__.judge = !$('#domore').__proto__.judge;
+          var dp = $('#domore').__proto__;
+          if(dp.j===undefined){ dp.j = false; };
+          $('#domore').css('width',(dp.j?'0':'60')+'px');
+          dp.j = !dp.j;
         },
       },
     },
 
+    //search content 
     'search-content':{
       props:['uid'],
       template:`
@@ -129,9 +90,7 @@ var main = new Vue({
       `,
       methods:{
         removeSearchInfo:function(){ 
-          if(document.getElementById('search-info')){
-            $('#search-info').remove(); 
-          }
+          if(document.getElementById('search-info')){ $('#search-info').remove(); }
         },
         closeCheckInfo:function(){
           document.getElementById('search_uid').value = '';
@@ -165,9 +124,8 @@ var main = new Vue({
             var data = { uid:searchContent.uid, tid:searchContent.searchId }
             var J_data = JSON.stringify(data);
             $.post('/join_judge','J_data='+J_data,function(judge){
-              if(judge==='ok'){ 
-                formPostUrl('/join',data); 
-              }else{
+              if(judge==='ok'){ formPost('/join',data); }
+              else{
                 $('#search-team').append("<li class='alert alert-info' role='alert'>"+judge+"</li>");
               }
             })
@@ -199,10 +157,8 @@ var main = new Vue({
         $('#send').click(function(){
           main.messageframeSeen = true;
           main.messtype = 'recent';
-          main.to = searchComponent.searchId;
-          console.log(main.to)
+          main.messto = searchComponent.searchId;
           main.nameOfmessageframe = $(this).siblings('#pinfo').find('#name').text();
-          console.log(main.nameOfmessageframe)
         })
 
         $('#star').click(function(){
@@ -212,41 +168,28 @@ var main = new Vue({
           };
           var J_data = JSON.stringify(data);
             $.post('/star','J_data='+J_data,function(data){
-              var judge = JSON.parse(data);
-              var t = judge?'成功标记该用户!':'已经标记过！';
+              var j = JSON.parse(data);
+              var t = j?'成功标记该用户!':'已经标记过！';
               $('#search-person').prepend("<li class='alert alert-success' role='alert'>"+t+"</li>");
-              if(judge){
+              if(j){
                 $('#starContent ul').prepend(`
                   <li style='height:60px;'>
                     <div class='info'>
-                      <div class='name'>${judge.name} </div>
-                      <span class='uid' >${judge.uid}</span>
-                      <div class='introduce'>${judge.introduce}</div>
+                      <div class='name'>${j.name} </div>
+                      <span class='uid' >${j.uid}</span>
+                      <div class='introduce'>${j.introduce}</div>
                     </div>
-                    <div class='avator' style='width:60px; border-radius:50%;'><img src='${judge.headImg}'></div>
+                    <div class='avator' style='width:60px; border-radius:50%;'><img src='${j.headImg}'></div>
                   </li>
                 `);
                 $('#star li').first().click(function(){
-                  // var unread_badge = $(this).find('.badge')[0]||$(this).parent('li').find('span.badge')[0];
-                  // var unreadNumber = unread_badge.innerText;
-                  // console.log('This badge number is :'+ unreadNumber);
-                  // unread_badge.innerText = '';
-                  // unread_badge.style.display = 'none';
                   main.moreinfoSeen=false;
                   main.messtype='star';
                   main.messageframeSeen=true;
                   main.isteam = false;
                   main.nameOfmessageframe = $(this).find('.name').text();
-                  main.to = $(this).find('.uid').text();
-                  // main.getUnreadMess(main.to,unreadNumber,'recent');
+                  main.messto = $(this).find('.uid').text();
                   document.getElementById('messageframe_cont').innerHTML = '';
-                  // main.moreinfoSeen = false;
-                  // main.messageframeSeen = true;
-                  // $('#messageframe_cont').html('');
-                  // main.messtype = 'star';
-                  // main.isteam = false;
-                  // main.nameOfmessageframe = $(this).find('.name').text();
-                  // main.to = $(this).find('.uid').text();
                 })
               }
             })
@@ -267,15 +210,11 @@ var main = new Vue({
           this.searchId = $('#search_uid').val().trim();; 
           if(!this.searchId||this.searchId===uid){ return; }
           $('#search_uid').css('width','70%');
-          var 
-            data = { uid:this.searchId },
-            J_data = JSON.stringify(data);
-
+          var J_data = JSON.stringify({ uid:this.searchId });
           var searchComponent = this;
           $.post("/search","J_data="+J_data,function(data){
-            var
-              team = data.team,
-              person = data.person;
+            var team = data.team;
+            var person = data.person;
             $('#search-content').append("<div id='search-info'></div>");
             if(team){
               searchComponent.createSearchTeamInfo(team);
@@ -315,35 +254,16 @@ var main = new Vue({
         </ul>
       `,
       computed:{
-        punR:function(){
-          var reg = /&#34;/g;
-          return JSON.parse(this.punread.replace(reg,"\""));
-        },
-        tunR:function(){
-          var reg = /&#34;/g;
-          return JSON.parse(this.tunread.replace(reg,"\""));
-        },
-        _info:function(){
-          var reg = /&#34;/g;
-          return JSON.parse(this.info.replace(reg,"\""));
-        },
+        punR:function(){ return JSON.parse(regKeepJSON(this.punread)); },
+        tunR:function(){ return JSON.parse(regKeepJSON(this.tunread)); },
+        _info:function(){ return JSON.parse(regKeepJSON(this.info)); },
       },
       methods:{
         //just judge whether the li have the level of team
         li_height:function(havelevel){
-          var h;
-          switch(this.type){
-            case('recent'):{
-              if(havelevel){
-                h='80';
-              }else{
-                h='55'; 
-              }
-              break;
-            };
-            case('star'):{h='60'; break;};
-            case('team'):{h='100'; break;};
-          }
+          var h = this.type==='recent'?
+                  havelevel?'80':'50':
+                  this.type==='star'?'60':'100';
           return { height:h+'px',overflow:'hidden', };
         },
         //just judge whether the li have the level of team
@@ -351,13 +271,8 @@ var main = new Vue({
           var w,b_radius;
           switch(this.type){
             case('recent'):{
-              if(havelevel){
-                w='78';
-                b_radius='0';
-              }else{
-                w='50';
-                b_radius='50';
-              }
+              w = havelevel?'78':'50';
+              b_radius = havelevel?'0':'50';
               break;
             };
             case('star'):{w='60'; b_radius='50'; break;};
@@ -395,8 +310,8 @@ var main = new Vue({
           main.messageframeSeen=true;
           $('#messageframe_cont').html('');
           main.nameOfmessageframe = e.find('.name').text()||e.parent().find('.name').text()||e.parent().parent().find('.name').text();
-          main.to = li_uid;
-          main.getUnreadMess(main.to,unreadNumber,main.messtype);
+          main.messto = li_uid;
+          main.getUnreadMess(main.messto,unreadNumber,main.messtype);
         },
       },
     },
@@ -422,7 +337,7 @@ var main = new Vue({
     moreinfoSeen:false,
     loginlist:loginlist,
     messtype:'',
-    to:'',
+    messto:'',
     nameOfmessageframe:'',
     messageframeSeen:false,
     isMessContentSeen:{
@@ -438,62 +353,62 @@ var main = new Vue({
     checkMoreinfo:function(){
       var data = {
         type:this.messtype,
-        check_uid:this.to
+        check_uid:this.messto
       }
       postChange("/getMoreinfo",data,function(d){ main.messInfo = d; });
-      console.log("CheckMoreinfo");
       this.moreinfoSeen=true;
     },
     getMoreMessageOnFrame:function(){
-      console.log('getMoreMess');
+      console.log('click the button and get more message');
       $('#messageframe_cont').append();
     },
     addUnReadInDB:function(msg_type,msg_uid,msg_to){
-      console.log('AddUnreadInDB');
       var data = {
         type:msg_type,
         uid:msg_uid,
         to:msg_to,
         checked:false
       };
-      postChange('/dealwithunread',data,function(d){
-        console.log(d);
-      });
+      postChange('/dealwithunread',data,function(d){});
     },
     addUnReadNumber:function(msg){
-      console.log("Add UnReadNumber");
-      var msg_type = (msg.type==='team')?'team':'people';
-      console.log('Msg type is '+msg_type);
-      var msg_uid = msg.uid;
-      var msg_to = msg.to;
+      //check the list in recent,add unread in recent list;
+
+      console.log("run into the function of add unread number:");
+      var msg_type = msg.type==='team'?'team':'people';
+      console.log('the type of message is '+msg_type);
+
+      var haveTheLiInRecent = false;
       var recent_lis = $('ul#recent').find('li');
       for(var i=0;i<recent_lis.length;i++){
         //循环获得每个li的消息类型,uid,未读数量
         var li_type = recent_lis.eq(i).find('.info .li_type span').text();
         var li_uid = recent_lis.eq(i).find('.info span.uid').text();
         var unread_badge = recent_lis.eq(i).find('.name span.badge')[0];
-        if(msg_type===li_type && msg_uid===li_uid){
+        if(msg_type===li_type && msg.uid===li_uid){
           console.log('Unread badge text is: '+unread_badge.innerText);
-
           if(!unread_badge.innerText){
-            console.log('Make unread_badge text 0 and show it');
+            console.log('make the badge change to 0');
             unread_badge.innerText = 0;
             unread_badge.style.display = 'inline-block';
-          }else{
-            console.log('Can not do anything with unread_badge!');
           }
           unread_badge.innerText = parseInt(unread_badge.innerText)+1; 
+          haveTheLiInRecent = true;
           break;
         }
       }
-      this.addUnReadInDB(msg_type,msg_uid,msg_to);
-    }, 
+      if(!haveTheLiInRecent){
+        msg.type = 'people';
+        this.addRecentLi(msg);
+      } 
+      this.addUnReadInDB(msg_type,msg.uid,msg.to);
+    },  
+
     createMessDiv:function(msg){
-      var f;
       if(msg.type==='team'){
-        f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
+        var f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
       }else{
-        f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
+        var f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
       }
       $('#messageframe_cont').append(`
         <div class="messli" ${f}>
@@ -508,21 +423,16 @@ var main = new Vue({
       var cont = document.getElementById('messageframe_cont');
       cont.scrollTop = cont.scrollHeight;
     },
+    
     addRecentLi:function(info){
       console.log('add recentLi base on :');
       console.log(info);
-      var con = {
-        h:'55px',
-        borderR:'50%',
-        avator_w:'50px',
-        type:'people'
-      }
-      if(info.level){
-        con.h = '80px';
-        con.borderR = '0%';
-        con.avator_w = '70px';
-        con.type='team';
-      };
+      var havelevel = info.level;
+      var con = new Object();
+      con.h = havelevel?'55px':'80px';
+      con.borderR = havelevel?'50%':'0%';
+      con.avator_w = havelevel?'50px':'70px';
+      con.type = havelevel?'people':'team';
       $('#recent').prepend(`
         <li style='height:${con.h};'>
           <div class='info'>
@@ -538,10 +448,11 @@ var main = new Vue({
           <div class='avator' style='width:${con.avator_w}; border-radius:${con.borderR};' ><img src='${info.headImg}'></div>
         </li>
       `);
+
       $('#recent li').first().click(function(){
         var unread_badge = $(this).find('.badge')[0]||$(this).parent('li').find('span.badge')[0];
         var unreadNumber = unread_badge.innerText;
-        console.log('This badge number is :'+ unreadNumber);
+        console.log('get message number is :'+ unreadNumber);
         unread_badge.innerText = '';
         unread_badge.style.display = 'none';
         main.moreinfoSeen=false;
@@ -549,11 +460,12 @@ var main = new Vue({
         main.messageframeSeen=true;
         main.isteam = false;
         main.nameOfmessageframe = $(this).find('.name').text();
-        main.to = $(this).find('.uid').text();
-        main.getUnreadMess(main.to,unreadNumber,'recent');
+        main.messto = $(this).find('.uid').text();
+        main.getUnreadMess(main.messto,unreadNumber,'recent');
         document.getElementById('messageframe_cont').innerHTML = '';
       })
     },
+
     getUnreadMess:function(get_uid,unreadNumber,type){
       var data = {
         uid:uid,
@@ -562,8 +474,7 @@ var main = new Vue({
         type:type
       }
       postChange('/getUnreadMess',data,function(d){
-        console.log("Get unread messages:");
-        console.log('Unread number is:'+d.length);
+        console.log("Get unread messages, the number is: "+d.length);
         for(let i=0;i<d.length;i++){ main.createMessDiv(d[i]); };
       });
     },
@@ -572,11 +483,14 @@ var main = new Vue({
       console.log('the message:');
       console.log(msg);
       console.log('the main chat type: '+main.messtype);
-      console.log('the main to: '+main.to);
+      console.log('the main to: '+main.messto);
 
-      if((msg.uid===main.to)&&(msg.type===main.messtype||msg.type!=='team'&&main.messtype==='star')||
+      if((msg.uid===main.messto)&&(msg.type===main.messtype||msg.type!=='team'&&main.messtype==='star')||
         msg.uid===uid&&msg.type!=='team'){
         this.createMessDiv(msg);
+        if(msg.uid===uid&&msg.type==='team'&&main.messto!==msg.uid){
+          this.addUnReadNumber(msg);
+        }
       }else{
         this.addUnReadNumber(msg);
       }
@@ -602,54 +516,51 @@ var main = new Vue({
 
           //link with router/unreadnumber.js g64,
           postChange('/justGetInfo',d,function(data){
-            if(msg.type==='team'){
-              loginlist['recent_team'].push(msg.uid);
-            }else{
+            msg.type==='team'?
+              loginlist['recent_team'].push(msg.uid):
               loginlist['recent_people'].push(msg.to);
-            }
             main.addRecentLi(data);
             var recentFirstLiUnreadnumber = $('ul#recent').find('li').eq(0).find('.name span.badge')[0];
             recentFirstLiUnreadnumber.innerText = '';
             recentFirstLiUnreadnumber.style.display = 'none';
           })
         }else{
-          console.log('This msg is from others');
-          if(msg.type==='team'){
-            loginlist['recent_team'].push(msg.uid);
-          }else{
+          msg.type==='team'?
+            loginlist['recent_team'].push(msg.uid):
             loginlist['recent_people'].push(msg.uid);
-          }
           this.addRecentLi(msg);
         }
       }
     },
+
     sendMessage:function(){
       var v = $('#messageframe_input').val().trim();
-      if(!v.length){ return false; }
-      else{
+      if(v.length){
         var msg = {
           time:getTime(),
           type:this.messtype,
           content:v,
-          to:this.to,
+          to:this.messto,
           from:uid
         }
         var J_msg = JSON.stringify(msg);
         socket.emit('chat',J_msg);
       }
     },
+
     messageframe_close:function(){
       this.messageframeSeen=false;
       this.messtype='';
-      this.to='';
+      this.messto='';
       $('#messageframe_cont').html('');
       $('#messageframe_input').val('');
     },
 
     hideDomore:function(){
       $('#domore').css('width','0px');
-      $('#domore').__proto__.judge = false;
+      $('#domore').__proto__.j = false;
     },
+
     resetOption:function(){
       $('.sOption').css('background','#FCFEF4').css('color','#333');
       this.isMessContentSeen.recent=false;
@@ -658,8 +569,7 @@ var main = new Vue({
     },
     contentSeen:function(event,type){
       this.resetOption();
-      var e = $(event.target);
-      e.css('color','#70C1B9').css('background','transparent');
+      $(event.target).css('color','#70C1B9').css('background','transparent');
       this.isMessContentSeen[type]=true;
     },
   },
@@ -668,4 +578,6 @@ var main = new Vue({
 socket.on(uid,function(J_msg){
   var msg = JSON.parse(J_msg);
   main.messageCome(msg);
-})
+});
+
+setInterval(function(){ socket.emit('loginjudge',uid); },10000);

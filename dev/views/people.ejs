@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>完善个人信息</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+   <style>
+	body{
+        background-size:100% 120%;
+    }
+.container{
+	width:100%;
+	max-width:750px;
+	margin:10% auto;
+	min-height:700px;
+	background:transparent;
+	border:solid 2px #70C1B9;
+	border-radius: 1em;
+	padding:1em;
+}
+#back{
+	margin:10px;
+}
+#textUpdate{
+	min-width:100px;
+	height:30px;
+	margin:20px;
+}
+#peopleHeadForm{
+	margin-left:10px;
+	margin-bottom: 2em;
+	position:relative;
+	display: none;
+	background: transparent;
+}
+#avator{
+	margin-right:0.5em;
+	padding:2px;
+}
+#headUpdate{
+}
+#peopleHeadForm div{
+	max-width:500px;
+	max-height:400px;
+}
+#checkImg{
+	width:100%;
+	max-width:500px;
+}
+#headImg{
+	margin:0 10px;
+	width:200px;
+	height:200px;
+	display: inline-block;
+	float:left;
+	cursor: pointer;
+}
+#headImg:hover{
+	opacity: 0.8;
+}
+#headImg img{
+	width:100%;
+	height:100%;
+}
+#brief{
+	float: left;
+	display: inline-block;
+	height:230px;
+	background: transparent;
+	padding:10px;
+	margin:10px;
+	margin-top:0;
+	border:solid 1px #666;
+	border-radius: 0.4em;
+}
+#name{
+	margin:5px;
+	background: transparent;
+	display: inline-block;
+	font-size: 1.3em;
+	border:solid 1px #777;	
+	border-radius: 0.4em;
+}
+#introduce{
+	border-radius: 0.5em;
+	background: transparent;
+	display:block;
+	width:250px;
+	height:120px;
+}
+#introduce{
+	font-size:1.2em;
+	display: block;
+}
+#intro{
+	margin-left:10px;
+	width:240px;
+	border:solid 1px #444;
+	border-radius: 0.5em;
+	float: left;
+	display: inline-block;
+	padding:1em;
+}
+#intro div{
+	padding:0.4em 0;
+}
+#sex,#hobby,#birthday{
+	width:150px;
+	border:solid 1px #777;	
+	border-radius: 0.4em;
+}
+
+
+@media (max-width: 768px) {
+  	#brief{
+  		margin:10px;
+		height:250px;
+	}
+}
+
+@media (max-width: 450px) {
+	.container{
+		padding:0;
+	}
+	#introduce{
+	display:block;
+	width:220px;
+	height:110px;
+	}
+	#textUpdate{
+		margin-left:2em;
+	}
+}
+
+	</style>	
+</head>
+<body>
+
+<div class='container'>
+		<div class="row">
+		<div class="col-md-12">
+		<button id='back' class="btn btn-default">返回主页</button>
+		</div>
+		</div>
+	
+		<div class="row">
+		<div class="col-md-12">
+
+		<form action="/peopleI" id='peopleHeadForm' method='post' enctype='multipart/form-data'>
+		<p>更新头像:</p>
+		<input type="file" class="btn btn-default" id='avator' name="avator">
+		<button type='button' class="btn btn-success" id='headUpdate'>保存头像</button>
+		<!-- <div><img src="" id='checkImg' name='avator'></div> -->
+		</form>
+		<!-- <button id='dataURL_test'>DATAURL-TEST</button> -->
+
+		</div>
+		</div>
+		
+		<div class="row">
+
+		<div class="col-md-4">
+		<div id='headImg'  class='ele' data-toggle="tooltip" data-placement="top" title="更新头像">
+		<img src=<%= headImg%>>
+		</div>
+		</div>
+
+		<div class="col-md-8">
+		<div id='brief'>
+		<uid>(<%= uid %>)</uid>
+		昵称：
+		<input id='name' value=<%= name%>>
+		<h3>个人简介:</h3>
+		<textarea id='introduce'><%= introduce %></textarea>
+		</div>
+		</div>
+
+		</div>
+
+		<div class="row">
+		<div class="col-md-8">
+		<div id='intro'>
+		<div>性别：<input id='sex' value=<%= sex%>></div>
+		<div>爱好：<input id='hobby' value=<%= hobby%>></div>
+		<div>生日：<input id='birthday' value=<%= birthday%>></div>
+		</div>
+		</div>
+
+		<div class=".col-md-4">
+		<button id='textUpdate' class="btn btn-primary">更新</button>
+		</div>
+		</div>
+
+</div>
+
+<script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
+<script src='https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js'></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src='js/lib.js'></script>
+<script src='js/people.js'></script>
+<script>
+	var uid = '<%=uid%>';
+	people(uid);
+</script>
+</body>
+</html>

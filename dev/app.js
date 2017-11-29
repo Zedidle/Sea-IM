@@ -2,11 +2,10 @@ const babel = require('babel-core');
 const fs = require('fs');
 const express = require('express');
 const app = express();
-const CHECK = require('./routes/lib/check.js');
+const LIB = require('./routes/lib.js');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const routes = require('./routes/routes')(app);
-const time = require('./routes/lib/retime');
 const path = require('path');
 const mongoose=require('mongoose');
 const User = require('./mongoModel/user');
@@ -22,14 +21,23 @@ const Loginlist = require('./mongoModel/loginlist');
 app.use(express.static(path.join(__dirname, 'public')));
 
 //every 10 mins make login status of all users logout,  
-setInterval(function(){
-  User.update({},{$set:{login:false}},{multi:true},(err)=>{ console.log("All user logout!");})
-},600000);
+// setInterval(function(){
+//   User.update({},{$set:{login:false}},{multi:true},(err)=>{ console.log("All user logout!");})
+// },600000);
+
+User.update({},{$set:{login:false}},{multi:true},(err)=>{ console.log("All user logout!");})
 
 io.on('connection', function(socket){
+  socket.on('loginjudge',function(uid){
+    User.update({uid},{$set:{login:true}},err=>{ console.log(uid + ' login'); });
+    setTimeout(function(){
+      User.update({uid},{$set:{login:false}},err=>{ console.log(uid + ' logout'); });
+    },19000);
+  });
+
 socket.on('chat',function(J_msg){
   var msg = JSON.parse(J_msg);
-  CHECK(msg,'chat_msg');
+  LIB.check(msg,'chat the message:');
 
   People.find({uid:msg.from},null,{limit:1},(err,detail)=>{
       var m = {
@@ -51,8 +59,7 @@ socket.on('chat',function(J_msg){
 // this part has the limit that it can not use session, 
 // so I use db to record login status of the user,
     User.find({uid:msg.to}, 'login', { limit: 1 }, (err,detail)=>{
-      var islogin = detail[0].login;
-      if(islogin){
+      if(detail[0].login){
         //If the receiver is logining.
         console.log('(user)'+msg.from+' send a message to (user)'+msg.to);
         io.emit(msg.to,J_m);
@@ -60,10 +67,10 @@ socket.on('chat',function(J_msg){
         Unread.find({uid:msg.to},'punRead',{limit:1},(err,detail)=>{
           //Get the unread number of message and make it +1, 
           var punRead = detail[0].punRead;
-          CHECK(punRead,'(1)(user)'+msg.to+' punread:');
+          LIB.check(punRead,'(1)(user)'+msg.to+' punread:');
           if(!punRead[msg.from]){ punRead[msg.from] = 0; }
           punRead[msg.from] = punRead[msg.from] + 1;
-          CHECK(punRead,'(2)(user)'+msg.to+' punread:');
+          LIB.check(punRead,'(2)(user)'+msg.to+' punread:');
           Unread.update({uid:msg.to},{$set:{punRead}},(err)=>{
             console.log('Make (user)'+msg.to+ ' unread of (user)'+msg.from+' +1 !');
           });
@@ -96,14 +103,14 @@ socket.on('chat',function(J_msg){
   }else{
     //如果这个消息是来自某个团队
       Team.find({uid:msg.to},'member',(err,detail)=>{
-        CHECK(detail[0],'Chat_Team');
+        LIB.check(detail[0],'Chat_Team');
         var members = detail[0].member;
         var tm = m;
         //msg.to is the uid of the team,
         tm.uid = msg.to;
         //msg.from is the person who said the message,
         tm.from_user = msg.from;
-        CHECK(tm,'messages of the team:');
+        LIB.check(tm,'messages of the team:');
         teamBroadcast(members,tm);
         Tmessage.update({uid:msg.to},{$push:{mess:tm}},(err)=>{});
       })
@@ -117,9 +124,7 @@ socket.on('chat',function(J_msg){
 const ip = '127.0.0.1';
 const port = 8000;
 
-server.listen(port,ip,function(){
-  console.log(ip+':'+port);
-})
+server.listen(port,ip,function(){console.log(ip+':'+port);});
 
 
 

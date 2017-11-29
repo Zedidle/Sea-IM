@@ -27,7 +27,7 @@ router.post('/people',urlencodedParser,(req,res)=>{
 	LIB.userFakeLogout(User,data.uid);
 	People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		var info = detail[0];
-		res.render('afterL/people.ejs',{
+		res.render('people.ejs',{
 			uid:info.uid,
 			headImg:info.headImg,
 			name:info.name,
@@ -39,7 +39,7 @@ router.post('/people',urlencodedParser,(req,res)=>{
 	})
 })
 
-//used by views/afterL/people.ejd g158
+//used by views/people.ejd g158
 //peoples images uploads
 router.post('/peopleI',upload.any(),(req,res)=>{
 	var files = req.files;
@@ -50,7 +50,7 @@ router.post('/peopleI',upload.any(),(req,res)=>{
 	People.update({uid:data.uid},{$set:{headImg:filename}},err=>{});
 	People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		var info = detail[0];
-		res.render('afterL/people.ejs',{
+		res.render('people.ejs',{
 			uid:info.uid,
 			headImg:filename,
 			name:info.name,
@@ -62,11 +62,11 @@ router.post('/peopleI',upload.any(),(req,res)=>{
 	})
 })
 
-//used by public/js/afterL/people.js
+//used by public/js/people.js  g61
 //peoples text uploads
 router.post('/peopleT',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	CHECK(data,'text information of people to change:');
+	LIB.check(data,'text information of people to change:');
 	res.send(req.body.J_data);
 	People.update({uid:data.uid},{$set:data},(err)=>{});
 })

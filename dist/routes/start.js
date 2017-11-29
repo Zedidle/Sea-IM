@@ -107,17 +107,32 @@ router.post('/', urlencodedParser,(req,res)=>{
 	hash.update(password);
 	var pwd = hash.digest('hex');
 
+	// new Promise(function(resolve,rejected){
+	// 	User.find({uid},null,{ limit: 1 },(err,detail)=>{
+	// 		resolve(detail[0].login);
+	// 	});
+	// }).then(loginstatus=>{
+	// 	if(loginstatus){
+	// 		res.render('login.ejs',{ tipInfo:"系统忙，请稍后登录！",  });
+	// 	}else{
+	// 		User.find({uid,password:pwd},null,{ limit : 1 },(err,detail)=>{
+	// 			if(!detail.length){
+	// 				res.render('login.ejs',{ tipInfo:"用户名不存在或密码错误！", });
+	// 			}
+	// 		});
+	// 	}
+	// })
+
 	User.find({uid},null,{ limit: 1 },(err,detail)=>{
-		console.log('login: judge login status of the user');
 		if(detail[0].login){
 			console.log('(user)'+uid+" had already logined!");
-			res.render('login.ejs',{ tipInfo:"用户已经登录！",  });
+			res.render('login.ejs',{ tipInfo:"系统忙，请稍后登录！",  });
 		}else{
 			User.find({uid,password:pwd},null,{ limit : 1 },(err,detail)=>{
 				if(!detail.length){
 					res.render('login.ejs',{ tipInfo:"用户名不存在或密码错误！", });
-					return false;
-				}
+				}else{
+
 				//enter the process to get information about the user to login,
 				//main too
 				var login_process = new Promise((resolve,reject)=>{
@@ -144,7 +159,6 @@ router.post('/', urlencodedParser,(req,res)=>{
 
 						var getinfo = Promise.all([
 							new Promise(function(resolve,rejected){
-
 								//get the list of recent chat information
 								if(recent_people.length || recent_team.length){
 									var recentinfo = [];
@@ -196,77 +210,32 @@ router.post('/', urlencodedParser,(req,res)=>{
 							})
 						]).then(info=>{
 							console.log('login: summary the information');
-							var 
-								recentinfo = info[0],
-								starinfo = info[1],
-								teaminfo = info[2];
-
-							var 
-								J_user_info = JSON.stringify(user_info),
-								J_recentinfo = JSON.stringify(recentinfo),
-								J_starinfo = JSON.stringify(starinfo),
-								J_teaminfo = JSON.stringify(teaminfo),
-								J_punRead = JSON.stringify(punRead);
-								J_tunRead = JSON.stringify(tunRead);
-
-							//设置用户登录状态为true
-							User.update({uid},{$set:{login:true}},err=>{
-								console.log('(user)'+uid+' login');
-								//At the same time, make the session login of user true;
-								//After login, set a interval to make user logout if user has not any action.
-								void function(){
-									function makeUserLogout(){
-										setTimeout(function(){
-											User.find({uid},'login',{limit:1},(err,detail)=>{
-												if(detail[0].login){
-													User.update({uid},{$set:{login:false}},(err)=>{
-														console.log('(user)'+uid+' logout');
-														makeUserLogout = null;
-													})
-												}
-												if(makeUserLogout){ makeUserLogout(); };
-											})
-										// },60000); //1 min;
-										},180000); //3 min;
-									};
-									makeUserLogout();
-								}();
-								// sess.makeUserSessLogout = setInterval(function(){
-								// 	//make user logout every 5 minutes,and user can do any action to relogin.
-								// 	console.log('Make (user)'+uid+' logout in session!');
-								// 	sess.login = false;
-								// },300000);//5min
-								
-								// sess.makeUserDBLogout = setInterval(function(){
-								// 	if(!sess.login){
-								// 		User.update({uid},{$set:{login:false}},(err)=>{
-								// 			console.log('Make (user)'+uid+' logout in DB!');
-								// 			clearInterval(sess.makeUserSessLogout);
-								// 			clearInterval(sess.makeUserDBLogout);
-								// 			delete sess.login;
-								// 		})
-								// 	}
-								// },1800000)//30min
-							});
-
 							res.render('main.ejs',{
 								uid,
-								punRead:J_punRead,
-								tunRead:J_tunRead,
-								user_info:J_user_info,
+								punRead:JSON.stringify(punRead),
+								tunRead:JSON.stringify(tunRead),
+								user_info:JSON.stringify(user_info),
 								loginlist:J_loginlist,
-								recentinfo:J_recentinfo,
-								starinfo:J_starinfo,
-								teaminfo:J_teaminfo,
+								recentinfo:JSON.stringify(info[0]),
+								starinfo:JSON.stringify(info[1]),
+								teaminfo:JSON.stringify(info[2]),
+							});
+							//make login status of user true;
+							User.update({uid},{$set:{login:true}},err=>{
+								console.log('(user)'+uid+' login');
+								setTimeout(function(){
+									User.update({uid},{$set:{login:false}},err=>{ console.log(uid + ' logout'); });
+								},9000);
 							});
 						});
 					});
 				});
 //main too
-	});
-	}
+				}
+			});
+		}
 	})
-	});
+});
 
 
 

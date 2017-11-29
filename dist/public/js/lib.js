@@ -15,31 +15,22 @@ function text_filter(data){
   if(typeof data === 'object'){
     var reg = /[\n"\\]/g;
     for(para in data){
-      // data[para] = data[para].replace(reg,'');
-      console.log(data[para])
+      data[para] = data[para].replace(reg,'');
     }
-
-  }else{
-    console.log('No Object')
   }
 };
 
-function formPostUrl(url,object){
+function formPost(url,object){
   var form = document.createElement('form');
   form.action = url;
   form.method = 'post';
   form.target = "_self"; 
   form.style.display = "none";
-  if(typeof object==='object'){
-    for(var para in object){
-      var input = document.createElement('input');
-      input.name = para;
-      input.value = object[para];
-      console.log(input)
-      form.appendChild(input);
-    }
-  }else{
-    console.log('Not paraments');
+  for(var para in object){
+    var input = document.createElement('input');
+    input.name = para;
+    input.value = object[para];
+    form.appendChild(input);
   }
   document.querySelector('body').appendChild(form);
   form.submit();
@@ -97,4 +88,8 @@ function ytime(){
      var month = parseInt(time.getMonth())+1;
      time = time.getFullYear()+'.'+month+ '.' +time.getDate()+'   '+time.getHours()+':'+time.getMinutes();
      return time;
+}
+
+function regKeepJSON(data){
+  return data.replace(/&#34;/g, '\"');
 }

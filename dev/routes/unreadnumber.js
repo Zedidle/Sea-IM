@@ -88,14 +88,14 @@ router.post('/getMoreinfo',urlencodedParser,(req,res)=>{
 router.post('/getUnreadMess',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 	LIB.userRelogin(User,data.uid);
-	LIB.check(data,'get unread messages:');
+	LIB.check(data.mess,data.uid+'get unread messages:');
 	var unrN = data.unreadNumber;
 	var mess = [];
 	if(data.type==='team'){
 		Tmessage.find({uid:data.get_uid},null,{limit:1},(err,detail)=>{
 			LIB.check(detail[0],'get unread messages of team');
 			var m = detail[0].mess;
-			while(unrN){
+			while(unrN&&m){
 				mess.unshift(m.pop());
 				unrN -= 1;
 			}
@@ -105,9 +105,9 @@ router.post('/getUnreadMess',urlencodedParser,(req,res)=>{
 		Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 			LIB.check(detail[0],'get unread messages of people: ');
 			var mf = detail[0].mess[data.get_uid];
-			while(unrN){
+			while(unrN&&mf){
 				mess.unshift(mf.pop());
-				unrN = unrN-1;
+				unrN -= 1;
 			}
 			res.send(mess);
 		})
