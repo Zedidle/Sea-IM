@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 	<meta charset="UTF-8">
-	<title>登录成功</title>
+	<title>Seanet-Chat</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
@@ -70,8 +70,11 @@
 	<div class="getMoreMessageOnFrame_btn" v-on:click='getMoreMessageOnFrame'>Get More Message</div>
     <div id='messageframe_cont' class='messageframe_cont'>
     </div>
+    <div v-show='expressionSeen' class='messageframe_expression'></div> 
     <div class='messageframe_say'>
-      <div class='messageframe_face'></div>
+      <div class='messageframe_face' v-on:click='showExpressions'>
+      	<span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> 
+      </div>
       <input id='messageframe_input' v-on:keyup.13='sendMessage'></input>
       <button v-on:click='sendMessage' class='messageframe_subm'>
         <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>

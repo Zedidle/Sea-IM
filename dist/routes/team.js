@@ -1,5 +1,4 @@
 const LIB = require('./lib');
-const assert = require('assert');
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path');

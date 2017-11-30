@@ -266,6 +266,7 @@ var main = new Vue({
                   this.type==='star'?'60':'100';
           return { height:h+'px',overflow:'hidden', };
         },
+
         //just judge whether the li have the level of team
         avator_w:function(havelevel){
           var w,b_radius;
@@ -280,6 +281,7 @@ var main = new Vue({
           }        
           return { width:w+'px', borderRadius:b_radius+'%',};
         },
+
         subUnread:function(unread_badge,uid,li_uid,haslevel){
           //sub the unread_badge in messli
           unread_badge.innerText = '';
@@ -296,14 +298,13 @@ var main = new Vue({
           });
         },
 
-        //当某个messli被点击之后，打开messageframe并获得未读信息
+        //when a messli be clicked, open the messageframe and get unread messages.
         show_messageFrame:function(event,li_uid,haslevel){
           main.moreinfoSeen = false;
           var e = $(event.target);
           var unread_badge = e.find('.badge')[0]||e.parents('li').find('.name span.badge')[0];
           var unreadNumber = parseInt(unread_badge.innerText);
           this.subUnread(unread_badge,uid,li_uid,haslevel);
-          //this.type is the prop
           main.messtype=this.type;
           if(haslevel){ main.messtype='team'; }
           main.isteam = (main.messtype==='team')?true:false;
@@ -316,6 +317,17 @@ var main = new Vue({
       },
     },
   },
+
+
+
+
+
+
+
+
+
+
+//Functions of the main chatting page. 
 
     
   el:'#main',
@@ -340,6 +352,7 @@ var main = new Vue({
     messto:'',
     nameOfmessageframe:'',
     messageframeSeen:false,
+    expressionSeen:false,
     isMessageListSeen:{
       recent:true,
       star:false,
@@ -542,6 +555,31 @@ var main = new Vue({
       }
     },
 
+    showExpressions:function(){
+      this.expressionSeen = !this.expressionSeen;
+
+        var faces = document.getElementsByClassName('messageframe_expression')[0];
+        faces.innerHTML = '';
+       
+        for(var i=0;i<50;i++){
+          var d = document.createElement('div');
+          d.style.backgroundPosition = 'left -'+i*30+'px';    
+          d.style.backgroundImage = 'url(img/faces.png)'; 
+          d.value = i;
+          d.onclick = faceChange;
+          faces.appendChild(d);
+        }
+        
+        function faceChange(){
+          var t = this.value;
+          main.expressionSeen = false;
+          var input = document.getElementById('messageframe_input');
+          var end = input.selectionEnd;
+          var iv = input.value;
+          input.value = iv.substr(0,end) + "#("+t+")" + iv.substr(end,iv.length);
+        } 
+    },
+
     //when user send any message, run this function,
     sendMessage:function(){
       var v = $('#messageframe_input').val().trim();
@@ -558,7 +596,7 @@ var main = new Vue({
       }
     },
 
-    //when the X of the top of left of the massageframe be clicked, run this function,
+    //when the < of the top of left of the massageframe be clicked, run this function,
     messageframe_close:function(){
       this.messageframeSeen=false;
       this.messtype='';
