@@ -98,7 +98,7 @@ router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 		for(var teamid of teamIds){
 			if(teamid===data.uid){ j = true; break; }
 		}
-		var page_ejs = j?'tipDealWithTeam.ejs':'buildTeam.ejs';
+		var page_ejs = j?'tipDealWithTeam.ejs':'buildteam.ejs';
 		res.render(''+page_ejs,{ uid:data.uid });
 	})
 })

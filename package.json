@@ -4,7 +4,7 @@
   "description": "Chatting Web project",
   "author": "ZFC<476409251@qq.com>",
   "private": true,
-  // "scripts": {
+    // "scripts": {
   //   "start":"node dist/app.js",
   //   "sup": "supervisor dist/app.js",
   //   "pm2":"pm2 start dist/app.js",
@@ -48,5 +48,4 @@
     "node": ">= 6.11.4",
     "npm": ">= 3.10.10"
   },
-  "license": "ISC"
 }

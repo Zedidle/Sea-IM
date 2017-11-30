@@ -21,7 +21,6 @@
 }
 .li_type{
 	display: none;
-	
 	visibility: hidden;
 }
 body{
@@ -33,7 +32,6 @@ body{
 .container{
 	background-color:#fbfcdd;
 	padding:0 5px;
-	margin:20px auto;
 	width: auto;
 	border:solid 10px #70C1B9;
 	border-left: none;
@@ -44,7 +42,6 @@ body{
 		width:100%;
 	}
 }
-
 
 .ele{
 	width:40px;
@@ -495,22 +492,21 @@ body{
 
 
 .messageframe{
+	background-color:#FBFCFD;
 	border:solid 2px #70C1B9;
 	border-radius: 10px;
 	overflow: hidden;
 	display: inline-block;
 	position:absolute;
 	z-index: 1000;
-	top: 65px;
 	left: 350px;
 	width:700px;
-	height:550px;
+	height:100%;
 	box-shadow: 0px 0px 5px #70C1B9;
 	@media (max-width:600px){
 		position: fixed;
 		top: 0px; left:0px;
-		width:100%; height: 100%;
-		background: rgba(240,240,240,0.9);
+		width:100%;
 	}
 	.moreinfo{
 		width: 280px;
@@ -655,20 +651,12 @@ body{
 			}
 		}
 		}
-
-	.messageframe_cont{
-		background-color:#FBFCFD;
+	#messageframe_cont{
 		width:100%;
-		height:470px;
+		height:90%;
 		overflow-y:scroll; 
 		font-size:1.2em;
-		@media (max-width:600px){
-			padding-top:25px;
-			height:450px;
-		}
-	}
-
-	#messageframe_cont{
+		padding-top:25px;
 		.messli{
 			padding:0.2em;
 			margin-bottom:0.4em;
@@ -708,14 +696,14 @@ body{
 		overflow: hidden;
 		border:solid 2px #70C1B9;
 		display: block;
-		height:37px;
+		height:30px;
 		color:#fff;
+		position:absolute;
+		bottom:0;
+		width:100%;
 		background: transparent;
-		border-bottom-left-radius: 10px;
-		border-bottom-right-radius: 10px;
-		#media (max-width:600px){
-			height:30px;
-		}
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 4px;
 		.messageframe_face{
 			color: #fff;
 			background-color:#70C1B9;

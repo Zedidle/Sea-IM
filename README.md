@@ -67,32 +67,26 @@ const io = require('socket.io')(server);
 io.on('connection', function(socket){
 
     socket.on('heartbeat',function(uid){
-        User.update({uid},{$set:{login:true}},err=>{ 
-            console.log(uid + ' login'); 
-        });
+        User.update({uid},{$set:{login:true}},err=>{});
         setTimeout(function(){
-            User.update({uid},{$set:{login:false}},err=>{ 
-                console.log(uid + ' logout'); 
-            });
+            User.update({uid},{$set:{login:false}},err=>{});
         },19000);
     });
 
     socket.on('chat',function(J_msg){
         var msg = JSON.parse(J_msg);
-        LIB.check(msg,'chat the message:');
         People.find({uid:msg.from},null,{limit:1},(err,detail)=>{
-        var m = {
-            uid:msg.from,
-            to:msg.to,
-            type:msg.type,
-            headImg:detail[0].headImg,
-            name:detail[0].name,
-            time:msg.time,
-            content:msg.content,
-            introduce:detail[0].introduce,
-        },
+          var m = {
+              uid:msg.from,
+              to:msg.to,
+              type:msg.type,
+              headImg:detail[0].headImg,
+              name:detail[0].name,
+              time:msg.time,
+              content:msg.content,
+              introduce:detail[0].introduce,
+          },
         J_m = JSON.stringify(m);
-
         if(msg.type!=='team'){
             User.find({uid:msg.to}, 'login', { limit: 1 }, (err,detail)=>{
                 if(detail[0].login){
@@ -105,7 +99,6 @@ io.on('connection', function(socket){
                         }
                         punRead[msg.from] = punRead[msg.from] + 1;
                         Unread.update({uid:msg.to},{$set:{punRead}},(err)=>{
-                            console.log('Make (user)'+msg.to+ ' unread of (user)'+msg.from+' +1 !');
                         });
                     })
                 }
