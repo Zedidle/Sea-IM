@@ -12,6 +12,28 @@ const Loginlist = require('./mongoModel/loginlist');
 const Message = require('./mongoModel/message');
 const Tmessage = require('./mongoModel/tmessage');
 
+
+User.remove({},err=>{
+Unread.remove({},err=>{
+People.remove({},err=>{
+Loginlist.remove({},err=>{
+Team.remove({},err=>{
+Message.remove({},err=>{
+Tmessage.remove({},err=>{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 for(let i = 0; i<10; i++){
 	let hash = crypto.createHash('sha1');
 	hash.update('123456789')
@@ -201,3 +223,18 @@ for(let i = 0; i<10; i++){
     });
     team1.save();
     tmessage1.save();
+
+
+
+
+
+
+console.log('finish to initial db');
+
+});
+});
+});
+});
+});
+});
+});

@@ -585,6 +585,11 @@ var main = new Vue({
 });
 
 //listen the port of the user,
-socket.on(uid,function(J_msg){ main.messageCome(JSON.parse(J_msg)); });
+socket.on(uid,function(J_msg){ 
+  main.messageCome(JSON.parse(J_msg)); 
+});
 
-setInterval(function(){ socket.emit('loginjudge',uid); },10000);
+//every 10 seconds to send a heartbeat package , keep on line;
+setInterval(function(){
+  socket.emit('heartbeat',uid); 
+},10000);

@@ -1,8 +1,15 @@
 {
-  "name": "rl",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "name": "seanet",
+  "version": "0.9.8.6",
+  "description": "Chatting Web project",
+  "author": "ZFC<476409251@qq.com>",
+  "private": true,
+  // "scripts": {
+  //   "start":"node dist/app.js",
+  //   "sup": "supervisor dist/app.js",
+  //   "pm2":"pm2 start dist/app.js",
+  //   "test": "echo \"Error: no test specified\" && exit 1"
+  // },
   "dependencies": {
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
@@ -22,7 +29,6 @@
     "socket.io": "^2.0.3"
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-cache": "^0.4.6",
     "gulp-clean": "^0.3.2",
@@ -38,10 +44,9 @@
     "jshint": "^2.9.5",
     "rename": "^1.0.4"
   },
-  "scripts": {
-    "start": "supervisor app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "engines": {
+    "node": ">= 6.11.4",
+    "npm": ">= 3.10.10"
   },
-  "author": "",
   "license": "ISC"
 }

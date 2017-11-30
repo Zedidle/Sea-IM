@@ -1,4 +1,3 @@
-const babel = require('babel-core');
 const fs = require('fs');
 const express = require('express');
 const app = express();
@@ -28,7 +27,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 User.update({},{$set:{login:false}},{multi:true},(err)=>{ console.log("All user logout!");})
 
 io.on('connection', function(socket){
-  socket.on('loginjudge',function(uid){
+
+//receive the heartbeat package ,and keep the user on line;
+  socket.on('heartbeat',function(uid){
     User.update({uid},{$set:{login:true}},err=>{ console.log(uid + ' login'); });
     setTimeout(function(){
       User.update({uid},{$set:{login:false}},err=>{ console.log(uid + ' logout'); });
@@ -80,7 +81,7 @@ socket.on('chat',function(J_msg){
 
       io.emit(msg.from,J_m);
 
-      //为msg.from和msg.to添加消息
+      //add the message to the receiver and sender.
       Message.find({uid:msg.to},null,{limit:1},(err,detail)=>{
         let mess = detail[0].mess;
         if(!mess[msg.from]){ mess[msg.from]=[]; }
@@ -101,7 +102,7 @@ socket.on('chat',function(J_msg){
       Loginlist.update({uid:msg.to},{$addToSet:{recent_people:msg.from}},{multi:false},(err)=>{});
 
   }else{
-    //如果这个消息是来自某个团队
+    //if this message is come from a team.
       Team.find({uid:msg.to},'member',(err,detail)=>{
         LIB.check(detail[0],'Chat_Team');
         var members = detail[0].member;
