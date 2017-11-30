@@ -1,20 +1,19 @@
 <h1>Sea Net</h1>
-
-<h3>Web site: 39.108.154.125</h3>
-<h3>Accounts for test:z00000,z00001,...z00009 ; password: '123456789';</h3>
+Website: 39.108.154.125
+<p>Accounts:z00000,z00001,z00002,...z00009 ; password: '123456789';</p>
 
 <br>
 
-<h3>Download:</h3>
+<h3>Download</h3>
 git clone https://github.com/DoubleCG/seanet.git
 
-<h3>Test or start the system</h3>
-<pre> 
-cd seanet/dist
+<h4>TEST</h4>
+<pre> cd seanet/dist
 supervisor app
 </pre>
 
-<h3>Stack of technique:</h3>
+<br>
+<h3><b>technical stack</b></h3>
 <h4>Vue2.0：build the front page.</h4>
 <h4>Socket.io：transport messages in true time.</h4>
 <h4>Express</h4>
@@ -32,36 +31,36 @@ supervisor app
 
 <br>
 
-<h2>The function of files: </h2>
+<h2>The Models's Function</h2>
 
 <h3>seanet/dev/app.js</h2>
-<h4>1. the transport to receive and send all messages</h4>
-<h4>2. the begining enter of the system. In the file "seanet/dist" , you can execute the command like "supervisor app" to start the system.</h3>
+<p>1. the transport to receive and send all messages</p>
+<p>2. the begining enter of the system. In the file "seanet/dist" , you can execute the command like "supervisor app" to start the system.</p>
 
 <br>
 
-<h3>seanet/dev/clearlogin.js (just for developer) : set login's status of all users to logout</h3>
-<h3>seanet/dev/ini.js (just for developer): initial all data in DB, and set new data for test.
+<h3>seanet/dev/clearlogin.js (developer)</h3>
+set login's status of all users to logout
+<h3>seanet/dev/ini.js (developer)</h3>
+initial data in database, and set new data for test.
 Create the account z00000,z00001...z00009, the password is all '123456789'.
-</h3>
 
 <br>
-<h2>seanet/gulpfile.js</h2>
-<h3>In the file "seanet", execute command "gulp" , it will create a file "dist" base on file "dev". File "dist" is the normal file should be executed.</h3>
+<h3>seanet/gulpfile.js</h3>
+<p>In the file "seanet", execute command "gulp" , it will create a file "dist" base on file "dev". File "dist" is the normal file should be executed.</p>
 <pre>
-    cd seanet/dist
-    pm2 start app.js    
+cd seanet/dist
+pm2 start app.js    
 </pre>
 
+<br>
 
-<h3>Segments of the Server code: </h3>
-<h3><b> Socket.io </b></h3>
+<h3>Segments of the server code: </h3>
+<h4>Socket.io</h4>
 服务端(Express):
-
-<h3>javascript</h3>
-// Server (seanet/dev/app.js)
+<h4>javascript</h4>
+Server (seanet/dev/app.js)
 <pre>
-
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
@@ -94,18 +93,12 @@ socket.on('chat',function(J_msg){
 
     if(msg.type!=='team'){
 
-// judge if the receiver is online, 
-// if the recevier is outline, make the unreadnumber +1.
-// this part has the limit that it can not use session, 
-// so I use db to record login status of the user,
     User.find({uid:msg.to}, 'login', { limit: 1 }, (err,detail)=>{
       if(detail[0].login){
-        //If the receiver is logining.
         console.log('(user)'+msg.from+' send a message to (user)'+msg.to);
         io.emit(msg.to,J_m);
       }else{
         Unread.find({uid:msg.to},'punRead',{limit:1},(err,detail)=>{
-          //Get the unread number of message and make it +1, 
           var punRead = detail[0].punRead;
           LIB.check(punRead,'(1)(user)'+msg.to+' punread:');
           if(!punRead[msg.from]){ punRead[msg.from] = 0; }
@@ -118,9 +111,8 @@ socket.on('chat',function(J_msg){
       }
     })
 
-      io.emit(msg.from,J_m);
+    io.emit(msg.from,J_m);
 
-      //为msg.from和msg.to添加消息
       Message.find({uid:msg.to},null,{limit:1},(err,detail)=>{
         let mess = detail[0].mess;
         if(!mess[msg.from]){ mess[msg.from]=[]; }
@@ -134,21 +126,15 @@ socket.on('chat',function(J_msg){
         Message.update({uid:msg.from},{$set:{mess}},(err)=>{})
       });
 
-      //make loginlist.recent_people of msg.from addToSet msg.to,
-      //the third argument of update is used to decide whether update all contents that is meeting the condition,
       Loginlist.update({uid:msg.from},{$addToSet:{recent_people:msg.to}},{multi:false},(err)=>{});
-      //make loginlist.recent_people of msg.to addToSet msg.from,
       Loginlist.update({uid:msg.to},{$addToSet:{recent_people:msg.from}},{multi:false},(err)=>{});
 
   }else{
-    //如果这个消息是来自某个团队
       Team.find({uid:msg.to},'member',(err,detail)=>{
         LIB.check(detail[0],'Chat_Team');
         var members = detail[0].member;
         var tm = m;
-        //msg.to is the uid of the team,
         tm.uid = msg.to;
-        //msg.from is the person who said the message,
         tm.from_user = msg.from;
         LIB.check(tm,'messages of the team:');
         teamBroadcast(members,tm);
@@ -160,28 +146,16 @@ socket.on('chat',function(J_msg){
 });
 </pre>
 客户端：
-
-```javascript
-// Client
-<script src="http://localhost:3000/socket.io/socket.io.js"></script>
-<script>
-  const socket = io.connect('http://localhost:3000')
-  socket.on('news', (data)=>{
-    socket.emit('my other event', { my: 'data' })
-  })
-</script>
-
+<p>javascript</p>
+seanet/dev/views/main.ejs
 <pre>
-// seanet/dev/views/main.ejs
 <script src="/socket.io/socket.io.js"></script>
 <script>var socket = io();</script>
 <script src='js/main.js'></script>
-
-
-
-// seanet/dev/js/main.js
-
-//when user send any message, run this function,
+</pre>
+<br>
+seanet/dev/js/main.js
+<pre>
     sendMessage:function(){
       var v = $('#messageframe_input').val().trim();
       if(v.length){
@@ -197,16 +171,16 @@ socket.on('chat',function(J_msg){
       }
     },
 
-//listen the port of the user,
 socket.on(uid,function(J_msg){ 
   main.messageCome(JSON.parse(J_msg)); 
 });
 
-//every 10 seconds to send a heartbeat package , keep on line;
 setInterval(function(){
   socket.emit('heartbeat',uid); 
 },10000);
 </pre>
+
+<br>
 
 socket.io最核心的两个api就是`emit` 和 `on`了 ，服务端和客户端都有这两个api。通过 `emit` 和 `on`可以实现服务器与客户端之间的双向通信。
 
@@ -233,24 +207,6 @@ socket.io最核心的两个api就是`emit` 和 `on`了 ，服务端和客户端�
 `socket.emit()`：向服务端发送消息
 
 `socket.on()`：监听服务端发来的信息
-
-
-## FAQ
-
-若使用的过程中遇到问题，可以加官方群交流：611212696。
-
-如果觉得不错，就毫不吝啬地给个star吧。后期项目还会继续更新和完善。
-
-
-
-
-
-
-
-
-
-
-
 
 
 
