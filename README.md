@@ -64,85 +64,87 @@ Server (seanet/dev/app.js)
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
-
 io.on('connection', function(socket){
 
-  socket.on('heartbeat',function(uid){
-    User.update({uid},{$set:{login:true}},err=>{ console.log(uid + ' login'); });
-    setTimeout(function(){
-      User.update({uid},{$set:{login:false}},err=>{ console.log(uid + ' logout'); });
-    },19000);
+    socket.on('heartbeat',function(uid){
+        User.update({uid},{$set:{login:true}},err=>{ 
+            console.log(uid + ' login'); 
+        });
+        setTimeout(function(){
+            User.update({uid},{$set:{login:false}},err=>{ 
+                console.log(uid + ' logout'); 
+            });
+        },19000);
+    });
+
+    socket.on('chat',function(J_msg){
+        var msg = JSON.parse(J_msg);
+        LIB.check(msg,'chat the message:');
+        People.find({uid:msg.from},null,{limit:1},(err,detail)=>{
+        var m = {
+            uid:msg.from,
+            to:msg.to,
+            type:msg.type,
+            headImg:detail[0].headImg,
+            name:detail[0].name,
+            time:msg.time,
+            content:msg.content,
+            introduce:detail[0].introduce,
+        },
+        J_m = JSON.stringify(m);
+
+        if(msg.type!=='team'){
+            User.find({uid:msg.to}, 'login', { limit: 1 }, (err,detail)=>{
+                if(detail[0].login){
+                    io.emit(msg.to,J_m);
+                }else{
+                    Unread.find({uid:msg.to},'punRead',{limit:1},(err,detail)=>{
+                        var punRead = detail[0].punRead;
+                        if(!punRead[msg.from]){ 
+                            punRead[msg.from] = 0; 
+                        }
+                        punRead[msg.from] = punRead[msg.from] + 1;
+                        Unread.update({uid:msg.to},{$set:{punRead}},(err)=>{
+                            console.log('Make (user)'+msg.to+ ' unread of (user)'+msg.from+' +1 !');
+                        });
+                    })
+                }
+            })
+
+            io.emit(msg.from,J_m);
+
+            Message.find({uid:msg.to},null,{limit:1},(err,detail)=>{
+                let mess = detail[0].mess;
+                if(!mess[msg.from]){ 
+                    mess[msg.from]=[]; 
+                }
+                mess[msg.from].push(m);
+                Message.update({uid:msg.to},{$set:{mess}},(err)=>{})
+            })
+            Message.find({uid:msg.from},null,{limit:1},(err,detail)=>{
+                let mess = detail[0].mess;
+                if(!mess[msg.to]){ 
+                    mess[msg.to]=[]; 
+                }
+                mess[msg.to].push(m);
+                Message.update({uid:msg.from},{$set:{mess}},(err)=>{})
+            });
+
+            Loginlist.update({uid:msg.from},{$addToSet:{recent_people:msg.to}},{multi:false},(err)=>{});
+            Loginlist.update({uid:msg.to},{$addToSet:{recent_people:msg.from}},{multi:false},(err)=>{});
+        
+        }else{
+            Team.find({uid:msg.to},'member',(err,detail)=>{
+                var members = detail[0].member;
+                var tm = m;
+                tm.uid = msg.to;
+                tm.from_user = msg.from;
+                teamBroadcast(members,tm);
+                Tmessage.update({uid:msg.to},{$push:{mess:tm}},(err)=>{});
+            })
+        }
+    });
   });
-
-socket.on('chat',function(J_msg){
-  var msg = JSON.parse(J_msg);
-  LIB.check(msg,'chat the message:');
-
-  People.find({uid:msg.from},null,{limit:1},(err,detail)=>{
-      var m = {
-        uid:msg.from,
-        to:msg.to,
-        type:msg.type,
-        headImg:detail[0].headImg,
-        name:detail[0].name,
-        time:msg.time,
-        content:msg.content,
-        introduce:detail[0].introduce,
-      },
-      J_m = JSON.stringify(m);
-
-    if(msg.type!=='team'){
-
-    User.find({uid:msg.to}, 'login', { limit: 1 }, (err,detail)=>{
-      if(detail[0].login){
-        console.log('(user)'+msg.from+' send a message to (user)'+msg.to);
-        io.emit(msg.to,J_m);
-      }else{
-        Unread.find({uid:msg.to},'punRead',{limit:1},(err,detail)=>{
-          var punRead = detail[0].punRead;
-          LIB.check(punRead,'(1)(user)'+msg.to+' punread:');
-          if(!punRead[msg.from]){ punRead[msg.from] = 0; }
-          punRead[msg.from] = punRead[msg.from] + 1;
-          LIB.check(punRead,'(2)(user)'+msg.to+' punread:');
-          Unread.update({uid:msg.to},{$set:{punRead}},(err)=>{
-            console.log('Make (user)'+msg.to+ ' unread of (user)'+msg.from+' +1 !');
-          });
-        })
-      }
-    })
-
-    io.emit(msg.from,J_m);
-
-      Message.find({uid:msg.to},null,{limit:1},(err,detail)=>{
-        let mess = detail[0].mess;
-        if(!mess[msg.from]){ mess[msg.from]=[]; }
-        mess[msg.from].push(m);
-        Message.update({uid:msg.to},{$set:{mess}},(err)=>{})
-      })
-      Message.find({uid:msg.from},null,{limit:1},(err,detail)=>{
-        let mess = detail[0].mess;
-        if(!mess[msg.to]){ mess[msg.to]=[]; }
-        mess[msg.to].push(m);
-        Message.update({uid:msg.from},{$set:{mess}},(err)=>{})
-      });
-
-      Loginlist.update({uid:msg.from},{$addToSet:{recent_people:msg.to}},{multi:false},(err)=>{});
-      Loginlist.update({uid:msg.to},{$addToSet:{recent_people:msg.from}},{multi:false},(err)=>{});
-
-  }else{
-      Team.find({uid:msg.to},'member',(err,detail)=>{
-        LIB.check(detail[0],'Chat_Team');
-        var members = detail[0].member;
-        var tm = m;
-        tm.uid = msg.to;
-        tm.from_user = msg.from;
-        LIB.check(tm,'messages of the team:');
-        teamBroadcast(members,tm);
-        Tmessage.update({uid:msg.to},{$push:{mess:tm}},(err)=>{});
-      })
-    }
-});
-});
 });
 </pre>
 客户端：
