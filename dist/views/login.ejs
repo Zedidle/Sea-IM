@@ -21,9 +21,11 @@
         border-radius:0.5em; 
         overflow: hidden;
         margin:10% auto;
-        height:348px;
-        width: 830px;
-        background: url(img/haitun.png);
+        width: 700px;
+        height: 300px;;
+        background-image:url(img/haitun.png);
+        background-size: 700px 300px;
+        background-repeat: no-repeat;
     }
 
     #loginForm{
@@ -31,9 +33,9 @@
         box-shadow: 0 0 3px #fff;
         border-radius: 0.5em;
         display: block;
-        margin:20px auto 40px auto;
+        margin:5px auto 40px auto;
         background: rgba(250,250,250,0.4);
-        padding:10px;
+        padding:5px;
         max-width:400px;
     }
 
@@ -48,13 +50,6 @@
             width:100%;
             visibility: visible;
         }
-    }
-    h1{
-        text-align: center;
-    }
-    h1 img{
-        width:100%;
-        height:50%;
     }
     #tipinfo{
         text-align: center;
@@ -91,8 +86,9 @@
 h1{
     font:52px "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
     color:#fff;
+    text-align: center;
+    margin:0; padding:0;
 }
-
 
 .mw90{
     min-width: 90px;
@@ -102,7 +98,7 @@ h1{
 <body>
 
 <div class="container" id='login'>
-<h1 style='margin:0;'>Sea Net</h1>
+<h1>Sea Net</h1>
     <form id='loginForm' class="bs-example bs-example-form"  role="form" action="/" method="post">
         <h4 id='tipinfo'><%=tipInfo%></h4>
         <div class="input-group">

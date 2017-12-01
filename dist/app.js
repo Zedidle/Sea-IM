@@ -15,11 +15,18 @@ const People = require('./mongoModel/people');
 const Team = require('./mongoModel/team');
 const Loginlist = require('./mongoModel/loginlist');
 
+User.update({},{$set:{login:false}},{multi:true},(err)=>{ console.log("All user logout!");})
 
 //设置公共静态路由
 app.use(express.static(path.join(__dirname, 'public')));
 
-User.update({},{$set:{login:false}},{multi:true},(err)=>{ console.log("All user logout!");})
+app.get('*', function(req, res){
+    res.render('404.ejs', {})
+});
+
+
+
+
 
 io.on('connection', function(socket){
 

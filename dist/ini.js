@@ -23,17 +23,6 @@ Tmessage.remove({},err=>{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 for(let i = 0; i<10; i++){
 	let hash = crypto.createHash('sha1');
 	hash.update('123456789')

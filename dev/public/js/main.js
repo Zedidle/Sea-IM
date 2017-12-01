@@ -65,7 +65,7 @@ var main = new Vue({
         toggleDomore:function(){
           var dp = $('#domore').__proto__;
           if(dp.j===undefined){ dp.j = false; };
-          $('#domore').css('width',(dp.j?'0':'60')+'px');
+          $('#domore').css('width',(dp.j?'0':'70')+'px');
           dp.j = !dp.j;
         },
       },

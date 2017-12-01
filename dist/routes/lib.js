@@ -1,15 +1,15 @@
 //made by ZFC, 2017.11.27
 
-function check(object,n){
+function check(obj,n){
 	console.log('');
 	console.log('Check:'+n||'');
-	console.log('Content:'+object);
-	console.log('   Type:'+ typeof object);
-	if(Array.isArray(object)){
-		console.log('It is array,length is '+object.length);
+	console.log('Content:'+ obj);
+	console.log('   Type:'+ typeof obj);
+	if(Array.isArray(obj)){
+		console.log('It is array,length is '+obj.length);
 	}
-	if(typeof(object) === 'string'){
-		console.log(' Length:' + object.length);
+	if(typeof(obj) === 'string'){
+		console.log(' Length:' + obj.length);
 	}
 	console.log('');
 }

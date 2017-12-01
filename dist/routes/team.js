@@ -24,7 +24,7 @@ const router = express.Router();
 router.post('/myteam',urlencodedParser,(req,res)=>{
 	var data = req.body;
 	LIB.userFakeLogout(User,data.uid);
-	LIB.check(data,'myteam');
+	// LIB.check(data,'myteam');
 
 	//set the variable to recored,
 	var teamids = [],teaminfo = [];
@@ -88,7 +88,7 @@ router.post('/teamsT',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g79,
 router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	LIB.check(data,'deal with team:');
+	// LIB.check(data,'deal with team:');
 	//get the teams the user has joined in,
 	Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 		var teamIds = detail[0].team; 
@@ -107,7 +107,7 @@ router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 router.post('/successB',urlencodedParser,(req,res)=>{
 	var data = req.body;
 
-	LIB.check(data,'success to build a team:')
+	// LIB.check(data,'success to build a team:')
 
 	var team = new Team({
 		headImg:'/img/defaultHead.jpg',
