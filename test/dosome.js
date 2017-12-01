@@ -1,3 +1,24 @@
+var av;
+var n = 10;
+while(av = n--){
+	console.log(av);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function $(o){
 	var $ = new Object;
 	$.value = o;

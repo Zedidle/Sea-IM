@@ -28,6 +28,9 @@
         background: rgba(255,255,255,0.3);
         padding:10px;
     }
+    #registForm input{
+        height:40px;
+    }
     .container{
         padding-top:10%;
         max-width:400px;
@@ -53,9 +56,9 @@
     <div id='tip'></div>
     <div class="input-group">
         <span class="mw100 input-group-addon">
-        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
         用户名</span>
-        <input  v-on:focus='uid'  type="text" class="form-control" name="uid" id="uid" placeholder="用户名">
+        <input  v-on:focus='uid' type="text" class="form-control" name="uid" id="uid" placeholder="用户名">
     </div>
     <div><%= tipuid%></div>
     <br>

@@ -1,3 +1,17 @@
+function check(object,n){
+  console.log('');
+  console.log('Check:'+n||'');
+  console.log('Content:'+object);
+  console.log('   Type:'+ typeof object);
+  if(Array.isArray(object)){
+    console.log('It is array,length is '+object.length);
+  }
+  if(typeof(object) === 'string'){
+    console.log(' Length:' + object.length);
+  }
+  console.log('');
+}
+
 function getTime(){
   var time = new Date();
   return time.getHours()+':'+time.getMinutes();
