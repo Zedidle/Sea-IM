@@ -1,8 +1,9 @@
-var mongoose = require("mongoose");mongoose.Promise = global.Promise;  
-mongoose.connect('mongodb://localhost/test',{useMongoClient:true});
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 //骨架模版
 var peopleSchema = new Schema({
+	createTime: { type: Date, default: Date.now, index: true },
+    updateTime: { type: Date, default: Date.now },
 	uid:String,
 	headImg:String,
     name : String,

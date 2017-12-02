@@ -1,57 +1,8 @@
-Vue.component('head-form',{
-      props:['uid'],
-      template:`
-      <form action="/teamsI" id='teamHeadForm' method='post' enctype='multipart/form-data'>
-        <p>更新头像:</p>
-        <input type="file" name='avator' class="btn btn-default" id='avator'>
-        <button id='headUpdate' v-on:click='headUpdate' class="btn btn-success">保存头像</button>
-      </form>
-      `,
-      data:function(){
-        return {
-        }
-      },
-      methods:{
-        headUpdate:function(){
-          var avator = $('#avator').val();
-          if(!avator.length){
-            $('#avator').css('border','solid 1px #449933'); return false;
-          }else{
-            var input = document.createElement('input');
-            input.style.display = 'none';
-            input.name = 'uid';
-            input.value = this.uid;
-            var teamHeadForm = $('#teamHeadForm');
-            teamHeadForm.append(input);
-            teamHeadForm.submit();
-          }
-        },
-      }
-})
+const uid = document.getElementById('getuid').value;
 
 
 var teams = new Vue({
   components:{
-    'back-botton':{
-      props:['uid'],
-      template:`  
-      <div class="row">
-        <div class="col-md-12">
-          <button style='float:right;margin:5px;' v-on:click='back' class="btn btn-default">返回主页</button>
-        </div>
-      </div>`,
-      data:function(){
-        return {
-          uidEnsure:{uid : this.uid},
-
-        }
-      },
-      methods:{
-        back:function(){
-          formPost('/main',this.uidEnsure);
-        }
-      }
-    },
 
      'text-info':{
       props:['uid','name','level','membernumber','introduce'],
@@ -96,6 +47,32 @@ var teams = new Vue({
   methods:{
     showTeamHeadform:function(){
       $('#teamHeadForm').css('display','block');
+    },
+    headUpdate:function(){
+      var avator = $('#avator').val();
+      if(!avator.length){
+        $('#avator').css('border','solid 1px #449933'); return false;
+      }else{
+        var input = document.createElement('input');
+        input.style.display = 'none';
+        input.name = 'uid';
+        input.value = this.uid;
+        var teamHeadForm = $('#teamHeadForm');
+        teamHeadForm.append(input);
+        teamHeadForm.submit();
+      }
+    },
+    showImg:function(e){
+      var that = e.target;
+      var img = that.nextElementSibling;
+      var r = new FileReader();
+      r.readAsDataURL(that.files[0]);
+      r.onload = function(e){
+        img.src=this.result;
+      }
+    },
+    backToMainPage:function(){
+      formPost('/main',{uid:uid});
     }
   }
 });

@@ -81,12 +81,23 @@
 </head>
 <body>
 
+<input style='display: none;' id='getuid' value='<%=uid%>'>
+
 
 <div class='container' id='teams'>
-	<back-botton uid='<%=uid%>'></back-botton>
-	<div class="row">
-    <div class="col-md-4">
-			<head-form uid='<%=uid%>' headimg='<%=headImg%>'></head-form>
+	  <div class="row">
+      <div class="col-md-12">
+        <button style='float:right;margin:5px;' v-on:click='backToMainPage' class="btn btn-default">返回主页</button>
+      </div>
+    </div>
+		<div class="row">
+    	<div class="col-md-4">
+			 	<form action="/teamsI" id='teamHeadForm' method='post' enctype='multipart/form-data'>
+	        <p>更新头像:</p>
+	        <input type="file" name='avator' class="btn btn-default" id='avator' v-on:change='showImg'>
+					<img style='width:210px;height:210px;' />
+	        <button id='headUpdate' v-on:click='headUpdate' class="btn btn-success">保存头像</button>
+      	</form>
       <div id='headImg' v-on:click='showTeamHeadform'> <img src= <%=headImg%> /> </div>
     </div>
 		<div class="col-md-8">
@@ -95,10 +106,9 @@
 	</div>
 </div>
 	
-    <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
-    <script src='https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js'></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+<script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
+<script src='https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js'></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src='js/lib.js'></script>
 <script src='js/teams.js'></script>
 

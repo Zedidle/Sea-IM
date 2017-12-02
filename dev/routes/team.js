@@ -60,7 +60,10 @@ router.post('/teams',urlencodedParser,(req,res)=>{
 router.post('/teamsI',upload.any(),(req,res)=>{
 	var data = req.body;
 	var image = req.files[0];
-	LIB.check(data,'d_teamsI')
+	console.log(213)
+	console.log(data.uid);
+	console.log(data);
+	// LIB.check(data,'d_teamsI')
 	fs.readFile(image.path,(err,DATA)=>{
 		var headImgPath = '/img/uploads/'+image.filename+'.jpg';
 		fs.writeFile('public'+headImgPath,DATA,(err)=>{

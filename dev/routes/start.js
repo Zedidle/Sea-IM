@@ -223,7 +223,9 @@ router.post('/', urlencodedParser,(req,res)=>{
 
 router.post('/logOff',urlencodedParser,(req,res)=>{
 	var uid = req.body.uid;
-	User.update({uid},{$set:{login:false}},(err)=>{ console.log('(user)'+uid+" logoff ↓"); });
+	User.update({uid},{$set:{login:false}},(err)=>{ 
+		console.log('(user)'+uid+" logoff ↓");
+	});
 	res.render('login.ejs',{ tipInfo:'' });
 });
 

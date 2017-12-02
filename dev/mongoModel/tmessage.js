@@ -1,5 +1,4 @@
-var mongoose = require("mongoose");mongoose.Promise = global.Promise;  
-mongoose.connect('mongodb://localhost/test',{useMongoClient:true});
+var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var tmessageSchema = new Schema({

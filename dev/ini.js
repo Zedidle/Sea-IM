@@ -12,7 +12,14 @@ const Loginlist = require('./mongoModel/loginlist');
 const Message = require('./mongoModel/message');
 const Tmessage = require('./mongoModel/tmessage');
 
+mongoose.Promise = global.Promise;  
 
+mongoose.connect('mongodb://localhost/test',{useMongoClient:true},err=>{
+  if(err){
+    console.log('connect database error -->',err);
+    process.exit(1);
+  }
+});
 User.remove({},err=>{
 Unread.remove({},err=>{
 People.remove({},err=>{

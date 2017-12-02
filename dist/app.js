@@ -15,7 +15,37 @@ const People = require('./mongoModel/people');
 const Team = require('./mongoModel/team');
 const Loginlist = require('./mongoModel/loginlist');
 
-User.update({},{$set:{login:false}},{multi:true},(err)=>{ console.log("All user logout!");})
+mongoose.Promise = global.Promise;  
+
+
+mongoose.connect('mongodb://localhost/test',{useMongoClient:true},err=>{
+  if(err){
+    console.log('connect database error -->',err);
+    process.exit(1);
+  }
+});
+
+// connect database
+// mongoose.connect(env !== 'test' ? config.database : config.testDatabase, err => {
+//     if (err) {
+//         console.log('connect database error -->', err);
+//         process.exit(1);
+//     }
+//     if (env === 'test') {
+//         mongoose.connection.db.dropDatabase();
+//     }
+//     console.log('connect database success');
+//     // clear old auth record
+//     require('./model/auth').remove({}, () => {
+//         console.log('remove all old auth');
+//     });
+// });
+
+
+User.update({},{$set:{login:false}},{multi:true},(err)=>{
+  if(err) throw err;
+  console.log("All user logout!");
+})
 
 //设置公共静态路由
 app.use(express.static(path.join(__dirname, 'public')));
@@ -64,7 +94,8 @@ io.on('connection', function(socket){
         // judge if the receiver is online, 
         // if the recevier is outline, make the unreadnumber +1.
         // use database to record login status of the user,
-        User.find({uid:msg.to}, 'login', { limit: 1 }, (err,detail)=>{
+        User.find({uid:msg.to}, null, { limit: 1 }, (err,detail)=>{
+          LIB.check(detail[0],'To:');
           if(detail[0].login){
             //if the receiver is logining.
             io.emit(msg.to,J_m);
