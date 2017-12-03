@@ -349,6 +349,7 @@ var main = new Vue({
     loginlist:loginlist,
     messtype:'',
     messto:'',
+    messgetTimes:0,
     nameOfmessageframe:'',
     messageframeSeen:false,
     expressionSeen:false,
@@ -371,7 +372,23 @@ var main = new Vue({
       this.moreinfoSeen=true;
     },
     getMoreMessageOnFrame:function(){
+      var data = {
+        receive_uid:uid,
+        from_uid:main.messto,
+        type:main.messtype,
+        getTimes:main.messgetTimes
+      }
+      postChange('/getmess',data,function(res){
+        console.log('response:');
+        console.log(res);
+        for(let i of res){
+          main.gotMessCreateMessDiv(i);
+        }
+        main.messgetTimes += 1;
+        console.log('Get Message times:'+ main.messgetTimes);
+      })
       $('#messageframe_cont').append();
+      console.log('get more messages');
     },
     addUnReadInDB:function(msg_type,msg_uid,msg_to){
       var data = {
@@ -412,7 +429,36 @@ var main = new Vue({
       // if(!haveTheLiInRecent){ this.addRecentLi(msg); }; 
       this.addUnReadInDB(msg_type,msg.uid,msg.to);
     },  
-
+    gotMessCreateMessDiv:function(msg){
+      if(!msg){
+        var getMessBtn = document.getElementsByClassName('getMoreMessageOnFrame_btn')[0];
+        getMessBtn.innerText = 'No More';
+        setTimeout(function(){
+          getMessBtn.innerText = 'Get More Message';
+        },1500)
+        return false;
+      }
+      if(msg.type==='team'){
+        var f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
+      }else{
+        var f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
+      }
+      var msgContent = main.expressionsParse(msg.content);
+      console.log('msgContent:');
+      console.log(msgContent);
+      $('#messageframe_cont').prepend(`
+        <div class="messli" ${f}>
+          <div class='avator' ${f}><img src='${msg.headImg}'/></div>
+          <div class='info' ${f}>
+            <div><div class='name' ${f}>${msg.name}  ${msg.time}</div></div>
+            <div class="content" ${f}>${msgContent}</div>
+          </div>
+        </div>
+      `);
+      document.getElementById('messageframe_input').value = '';
+      var cont = document.getElementById('messageframe_cont');
+      cont.scrollTop = 0;
+    },
     //when the mess come, if messageFrame is opning, check the messtype and messto, 
     //if satisfy the condition, it will run this function to show the message.
     createMessDiv:function(msg){
@@ -421,7 +467,23 @@ var main = new Vue({
       }else{
         var f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
       }
-      var msgContent = msg.content;
+      var msgContent = main.expressionsParse(msg.content);
+      console.log('msgContent:');
+      console.log(msgContent);
+      $('#messageframe_cont').append(`
+        <div class="messli" ${f}>
+          <div class='avator' ${f}><img src='${msg.headImg}'/></div>
+          <div class='info' ${f}>
+            <div><div class='name' ${f}>${msg.name}  ${msg.time}</div></div>
+            <div class="content" ${f}>${msgContent}</div>
+          </div>
+        </div>
+      `);
+      document.getElementById('messageframe_input').value = '';
+      var cont = document.getElementById('messageframe_cont');
+      cont.scrollTop = cont.scrollHeight;
+    },
+    expressionsParse:function(msgContent){
       console.log('Before switch , the msgContent:'+ msgContent);
       while(msgContent.match(/\#\(.{1,4}\)/)){
         var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/));
@@ -434,20 +496,7 @@ var main = new Vue({
           </div>`
           )
       }
-      console.log('After switch, the msgContent: \n'+ msgContent);
-
-      $('#messageframe_cont').append(`
-        <div class="messli" ${f}>
-          <div class='avator' ${f}><img src='${msg.headImg}'/></div>
-          <div class='info' ${f}>
-            <div><div class='name' ${f}>${msg.name}  ${msg.time}</div></div>
-            <div class="content" ${f}>${msgContent}</div>
-          </div>
-        </div>
-      `);
-      $('#messageframe_input').val('');
-      var cont = document.getElementById('messageframe_cont');
-      cont.scrollTop = cont.scrollHeight;
+      return msgContent;
     },
 
     addRecentLi:function(info){
@@ -667,13 +716,14 @@ var main = new Vue({
       this.messageframeSeen=false;
       this.messtype='';
       this.messto='';
+      this.messgetTimes=0;
       document.getElementById('messageframe_cont').innerHTML = '';
       document.getElementById('messageframe_input').value = '';
     },
 
     //hide the domore model,
     hideDomore:function(){
-      document.getElmentById('domore').style.width = '0px';
+      document.getElementById('domore').style.width = '0px';
       $('#domore').__proto__.j = false;
     },
 

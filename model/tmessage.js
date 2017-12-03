@@ -5,11 +5,15 @@ var tmessageSchema = new Schema({
     uid:String,
     mess:Array,
     // var mess = [{
-    // 	uid:String,
-    //	headImg:String,
-    //  name:String,
-    // 	time:String,
-    // 	content:String,
+    //    "uid" : "z00003",
+    //    "to" : Same as the receiver,
+    //    "type" : "team",
+    //    "headImg" : "/img/uploads/9a5945c63c48bad2290a1c19c2dc0359",
+    //    "name" : "",
+    //    "time:": "",
+    //    "content": "",
+    //    "introduce": "",
+    //    "from_user" : ""  
     // },
     // ...
     // ]
