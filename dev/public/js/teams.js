@@ -51,15 +51,16 @@ var teams = new Vue({
     headUpdate:function(){
       var avator = $('#avator').val();
       if(!avator.length){
-        $('#avator').css('border','solid 1px #449933'); return false;
+        $('#avator').css('border','solid 1px #449933'); 
       }else{
-        var input = document.createElement('input');
-        input.style.display = 'none';
-        input.name = 'uid';
-        input.value = this.uid;
-        var teamHeadForm = $('#teamHeadForm');
-        teamHeadForm.append(input);
-        teamHeadForm.submit();
+        // var input = document.createElement('input');
+        // input.style.display = 'none';
+        // input.name = 'uid';
+        // input.value = this.uid;
+        // var teamHeadForm = $('#teamHeadForm');
+        // teamHeadForm.append(input);
+        // teamHeadForm.submit();
+        $('#teamHeadForm').submit();
       }
     },
     showImg:function(e){

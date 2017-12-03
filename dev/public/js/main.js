@@ -43,7 +43,7 @@ var main = new Vue({
     'user-info':{
       props:['uid','user_info'],
       template:`
-        <div v-bind:class='{userinfo_wrap:true}' id='user_info' >
+        <div v-bind:class='{userinfo_wrap:true}'>
           <div v-bind:class='{userinfo_avator:true}'><img v-bind:class='{userinfo_avator_img:true}' v-bind:src='info.headImg'></div>
           <div id='intro' v-bind:class='{userinfo_intro:true}'>
             <div id='name' >
@@ -65,7 +65,7 @@ var main = new Vue({
         toggleDomore:function(){
           var dp = $('#domore').__proto__;
           if(dp.j===undefined){ dp.j = false; };
-          $('#domore').css('width',(dp.j?'0':'70')+'px');
+          document.getElementById('domore').style.width = (dp.j?'0':'70')+'px'; 
           dp.j = !dp.j;
         },
       },
@@ -79,7 +79,6 @@ var main = new Vue({
           <div id='search' v-on:keyup.13='searchSubmit'>
             <button id='sub' v-on:click='searchSubmit'>
               <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-              查找
             </button>
           <input type="text" id='search_uid' name='search_uid' placeholder="请输入团队或用户的ID">
           <div v-bind:class='{search_close:true}' v-on:click='closeCheckInfo'>
@@ -207,7 +206,7 @@ var main = new Vue({
         },
 
         getSearchResponse:function(){
-          this.searchId = $('#search_uid').val().trim();; 
+          this.searchId = document.getElementById('search_uid').value.trim();; 
           if(!this.searchId||this.searchId===uid){ return; }
           $('#search_uid').css('width','70%');
           var J_data = JSON.stringify({ uid:this.searchId });
@@ -309,7 +308,7 @@ var main = new Vue({
           if(haslevel){ main.messtype='team'; }
           main.isteam = (main.messtype==='team')?true:false;
           main.messageframeSeen=true;
-          $('#messageframe_cont').html('');
+          document.getElementById('messageframe_cont').innerHTML = '';
           main.nameOfmessageframe = e.find('.name').text()||e.parent().find('.name').text()||e.parent().parent().find('.name').text();
           main.messto = li_uid;
           main.getUnreadMess(main.messto,unreadNumber,main.messtype);
@@ -372,7 +371,6 @@ var main = new Vue({
       this.moreinfoSeen=true;
     },
     getMoreMessageOnFrame:function(){
-      console.log('click the button and get more message');
       $('#messageframe_cont').append();
     },
     addUnReadInDB:function(msg_type,msg_uid,msg_to){
@@ -650,7 +648,7 @@ var main = new Vue({
 
     //when user send any message, run this function,
     sendMessage:function(){
-      var v = $('#messageframe_input').val().trim();
+      var v = document.getElementById('messageframe_input').value.trim();
       if(v.length){
         var msg = {
           time:getTime(),
@@ -669,22 +667,23 @@ var main = new Vue({
       this.messageframeSeen=false;
       this.messtype='';
       this.messto='';
-      $('#messageframe_cont').html('');
-      $('#messageframe_input').val('');
+      document.getElementById('messageframe_cont').innerHTML = '';
+      document.getElementById('messageframe_input').value = '';
     },
 
     //hide the domore model,
     hideDomore:function(){
-      $('#domore').css('width','0px');
+      document.getElmentById('domore').style.width = '0px';
       $('#domore').__proto__.j = false;
     },
 
     listSeen:function(event,type){
-      $('.sOption').css('background','#FCFEF4').css('color','#333');
+      $('.sOption>span').css('color','#fff');
       this.isMessageListSeen.recent=false;
       this.isMessageListSeen.star=false;
       this.isMessageListSeen.team=false;
-      $(event.target).css('color','#70C1B9').css('background','transparent');
+      var target = event.target.querySelector('span')||event.target;
+      $(target).css('color','#70C1B9');
       this.isMessageListSeen[type]=true;
     },
   },

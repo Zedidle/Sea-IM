@@ -4,9 +4,9 @@
   "author": "ZFC<476409251@qq.com>",
   "private": true,
   "scripts": {
-    "start":"node dist/app.js",
+    "start": "node dist/app.js",
     "sup": "supervisor dist/app.js",
-    "pm2":"pm2 start dist/app.js",
+    "pm2": "pm2 start dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
     "lokijs": "^1.5.0",
     "mongoose": "^4.11.0",
     "multer": "^1.3.0",
+    "pm2": "^2.8.0",
     "socket.io": "^2.0.3"
   },
   "devDependencies": {

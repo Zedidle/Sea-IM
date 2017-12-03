@@ -18,17 +18,16 @@ var people = new Vue({
           headUpdate:function(){
                var avator = $('#avator').val();
                if(avator.length){
-               var input = document.createElement('input');
-                    input.style.display = 'none';
-                    input.name = 'uid';
-                    input.value = uid;
-
-               var peopleHeadForm = $('#peopleHeadForm');
-                    peopleHeadForm.append(input);
-                    peopleHeadForm.submit();
+                    $('#peopleHeadForm').submit();
+               // var input = document.createElement('input');
+               //      input.style.display = 'none';
+               //      input.name = 'uid';
+               //      input.value = uid;
+               // var peopleHeadForm = $('#peopleHeadForm');
+               //      peopleHeadForm.append(input);
+               //      peopleHeadForm.submit();
                }else{
                     $('#avator').css('border','solid 1px #449933');
-                    return false;
                }
           },
           textUpdate:function(){

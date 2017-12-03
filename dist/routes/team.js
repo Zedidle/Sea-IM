@@ -60,21 +60,18 @@ router.post('/teams',urlencodedParser,(req,res)=>{
 router.post('/teamsI',upload.any(),(req,res)=>{
 	var data = req.body;
 	var image = req.files[0];
-	console.log(213)
-	console.log(data.uid);
-	console.log(data);
-	// LIB.check(data,'d_teamsI')
-	fs.readFile(image.path,(err,DATA)=>{
-		var headImgPath = '/img/uploads/'+image.filename+'.jpg';
-		fs.writeFile('public'+headImgPath,DATA,(err)=>{
-			Team.update({uid:data.uid},{$set:{headImg:headImgPath}},(err,a)=>{
-				Team.find({uid:data.uid},(err,detail)=>{
-					LIB.check(detail[0],'TeamsIFind');
+	var datapath = image.path;
+	var savepath = 'dist/'+image.destination+image.filename;
+	var readpath = 'img/uploads/'+image.filename;
+	fs.readFile(datapath,(err,image_data)=>{
+		fs.writeFile(savepath,image_data,(err)=>{
+			Team.update({uid:data.uid},{$set:{headImg:readpath}},err=>{
+				Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 					res.render('teams.ejs',detail[0]);
 				})
 			});
-		});	
-	});
+		})
+	})
 });
 
 

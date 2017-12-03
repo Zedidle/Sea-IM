@@ -18,28 +18,63 @@
 
     .container{
         z-index:100;
-        border-radius:0.5em; 
         overflow: hidden;
         margin:10% auto;
-        width: 700px;
-        height: 300px;;
-        background-image:url(img/haitun.png);
-        background-size: 700px 300px;
-        background-repeat: no-repeat;
-    }
+        display: flex;
+        justify-content: space-between;
+}
+#logo{
+    float: left;
+    position:relative;
+    width:393px;
+    height:232px;
+    min-width:300px;
+    min-height:180px;
+    /*margin: 0 20px 10px 0;*/
+    background-image:url(img/hait.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+}
+#logo>h1{
+    position: absolute;
+    display: inline-block;
+    width:55%;
+    height:40%;
+    bottom:0;
+    right: 0;
+    font:40px "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
+    color:#fff;
+    text-align: center;
+    margin:0; 
+    padding:0;
+}
+    @media(max-width: 960px) {
+        .container{
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
 
+    }
+    @media(max-width: 393px) {
+        #logo{
+            width:100%;
+        }
+        #logo>h1{
+            font-size:31px;
+        }
+    }
     #loginForm{
+        width:393px;
+        height:232px;
+        float: left;
         border: 2px solid #fff;
         box-shadow: 0 0 3px #fff;
-        border-radius: 0.5em;
-        display: block;
-        margin:5px auto 40px auto;
+        display:inline-block;
         background: rgba(250,250,250,0.4);
-        padding:5px;
-        max-width:400px;
+        padding:20px;
     }
-
-    @media(max-width: 450px) {
+    @media(max-width: 393px) {
         .container{
             width: 100%;
             margin-top: 20%;
@@ -48,7 +83,6 @@
         }
         #loginForm{
             width:100%;
-            visibility: visible;
         }
     }
     #tipinfo{
@@ -84,23 +118,18 @@
         width:30%;
         height:25px;
     }
-
-h1{
-    font:52px "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
-    color:#fff;
-    text-align: center;
-    margin:0; padding:0;
-}
-
 .mw90{
     min-width: 90px;
 }
+
 </style>
 </head>
 <body>
 
 <div class="container" id='login'>
-<h1>Sea Net</h1>
+    <div id="logo">
+        <h1>Sea Net</h1>
+    </div>    
     <form id='loginForm' class="bs-example bs-example-form"  role="form" action="/" method="post">
         <h4 id='tipinfo'><%=tipInfo%></h4>
         <div class="input-group">

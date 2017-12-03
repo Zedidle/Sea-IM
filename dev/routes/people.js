@@ -6,7 +6,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer({ dest: 'public/img/uploads/' });
+const upload = multer({
+	dest: 'public/img/uploads/',
+
+});
 const mongoose=require('mongoose');
 const User = require('../../model/user');
 const Unread = require('../../model/unread');
@@ -42,23 +45,27 @@ router.post('/people',urlencodedParser,(req,res)=>{
 //used by views/people.ejd g158
 //peoples images uploads
 router.post('/peopleI',upload.any(),(req,res)=>{
-	var files = req.files;
 	var data = req.body;
-	var image = files[0];
-	var filename = '/img/uploads/'+image.filename;
-	
-	People.update({uid:data.uid},{$set:{headImg:filename}},err=>{});
-	People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		var info = detail[0];
-		res.render('people.ejs',{
-			uid:info.uid,
-			headImg:filename,
-			name:info.name,
-			sex:info.sex,
-			introduce:info.introduce,
-			hobby:info.hobby,
-			birthday:info.birthday,
-		});
+	var image = req.files[0];
+	var savepath = 'dist/'+image.destination+image.filename;
+	var readpath = 'img/uploads/'+image.filename;
+	fs.readFile(image.path,(err,image_data)=>{
+		fs.writeFile(savepath,image_data,(err)=>{
+			People.update({uid:data.uid},{$set:{headImg:readpath}},err=>{
+				People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+					var info = detail[0];
+					res.render('people.ejs',{
+						uid:info.uid,
+						headImg:info.headImg,
+						name:info.name,
+						sex:info.sex,
+						introduce:info.introduce,
+						hobby:info.hobby,
+						birthday:info.birthday,
+					});
+				})
+			});
+		})
 	})
 })
 

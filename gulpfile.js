@@ -13,7 +13,7 @@ var
 
 
 gulp.task('default',['clean'],function(){
-	gulp.start( 'lib', 'public_less','public_cropper','public_js','public_img','public_voice','routes','app');
+	gulp.start( 'lib', 'public_less','public_js','public_img','public_voice','routes','app');
 })
 gulp.task('clean', function() { 
   return gulp.src(['dist'], {read: false})
@@ -36,10 +36,7 @@ gulp.task('public_less', function() {
 	.pipe(gulp.dest('./dist/public/css'))
 });
 
-gulp.task('public_cropper', function() {
-	gulp.src('./dev/public/cropper/*.*')
-	.pipe(gulp.dest('./dist/public/cropper'));
-});
+
 gulp.task('public_js', function() {
 	gulp.src('./dev/public/js/**/*.js')
 	// .pipe(jshint('.jshintrc'))
@@ -49,7 +46,7 @@ gulp.task('public_js', function() {
 	.pipe(gulp.dest('./dist/public/js'));
 });
 gulp.task('public_img', function() {
-	gulp.src('./dev/public/img/**/*.*')
+	gulp.src('./dev/public/img/**/*')
 	.pipe(imagemin())
 	.pipe(gulp.dest('./dist/public/img'));
 });
@@ -70,7 +67,6 @@ gulp.task('app', function() {
 gulp.task('watch', function() {
   gulp.watch('./dev/lib/*.js', ['db']);
   gulp.watch('./dev/public/less/*.less', ['public_less']);
-  gulp.watch('./dev/public/cropper/*.*', ['public_cropper']);
   gulp.watch('./dev/public/js/**/*.js', ['public_js']);
   gulp.watch('./dev/public/img/**/*.*', ['public_img']);
   gulp.watch('./dev/public/voice/*.*', ['public_voice']);

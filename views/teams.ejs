@@ -81,7 +81,7 @@
 </head>
 <body>
 
-<input style='display: none;' id='getuid' value='<%=uid%>'>
+
 
 
 <div class='container' id='teams'>
@@ -92,14 +92,15 @@
     </div>
 		<div class="row">
     	<div class="col-md-4">
-			 	<form action="/teamsI" id='teamHeadForm' method='post' enctype='multipart/form-data'>
-	        <p>更新头像:</p>
-	        <input type="file" name='avator' class="btn btn-default" id='avator' v-on:change='showImg'>
-					<img style='width:210px;height:210px;' />
-	        <button id='headUpdate' v-on:click='headUpdate' class="btn btn-success">保存头像</button>
-      	</form>
-      <div id='headImg' v-on:click='showTeamHeadform'> <img src= <%=headImg%> /> </div>
-    </div>
+			<form action="/teamsI" id='teamHeadForm' method='post' enctype='multipart/form-data'>
+	        	<input style='display: none;' name='uid' id='getuid' value='<%=uid%>'>
+	        	<p>更新头像:</p>
+	       	 	<input type="file" name='avator' class="btn btn-default" id='avator' v-on:change='showImg'>
+				<img style='width:210px;height:210px;' />
+	        	<button id='headUpdate' v-on:click='headUpdate' class="btn btn-success">保存头像</button>
+      		</form>
+      		<div id='headImg' v-on:click='showTeamHeadform'> <img src= <%=headImg%> /> </div>
+    	</div>
 		<div class="col-md-8">
 			<text-info uid='<%=uid%>' name='<%=name%>' level='<%=level%>' membernumber='<%=membernumber%>' introduce='<%=introduce%>'></text-info>
 		</div>
