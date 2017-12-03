@@ -4,12 +4,12 @@
   "description": "Chatting Web project",
   "author": "ZFC<476409251@qq.com>",
   "private": true,
-    // "scripts": {
-  //   "start":"node dist/app.js",
-  //   "sup": "supervisor dist/app.js",
-  //   "pm2":"pm2 start dist/app.js",
-  //   "test": "echo \"Error: no test specified\" && exit 1"
-  // },
+  "scripts": {
+    "start":"node dist/app.js",
+    "sup": "supervisor dist/app.js",
+    "pm2":"pm2 start dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
