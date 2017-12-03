@@ -7,13 +7,13 @@ const io = require('socket.io')(server);
 const routes = require('./routes/routes')(app);
 const path = require('path');
 const mongoose=require('mongoose');
-const User = require('./mongoModel/user');
-const Unread = require('./mongoModel/unread');
-const Message = require('./mongoModel/message');
-const Tmessage = require('./mongoModel/tmessage');
-const People = require('./mongoModel/people');
-const Team = require('./mongoModel/team');
-const Loginlist = require('./mongoModel/loginlist');
+const User = require('../model/user');
+const Unread = require('../model/unread');
+const Message = require('../model/message');
+const Tmessage = require('../model/tmessage');
+const People = require('../model/people');
+const Team = require('../model/team');
+const Loginlist = require('../model/loginlist');
 
 mongoose.Promise = global.Promise;  
 
@@ -24,23 +24,6 @@ mongoose.connect('mongodb://localhost/test',{useMongoClient:true},err=>{
     process.exit(1);
   }
 });
-
-// connect database
-// mongoose.connect(env !== 'test' ? config.database : config.testDatabase, err => {
-//     if (err) {
-//         console.log('connect database error -->', err);
-//         process.exit(1);
-//     }
-//     if (env === 'test') {
-//         mongoose.connection.db.dropDatabase();
-//     }
-//     console.log('connect database success');
-//     // clear old auth record
-//     require('./model/auth').remove({}, () => {
-//         console.log('remove all old auth');
-//     });
-// });
-
 
 User.update({},{$set:{login:false}},{multi:true},(err)=>{
   if(err) throw err;

@@ -1,5 +1,4 @@
 const LIB = require('./lib');
-const assert = require('assert');
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path');
@@ -9,20 +8,22 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer({ dest: 'public/img/uploads/' });
 const mongoose=require('mongoose');
-const User = require('../mongoModel/user');
-const Unread = require('../mongoModel/unread');
-const People = require('../mongoModel/people');
-const Team = require('../mongoModel/team');
-const Loginlist = require('../mongoModel/loginlist');
-const Message = require('../mongoModel/message');
-const Tmessage = require('../mongoModel/tmessage');
+const User = require('../../model/user');
+const Unread = require('../../model/unread');
+const Message = require('../../model/message');
+const Tmessage = require('../../model/tmessage');
+const People = require('../../model/people');
+const Team = require('../../model/team');
+const Loginlist = require('../../model/loginlist');
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
 const router = express.Router();
 
 
 //start: login page,
-router.get('/',(req,res)=>{ res.render('login.ejs', { tipInfo:'' }); });
+router.get('/',(req,res)=>{ 
+	res.render('login.ejs', { tipInfo:'' }); 
+});
 
 //used by public/js/login.js g5,
 router.get('/regist',(req,res)=>{ res.render('regist.ejs',{  tipuid:'' }); });

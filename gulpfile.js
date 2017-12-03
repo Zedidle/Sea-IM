@@ -13,7 +13,7 @@ var
 
 
 gulp.task('default',['clean'],function(){
-	gulp.start( 'lib', 'mongoModel','public_less','public_cropper','public_js','public_img','public_voice','routes','views','app');
+	gulp.start( 'lib', 'public_less','public_cropper','public_js','public_img','public_voice','routes','app');
 })
 gulp.task('clean', function() { 
   return gulp.src(['dist'], {read: false})
@@ -23,10 +23,7 @@ gulp.task('lib', function() {
 	gulp.src('./dev/lib/*.js')
 	.pipe(gulp.dest('./dist/lib'));
 }); 
-gulp.task('mongoModel', function() {
-	gulp.src('./dev/mongoModel/*.js')
-	.pipe(gulp.dest('./dist/mongoModel'));
-});
+
 gulp.task('public_less', function() {
 	gulp.src('./dev/public/less/*.less')
 	.pipe(less())
@@ -64,27 +61,21 @@ gulp.task('routes', function() {
 	gulp.src('./dev/routes/**/*.js')
 	.pipe(gulp.dest('./dist/routes'));
 });
-gulp.task('views', function() {
-	gulp.src('./dev/views/**/*.ejs')
-	.pipe(gulp.dest('./dist/views'));
-});
 gulp.task('app', function() {
-	gulp.src('./dev/*.*')
+	gulp.src('./dev/app.js')
 	.pipe(gulp.dest('./dist'));
 });
 	
 // 看守
 gulp.task('watch', function() {
   gulp.watch('./dev/lib/*.js', ['db']);
-  gulp.watch('./dev/mongoModel/*.js', ['mongoModel']);
   gulp.watch('./dev/public/less/*.less', ['public_less']);
   gulp.watch('./dev/public/cropper/*.*', ['public_cropper']);
   gulp.watch('./dev/public/js/**/*.js', ['public_js']);
   gulp.watch('./dev/public/img/**/*.*', ['public_img']);
   gulp.watch('./dev/public/voice/*.*', ['public_voice']);
   gulp.watch('./dev/routes/**/*.js', ['routes']);
-  gulp.watch('./dev/views/**/*.ejs', ['views']);
-  gulp.watch('./dev/*.*', ['app']);
+  gulp.watch('./dev/app.js', ['app']);
 
   // 看守所有位在 dist/  目录下的档案，一旦有更动，便进行重整
   gulp.watch(['dist/**']).on('change', function(file) {

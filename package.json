@@ -1,6 +1,5 @@
 {
   "name": "seanet",
-  "version": "0.9.8.6",
   "description": "Chatting Web project",
   "author": "ZFC<476409251@qq.com>",
   "private": true,
@@ -47,5 +46,5 @@
   "engines": {
     "node": ">= 6.11.4",
     "npm": ">= 3.10.10"
-  },
+  }
 }
