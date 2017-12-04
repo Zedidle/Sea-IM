@@ -4,13 +4,13 @@ const path = require('path');
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const User = require('./mongoModel/user');
-const Unread = require('./mongoModel/unread');
-const People = require('./mongoModel/people');
-const Team = require('./mongoModel/team');
-const Loginlist = require('./mongoModel/loginlist');
-const Message = require('./mongoModel/message');
-const Tmessage = require('./mongoModel/tmessage');
+const User = require('../model/user');
+const Unread = require('../model/unread');
+const People = require('../model/people');
+const Team = require('../model/team');
+const Loginlist = require('../model/loginlist');
+const Message = require('../model/message');
+const Tmessage = require('../model/tmessage');
 
 mongoose.Promise = global.Promise;  
 
@@ -56,7 +56,7 @@ for(let i = 0; i<10; i++){
 	}); 
 	let people = new People({
 		uid,
-		headImg:'/img/defaultHead.jpg',
+		headImg:'/img/defaultHead.png',
 		sex : '保密',
     	name : '未命名',
     	introduce:'这家伙很懒,什么也没有写.',
@@ -79,7 +79,7 @@ for(let i = 0; i<10; i++){
                 "uid" : "z00001",
                 "to" : "z0000"+i,
                 "type" : "recent",
-                "headImg" : "/img/defaultHead.jpg",
+                "headImg" : "/img/defaultHead.png",
                 "name" : "未命名",
                 "time" : "11.27",
                 "content" : "2233 You are most fat one.",
@@ -89,7 +89,7 @@ for(let i = 0; i<10; i++){
                 "uid" : "z00001",
                 "to" : "z0000"+i,
                 "type" : "recent",
-                "headImg" : "/img/defaultHead.jpg",
+                "headImg" : "/img/defaultHead.png",
                 "name" : "未命名",
                 "time" : "11.27",
                 "content" : "3322 My Lover is ok!",
@@ -101,7 +101,7 @@ for(let i = 0; i<10; i++){
                 "uid" : "z00002",
                 "to" : "z0000"+i,
                 "type" : "recent",
-                "headImg" : "/img/defaultHead.jpg",
+                "headImg" : "/img/defaultHead.png",
                 "name" : "未命名",
                 "time" : "11.28",
                 "content" : "Godlike!",
@@ -111,7 +111,7 @@ for(let i = 0; i<10; i++){
                 "uid" : "z00002",
                 "to" : "z0000"+i,
                 "type" : "recent",
-                "headImg" : "/img/defaultHead.jpg",
+                "headImg" : "/img/defaultHead.png",
                 "name" : "未命名",
                 "time" : "11.28",
                 "content" : "Dominating!",
@@ -132,7 +132,7 @@ for(let i = 0; i<10; i++){
 
 
     var team = new Team({
-        headImg:'/img/defaultHead.jpg',
+        headImg:'/img/defaultHead.png',
         uid:'z00001',
         name:"TEAM1",
         password:123456,
@@ -151,7 +151,7 @@ for(let i = 0; i<10; i++){
                 uid:'z00001',
                 to:'z00000000',
                 type:'team',
-                headImg:"/img/defaultHead.jpg",
+                headImg:"/img/defaultHead.png",
                 name:"POKER",
                 content:"44444!",
                 time:"12:00",
@@ -162,7 +162,7 @@ for(let i = 0; i<10; i++){
                 uid:'z00001',
                 to:'z00000000',
                 type:'team',
-                headImg:"/img/defaultHead.jpg",
+                headImg:"/img/defaultHead.png",
                 name:"POKER",
                 content:"55555!",
                 time:"12:01",
@@ -178,7 +178,7 @@ for(let i = 0; i<10; i++){
 
 
     var team1 = new Team({
-        headImg:'/img/defaultHead.jpg',
+        headImg:'/img/defaultHead.png',
         uid:'z00002',
         name:"TEAM2",
         password:123456,
@@ -197,7 +197,7 @@ for(let i = 0; i<10; i++){
                 uid:'z00002',
                 to:'z00000000',
                 type:'team',
-                headImg:"/img/defaultHead.jpg",
+                headImg:"/img/defaultHead.png",
                 name:"FAKER",
                 content:"EEEEE!",
                 time:"13:00",
@@ -208,7 +208,7 @@ for(let i = 0; i<10; i++){
                 uid:'z00002',
                 to:'z00000000',
                 type:'team',
-                headImg:"/img/defaultHead.jpg",
+                headImg:"/img/defaultHead.png",
                 name:"FAKER",
                 content:"ZZZZZ!",
                 time:"13:01",
