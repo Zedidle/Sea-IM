@@ -38,9 +38,9 @@ gulp.task('public_less', function() {
 
 
 gulp.task('public_js', function() {
-	gulp.src('./dev/public/js/**/*.js')
+	gulp.src('./dev/public/js/*.js')
 	// .pipe(jshint('.jshintrc'))
-    .pipe(jshint.reporter('default'))
+    // .pipe(jshint.reporter('default'))
 	// .pipe(uglify())
     // .pipe(concat('index.js'))
 	.pipe(gulp.dest('./dist/public/js'));

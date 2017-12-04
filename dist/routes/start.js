@@ -58,7 +58,7 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 			}); 
 			var people = new People({
 				uid,
-				headImg:'/img/defaultHead.jpg',
+				headImg:'/img/defaultHead.png',
 				sex : '保密',
 		    	name : 'User'+Math.random()*Math.random()*10000,
 		    	introduce:'这家伙很懒,什么也没有写．',

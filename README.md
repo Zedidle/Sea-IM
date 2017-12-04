@@ -11,6 +11,7 @@ git clone https://github.com/DoubleCG/seanet.git
 
 <h4>TEST</h4>
 <pre>cd seanet
+npm install
 npm run sup
 </pre>
 

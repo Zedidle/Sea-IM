@@ -21,12 +21,12 @@
 	<div id="content" >
 		<div id='getRender'></div>
 
-		<domore-part uid="<%=uid%>"></domore-part>
+		<domore-part></domore-part>
 
 		<div id="checkMess" >
 			
-			<user-info uid="<%=uid%>"  user_info="<%=user_info%>" ></user-info>
-			<search-content uid='<%=uid%>'></search-content>
+			<user-info  user_info="<%=user_info%>" ></user-info>
+			<search-content></search-content>
 
 			<div id="messOption" v-on:click='hideDomore'>
 				<div v-on:click="listSeen($event,'recent')" id='recentOption' class='sOption'>
@@ -124,6 +124,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>var socket = io();</script>
 <script src='js/lib.js'></script>	
+<script src='js/main-help.js'></script>
 <script src='js/main.js'></script>
 
 </body>
