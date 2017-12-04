@@ -22,7 +22,7 @@ npm run sup
 <p>Client use ES5, Server use ES6，promise deal with async program.</p>
 <p>localStorage：Save the user's information locally.</p>
 <p>Gulp: model package</p>
-<p>LESS</p>
+<p>LESS:</p>
 <p>CSS3:stylesheet</p>
 <p>Mongodb</p>
 <p>jsonp：跨域请求数据</p>
@@ -32,99 +32,143 @@ npm run sup
 
 <h3>Segments of the server code: </h3>
 <h4>Socket.io</h4>
-服务端(Express):
-<h4>javascript</h4>
-Server (seanet/dev/app.js)
+Sercer (Express): seanet/dev/app.js
 <pre>
+const fs = require('fs');
+const express = require('express');
+const app = express();
+const LIB = require('./routes/lib.js');
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+const routes = require('./routes/routes')(app);
+const path = require('path');
+const mongoose=require('mongoose');
+const User = require('../model/user');
+const Unread = require('../model/unread');
+const Message = require('../model/message');
+const Tmessage = require('../model/tmessage');
+const People = require('../model/people');
+const Team = require('../model/team');
+const Loginlist = require('../model/loginlist');
+
+mongoose.Promise = global.Promise;  
+
+
+mongoose.connect('mongodb://localhost/test',{useMongoClient:true},err=>{
+  if(err){
+    console.log('connect database error -->',err);
+    process.exit(1);
+  }
+});
+
+User.update({},{$set:{login:false}},{multi:true},(err)=>{
+  if(err) throw err;
+  console.log("All user logout!");
+})
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('*', function(req, res){
+    res.render('404.ejs', {})
+});
+
 
 io.on('connection', function(socket){
+  socket.on('heartbeat',function(uid){
+    User.update({uid},{$set:{login:true}},err=>{ console.log(uid + ' login'); });
+    setTimeout(function(){
+      User.update({uid},{$set:{login:false}},err=>{ console.log(uid + ' logout'); });
+    },19000);
+  });
 
-    socket.on('heartbeat',function(uid){
-        User.update({uid},{$set:{login:true}},err=>{});
-        setTimeout(function(){
-            User.update({uid},{$set:{login:false}},err=>{});
-        },19000);
-    });
 
-    socket.on('chat',function(J_msg){
-        var msg = JSON.parse(J_msg);
-        People.find({uid:msg.from},null,{limit:1},(err,detail)=>{
-          var m = {
-              uid:msg.from,
-              to:msg.to,
-              type:msg.type,
-              headImg:detail[0].headImg,
-              name:detail[0].name,
-              time:msg.time,
-              content:msg.content,
-              introduce:detail[0].introduce,
-          },
-        J_m = JSON.stringify(m);
-        if(msg.type!=='team'){
-            User.find({uid:msg.to}, 'login', { limit: 1 }, (err,detail)=>{
-                if(detail[0].login){
-                    io.emit(msg.to,J_m);
-                }else{
-                    Unread.find({uid:msg.to},'punRead',{limit:1},(err,detail)=>{
-                        var punRead = detail[0].punRead;
-                        if(!punRead[msg.from]){ 
-                            punRead[msg.from] = 0; 
-                        }
-                        punRead[msg.from] = punRead[msg.from] + 1;
-                        Unread.update({uid:msg.to},{$set:{punRead}},(err)=>{
-                        });
-                    })
-                }
+  socket.on('chat',function(J_msg){
+
+    var msg = JSON.parse(J_msg);
+    LIB.check(msg,'chat the message:');
+    LIB.check(msg.content,'the content of message:');
+
+
+    People.find({uid:msg.from},null,{limit:1},(err,detail)=>{
+      var m = {
+        uid:msg.from,
+        to:msg.to,
+        type:msg.type,
+        headImg:detail[0].headImg,
+        name:detail[0].name,
+        time:msg.time,
+        content:msg.content,
+        introduce:detail[0].introduce,
+      },
+      J_m = JSON.stringify(m);
+
+      if(msg.type!=='team'){
+
+        User.find({uid:msg.to}, null, { limit: 1 }, (err,detail)=>{
+          LIB.check(detail[0],'To:');
+          if(detail[0].login){
+            io.emit(msg.to,J_m);
+          }else{
+            Unread.find({uid:msg.to},'punRead',{limit:1},(err,detail)=>{
+              var punRead = detail[0].punRead;
+              if(!punRead[msg.from]){ punRead[msg.from] = 0; }
+              punRead[msg.from] = punRead[msg.from] + 1;
+              Unread.update({uid:msg.to},{$set:{punRead}},(err)=>{});
             })
+          }
+        })
 
-            io.emit(msg.from,J_m);
+        io.emit(msg.from,J_m);
 
-            Message.find({uid:msg.to},null,{limit:1},(err,detail)=>{
-                let mess = detail[0].mess;
-                if(!mess[msg.from]){ 
-                    mess[msg.from]=[]; 
-                }
-                mess[msg.from].push(m);
-                Message.update({uid:msg.to},{$set:{mess}},(err)=>{})
-            })
-            Message.find({uid:msg.from},null,{limit:1},(err,detail)=>{
-                let mess = detail[0].mess;
-                if(!mess[msg.to]){ 
-                    mess[msg.to]=[]; 
-                }
-                mess[msg.to].push(m);
-                Message.update({uid:msg.from},{$set:{mess}},(err)=>{})
-            });
+        Message.find({uid:msg.to},null,{limit:1},(err,detail)=>{
+          let mess = detail[0].mess;
+          if(!mess[msg.from]){ mess[msg.from]=[]; }
+          mess[msg.from].push(m);
+          Message.update({uid:msg.to},{$set:{mess}},(err)=>{})
+        })
+        Message.find({uid:msg.from},null,{limit:1},(err,detail)=>{
+          let mess = detail[0].mess;
+          if(!mess[msg.to]){ mess[msg.to]=[]; }
+          mess[msg.to].push(m);
+          Message.update({uid:msg.from},{$set:{mess}},(err)=>{})
+        });
 
-            Loginlist.update({uid:msg.from},{$addToSet:{recent_people:msg.to}},{multi:false},(err)=>{});
-            Loginlist.update({uid:msg.to},{$addToSet:{recent_people:msg.from}},{multi:false},(err)=>{});
-        
-        }else{
-            Team.find({uid:msg.to},'member',(err,detail)=>{
-                var members = detail[0].member;
-                var tm = m;
-                tm.uid = msg.to;
-                tm.from_user = msg.from;
-                teamBroadcast(members,tm);
-                Tmessage.update({uid:msg.to},{$push:{mess:tm}},(err)=>{});
-            })
-        }
+        Loginlist.update({uid:msg.from},{$addToSet:{recent_people:msg.to}},{multi:false},(err)=>{});
+        Loginlist.update({uid:msg.to},{$addToSet:{recent_people:msg.from}},{multi:false},(err)=>{});
+
+      }else{
+        Team.find({uid:msg.to},'member',(err,detail)=>{
+          LIB.check(detail[0],'Chat_Team');
+          var members = detail[0].member;
+          var tm = m;
+          tm.uid = msg.to;
+          tm.from_user = msg.from;
+          LIB.check(tm,'messages of the team:');
+          teamBroadcast(members,tm);
+          Tmessage.update({uid:msg.to},{$push:{mess:tm}},(err)=>{});
+        })
+      }
     });
   });
 });
+
+const ip = '127.0.0.1';
+const port = 8000;
+
+server.listen(port,ip,function(){console.log(ip+':'+port);});
+
+function teamBroadcast(members,msgToTeam){
+  members.forEach(toWhom=>{
+    msgToTeam.to = toWhom;
+    var J_tm = JSON.stringify(msgToTeam);
+    io.emit(toWhom,J_tm);
+  })
+}
 </pre>
-客户端：
-<p>javascript</p>
-seanet/views/main.ejs
-<pre>
-<script src="/socket.io/socket.io.js"></script>
-<script>var socket = io();</script>
-<script src='js/main.js'></script>
-</pre>
+
+
 <br>
-seanet/dev/js/main.js
+Client: seanet/dev/js/main.js
 <pre>
     sendMessage:function(){
       var v = $('#messageframe_input').val().trim();
@@ -177,9 +221,6 @@ socket.io最核心的两个api就是`emit` 和 `on`了 ，服务端和客户端�
 `socket.emit()`：向服务端发送消息
 
 `socket.on()`：监听服务端发来的信息
-
-
-
 
 
 
