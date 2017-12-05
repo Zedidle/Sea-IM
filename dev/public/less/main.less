@@ -55,7 +55,7 @@
 	@media (max-width:450px){
 		position:absolute;
 		z-index: 20;
-		left:82%;
+		right:0;
 		top:80px;
 	}
 }
@@ -472,7 +472,7 @@
 		width:100%;
 	}
 	.moreinfo{
-		width: 280px;
+		width: 300px;
 		background-color:#FAFBFC;
 		border:solid 2px #90D1C9;
 		box-shadow:0 0 2px #60C1B1;
@@ -492,15 +492,32 @@
 			color:#D3D3D3;
 			height:30px;
 			font-size:1.8em;
-			&:hover{
-				color:#C3C3C3;
-			}
 		}
-
 		img{
 			width:100px;
 			height:100px;
 			border-radius: 50%;
+		}
+		.teamMembers{
+			width:105%;
+			ul{
+				max-height:370px;
+				overflow-y:scroll; 
+				li{
+					width:65px;
+					height:90px;
+					list-style: none;
+					float: left;
+					margin-right: 2px;
+					img{
+						width:50px;
+						height:50px;
+					}
+					.name{
+						text-align: center;
+					}
+				}
+			}
 		}
 		.info{
 			font-size:16px;
@@ -541,6 +558,8 @@
 	.getMoreMessageOnFrame_btn {
 		background: rgba(252,254,253,0.9);
 		color:#555;
+		width:140px;
+		text-align: center;
 		cursor:pointer;
 		padding:0 0.5em 0 0.5em;
 		box-shadow: 0 0 2px #60B199;
@@ -548,10 +567,9 @@
 		border:1px solid #90C1C9;
 		position: absolute;
 		top:45px;
-		left:250px;
+		left:40%;
 		&:hover{ box-shadow: 0 0 3px #fff; }
-		@media(max-width:600px){ left:200px; }
-		@media(max-width:400px){ left:80px; }
+		@media(max-width:420px){left:27%;}
 	}
 	.messageframe_top{
 		border-top-left-radius: 10px;

@@ -217,6 +217,15 @@ var main = new Vue({
         },
       },
     },
+    // 'member-infos':{
+    //   props:['infos'],
+    //   template:v_member_infos_template(this._infos),
+    //   computed:{
+    //     _infos:function(){ return JSON.parse(regKeepJSON(this.infos)); },
+    //   },
+    //   methods:{
+    //   }
+    // }
   },
 
 
@@ -244,6 +253,7 @@ var main = new Vue({
     },
     isteam:false,
     moreinfoSeen:false,
+    teamMembersSeen:false,
     loginlist:loginlist,
     messtype:'',
     messto:'',
@@ -274,13 +284,13 @@ var main = new Vue({
         receive_uid:uid,
         from_uid:main.messto,
         type:main.messtype,
-        skip:main.messgetTimes * 5 + document.getElementById('messageframe_cont').getElementsByClassName('messli').length,
+        // skip:document.getElementById('messageframe_cont').getElementsByClassName('messli').length,
+        skip:document.querySelectorAll('#messageframe_cont>.messli').length,
       }
       postChange('/getmess',data,function(res){
         for(let i of res){ main.gotMessCreateMessDiv(i); }
         main.messgetTimes += 1;
       })
-      $('#messageframe_cont').append();
     },
     addUnReadInDB:function(msg_type,msg_uid,msg_to){
       var data = {
@@ -326,20 +336,33 @@ var main = new Vue({
         },1500)
         return false;
       }
-      var t = judgeTypeforFloatDirection(msg);
+      // if(msg.type==='team'){
+      //   var f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
+      // }else{
+      //   var f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
+      // }
+      var f = judgeTypeforFloatDirection(msg,uid);
       var msgContent = main.expressionsParse(msg.content);
-      $('#messageframe_cont').append(v_createMessDiv(t,msgContent));
-      emptyMessageFrameInput();
+      $('#messageframe_cont').prepend(v_createMessDiv(msg,f,msgContent));
+      // $('#messageframe_cont').prepend(`
+      //   <div class="messli" ${f}>
+      //     <div class='avator' ${f}><img src='${msg.headImg}'/></div>
+      //     <div class='info' ${f}>
+      //       <div><div class='name' ${f}>${msg.name}  ${msg.time}</div></div>
+      //       <div class="content" ${f}>${msgContent}</div>
+      //     </div>
+      //   </div>
+      //   `);
       var cont = document.getElementById('messageframe_cont');
       cont.scrollTop = 0;
     },
     //when the mess come, if messageFrame is opning, check the messtype and messto, 
     //if satisfy the condition, it will run this function to show the message.
     createMessDiv:function(msg){
-      var f = judgeTypeforFloatDirection(msg);
+      var f = judgeTypeforFloatDirection(msg,uid);
       var msgContent = main.expressionsParse(msg.content);
       $('#messageframe_cont').append(v_createMessDiv(msg,f,msgContent));
-      emptyMessageFrameInput();
+      document.getElementById('messageframe_input').value = '';
       var cont = document.getElementById('messageframe_cont');
       cont.scrollTop = cont.scrollHeight;
     },
@@ -477,9 +500,40 @@ var main = new Vue({
       }
     },
 
+    exitTeam:function(){
+      if(confirm('Ensure to Exit?')){
+        var data = {
+          uid:uid,
+          tid:main.messto
+        }
+        postChange('/exitTeam',data,function(){
+            v_removeTheTeamInList(data.uid,data.tid,'recent');
+            v_removeTheTeamInList(data.uid,data.tid,'team');
+        });
+      }
+    },
+
+    showMembers:function(){
+      console.log('showMembers');
+      var data = { tid:main.messto };
+      main.teamMembersSeen = true;
+      postChange('/showMembers',data,function(_infos){
+        var teamMembers_ul = document.querySelector('.teamMembers>ul');
+        console.log(teamMembers_ul);
+        for(let li of _infos){
+          console.log(li);
+          $(teamMembers_ul).append(v_teamMembers_template(li));         
+        }
+      })
+    },
+    closeTeamMembers:function(){
+      document.querySelector('.teamMembers>ul').innerHTML = '';
+      this.teamMembersSeen=false;
+    },
     //when the < of the top of left of the massageframe be clicked, run this function,
     messageframe_close:function(){
       this.messageframeSeen=false;
+      this.teamMembersSeen=false;
       this.messtype='';
       this.messto='';
       this.messgetTimes=0;

@@ -137,16 +137,48 @@ router.post('/successB',urlencodedParser,(req,res)=>{
 //dismiss my own team
 router.post('/dismissTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	LIB.check(data,'dismissTeam');
-
 	Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		LIB.check(detail[0],'the information of the team:')
 		res.render('dismissTeam.ejs',{
 			uid:data.uid,
 			pw:detail[0].password,
 		})
 	})
 })
+
+
+
+router.post('/exitTeam',urlencodedParser,(req,res)=>{
+	var data = JSON.parse(req.body.J_data);
+	Team.update({uid:data.tid},{
+		$pull:{member:data.uid}
+		,$inc:{membernumber:-1}
+	},err=>{});
+	Loginlist.update({uid:data.uid},{$pull:{recent_team:data.tid,team:data.tid}},err=>{});
+	res.send(true);
+})
+
+
+router.post('/showMembers',urlencodedParser,(req,res)=>{
+	var data = JSON.parse(req.body.J_data);
+	Team.find({uid:data.tid},'member',{limit:1},(err,detail)=>{
+		var members = detail[0].member;
+		var member_infos = [];
+		members.forEach(member=>{
+			People.find({uid:member},null,{limit:1},(err,detail)=>{
+				member_infos.push(detail[0]);
+				if(member_infos.length===members.length){
+					console.log(member_infos);
+					res.send(JSON.stringify(member_infos));
+				}
+			})
+		})
+	})
+})
+
+
+
+
+
 
 
 //used by views/dismissTeam.ejs g51,

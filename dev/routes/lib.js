@@ -3,13 +3,14 @@
 function check(obj,n){
 	console.log('');
 	console.log('Check:'+n||'');
-	console.log('Content:'+ obj);
-	console.log('   Type:'+ typeof obj);
+	console.log('Content:')
+	console.log(obj);
+	console.log('Type:'+ typeof obj);
 	if(Array.isArray(obj)){
 		console.log('It is array,length is '+obj.length);
 	}
 	if(typeof(obj) === 'string'){
-		console.log(' Length:' + obj.length);
+		console.log('Length:' + obj.length);
 	}
 	console.log('');
 }

@@ -110,7 +110,16 @@ function v_mess_li_template(){
 }
 
 
-function judgeTypeforFloatDirection(msg){
+function v_teamMembers_template(li){
+  return `<li> 
+              <div class='avator'>
+                <img src=${li.headImg} alt='UID:${li.uid}' title='UID:${li.uid}'>
+              </div>
+              <span class='name'>${li.name}</span>
+         </li>`;
+}
+
+function judgeTypeforFloatDirection(msg,uid){
       if(msg.type==='team'){
         var f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
       }else{
@@ -119,9 +128,6 @@ function judgeTypeforFloatDirection(msg){
       return f;
 }
 
-function emptyMessageFrameInput(){
-  document.getElementById('messageframe_input').value = '';
-}
 
 function v_createMessDiv(msg,f,msgContent){
   return `
@@ -153,7 +159,17 @@ function v_addRecentLi_recent(){
         </li>
       `;
 }
-
+          function v_removeTheTeamInList(uid,tid,li_type){
+            var lis = document.getElementById(li_type).getElementsByTagName('li');
+            for(let li of lis){
+              if(li.querySelectorAll('.info .li_type span')[0].innerText==='team'&&
+                li.querySelectorAll('.info .uid')[0].innerText===tid){
+                li.parentNode.removeChild(li);
+                main.messageframe_close();
+                break;
+              }
+            }
+          }
         function help_addFaceMark(){
           var t;
           switch(this.value){
