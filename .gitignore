@@ -6,3 +6,9 @@ npm-debug.log
 logs
 *.log
 npm-debug.log*
+
+#jshintrc
+.jshintrc
+
+#test
+test/

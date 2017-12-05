@@ -12,34 +12,36 @@ function v_domore_part_template(){
         <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
       </div>
       </div>
-    `;
+      `;
 }
 
 
 function v_user_info_template(){
 	return `
-        <div v-bind:class='{userinfo_wrap:true}'>
-          <div v-bind:class='{userinfo_avator:true}'><img v-bind:class='{userinfo_avator_img:true}' v-bind:src='info.headImg'></div>
-          <div id='intro' v-bind:class='{userinfo_intro:true}'>
-            <div id='name' >
-              <div id='nick_name'>{{info.name}}</div>
-            </div>
-            <div id='introduce' v-bind:class='{userinfo_introduce:true}'>{{info.introduce}}</div>
-          </div>
-          <div id='set' v-bind:class='{userinfo_set:true}' v-on:click='toggleDomore' >
-            <span class='glyphicon glyphicon-list' aria-hidden='true'></span>
-          </div>
+      <div v-bind:class='{userinfo_wrap:true}'>
+        <div v-bind:class='{userinfo_avator:true}'>
+          <img v-bind:class='{userinfo_avator_img:true}' v-bind:src='info.headImg'>
         </div>
+        <div id='intro' v-bind:class='{userinfo_intro:true}'>
+          <div id='name' >
+            <div id='nick_name'>{{info.name}}</div>
+          </div>
+          <div id='introduce' v-bind:class='{userinfo_introduce:true}'>{{info.introduce}}</div>
+        </div>
+        <div id='set' v-bind:class='{userinfo_set:true}' v-on:click='toggleDomore' >
+          <span class='glyphicon glyphicon-list' aria-hidden='true'></span>
+        </div>
+      </div>
       `;
 }
 
 function v_search_content_template(){
 	return `
-        <div id='search-content' >
-          <div id='search' v-on:keyup.13='searchSubmit'>
-            <button id='sub' v-on:click='searchSubmit'>
-              <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-            </button>
+      <div id='search-content' >
+        <div id='search' v-on:keyup.13='searchSubmit'>
+          <button id='sub' v-on:click='searchSubmit'>
+            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </button>
           <input type="text" id='search_uid' name='search_uid' placeholder="请输入团队或用户的ID">
           <div v-bind:class='{search_close:true}' v-on:click='closeCheckInfo'>
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
@@ -51,45 +53,49 @@ function v_search_content_template(){
 
 function v_createSearchTeamInfo_template(t){
 	return `
-            <div id='search-team'>
-              <div id='teamImg'><img src=`+t.headImg+`></div>
-              <div id='tinfo'>
-                <div id='teamname'>团队名: `+t.name+`</div>
-                <div id='builder'>ID: `+t.uid+`</div>
-                <div id='level'>级别: `+t.level+`</div>
-                <div id='membernumber'>人数: `+t.membernumber+`</div>
-                <div id='teamintro'>简介: `+t.introduce+`</div>
-              </div>
-              <div id='join'> 
-                <span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span>  Join in
-              </div>
-            </div>
-          `;
+      <div id='search-team'>
+        <div id='teamImg'>
+          <img src=`+t.headImg+`>
+        </div>
+        <div id='tinfo'>
+          <div id='teamname'>团队名: `+t.name+`</div>
+          <div id='builder'>ID: `+t.uid+`</div>
+          <div id='level'>级别: `+t.level+`</div>
+          <div id='membernumber'>人数: `+t.membernumber+`</div>
+          <div id='teamintro'>简介: `+t.introduce+`</div>
+        </div>
+        <div id='join'> 
+          <span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span>  Join in
+        </div>
+      </div>
+      `;
 }
 
 function v_createSearchPersonInfo_template(p){
 	return `
-            <div id='search-person'>
-            <div id='personImg'><img src=`+p.headImg+`></div>
-            <div id='pinfo'>
-              昵称: <div id='name'>`+p.name+`</div>
-              <div id='sex'>性别: `+p.sex+`</div>
-              <div id='hobby'>爱好: `+p.hobby+`</div>
-              <div id='personIntro'>简介: `+p.introduce+`</div>
-            </div>
-            <div id='send'>
-              <span class='glyphicon glyphicon-envelope' aria-hidden='true'></span>Mess
-            </div>
-            <div id='star'>
-              <span class='glyphicon glyphicon-star-empty' aria-hidden='true'></span>Star
-            </div>
-            </div>
-          `;
+      <div id='search-person'>
+        <div id='personImg'>
+          <img src=`+p.headImg+`>
+        </div>
+        <div id='pinfo'>
+          <div id='name'>昵称: `+p.name+`</div>
+          <div id='sex'>性别: `+p.sex+`</div>
+          <div id='hobby'>爱好: `+p.hobby+`</div>
+          <div id='personIntro'>简介: `+p.introduce+`</div>
+        </div>
+        <div id='send'> 
+          <span class='glyphicon glyphicon-envelope' aria-hidden='true'></span>Mess
+        </div>
+        <div id='star'>
+          <span class='glyphicon glyphicon-star-empty' aria-hidden='true'></span>Star
+        </div>
+      </div>
+      `;
 }
 
 function v_mess_li_template(){
 	return `
-        <ul v-bind:id='type'>
+      <ul v-bind:id='type'>
         <li v-for='i in _info' v-on:click='show_messageFrame($event,i.uid,i.level)' :style='li_height(i.level)'>
           <div class='info'>
             <div class='name'>{{i.name}} 
@@ -105,7 +111,7 @@ function v_mess_li_template(){
           </div>
           <div class='avator' :style='avator_w(i.level)'><img :src=i.headImg></div>
         </li>
-        </ul>
+      </ul>
       `;
 }
 
@@ -159,17 +165,59 @@ function v_addRecentLi_recent(){
         </li>
       `;
 }
-          function v_removeTheTeamInList(uid,tid,li_type){
-            var lis = document.getElementById(li_type).getElementsByTagName('li');
-            for(let li of lis){
-              if(li.querySelectorAll('.info .li_type span')[0].innerText==='team'&&
-                li.querySelectorAll('.info .uid')[0].innerText===tid){
-                li.parentNode.removeChild(li);
-                main.messageframe_close();
-                break;
-              }
-            }
-          }
+
+
+function v_removeThePeopleInStar(id){
+  console.log('v_removeThePeopleInStar');
+  var lis = document.getElementById('star').getElementsByTagName('li');
+  for(let li of lis){
+    if(li.querySelectorAll('.info .uid')[0].innerText===id){
+      li.parentNode.removeChild(li);
+      break;
+    }
+  }
+}
+
+function v_addThePeopleInStar(info){
+  $('#star').prepend(`
+      <li v-on:click='show_messageFrame($event,${info.uid},false)' style='height:60px;'>
+        <div class='info'>
+          <div class='name'>${info.name} 
+            <span class="badge"></span>
+          </div>
+          <div class='li_type'>
+            <span>people</span>
+          </div>
+          <span class='uid' >${info.uid}</span>
+          <div class='introduce'>${info.introduce}</div>
+        </div>
+        <div class='avator' style='width:60px;border-radius:50%;'>
+          <img src=${info.headImg}>
+        </div>
+      </li>
+    `);
+}
+
+function v_removeThePeopleInRecent(id){
+  var lis = document.getElementById('recent').getElementsByTagName('li');
+  for(let li of lis){
+    if(li.querySelectorAll('.info .uid')[0].innerText===id&&
+      li.querySelectorAll('.info .li_type span')[0].innerText!=='team'){
+      li.parentNode.removeChild(li);
+      break;
+    }
+  }
+}
+function v_removeTheTeamInList(tid,li_type){
+  var lis = document.getElementById(li_type).getElementsByTagName('li');
+  for(let li of lis){
+    if(li.querySelectorAll('.info .li_type span')[0].innerText==='team'&&
+      li.querySelectorAll('.info .uid')[0].innerText===tid){
+      li.parentNode.removeChild(li);
+      break;
+    }
+  }
+}
         function help_addFaceMark(){
           var t;
           switch(this.value){

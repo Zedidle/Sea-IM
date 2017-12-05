@@ -108,8 +108,8 @@
 			</div>
 			<hr style=' float:left; width:100%;border-color: #C0D0D0;border-width: 1px;'>
 			<div class="more">
-				<button type="button" v-show='!isteam'  v-on:click='' class="btn btn-success" aria-haspopup="true" aria-expanded="false">Star/Unstar</button>
-				<button type="button" v-show='!isteam'  v-on:click='' class="btn btn-warning" aria-haspopup="true" aria-expanded="false">Delete Chat</button>
+				<button type="button" v-show='!isteam'  v-on:click='starOrUnstar' class="btn btn-success" aria-haspopup="true" aria-expanded="false">Star/Unstar</button>
+				<button type="button" v-show='!isteam'  v-on:click='deleteTheRecentChat' class="btn btn-warning" aria-haspopup="true" aria-expanded="false">Delete Chat</button>
 				<button type="button" v-show='isteam' v-on:click='exitTeam' class="btn btn-danger" aria-haspopup="true" aria-expanded="false">Exit Team</button>
 				<button type="button" v-show='isteam' v-on:click='showMembers' class="btn btn-primary" aria-haspopup="true" aria-expanded="false">Show Members</button>
 			</div>

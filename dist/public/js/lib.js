@@ -1,3 +1,13 @@
+Array.prototype.pull = function(o){
+  for(let i in this){
+    if(this[i] === o){
+      this.splice(i,1);
+    }
+  }
+  return this;
+}
+
+
 function check(object,n){
   console.log('');
   console.log('Check:'+n||'');

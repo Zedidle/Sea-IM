@@ -43,6 +43,30 @@ router.post('/getmess',urlencodedParser,(req,res)=>{
 	})
 })
 
+router.post('/starOrUnstar',urlencodedParser,(req,res)=>{
+	var data = JSON.parse(req.body.J_data);
+	if(data.isStar){
+		Loginlist.update({uid:data.uid},{$pull:{star:data.to}},err=>{
+			res.send(false);
+		})
+	}else{
+		Loginlist.update({uid:data.uid},{$addToSet:{star:data.to}},err=>{
+			People.find({uid:data.to},null,{limit:1},(err,detail)=>{
+				res.send(detail[0]);
+			})
+		})
+	}
+})
+
+router.post('/deleteRecentChat',urlencodedParser,(req,res)=>{
+	var data = JSON.parse(req.body.J_data);
+	Loginlist.update({uid:data.uid},{$pull:{recent_people:data.to}},err=>{
+		console.log(666);
+	})
+	res.send(true);
+})
+
+
 
 
 // router.post('/getmess',urlencodedParser,(req,res)=>{
@@ -79,5 +103,7 @@ router.post('/getmess',urlencodedParser,(req,res)=>{
 // 		res.send(J_msend);
 // 	})
 // })
+
+
 
 module.exports = router;

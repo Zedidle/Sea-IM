@@ -499,7 +499,40 @@ var main = new Vue({
         socket.emit('chat',J_msg);
       }
     },
-
+    starOrUnstar(){
+      var stars = loginlist.star;
+      var data = {
+        uid:uid,
+        to:main.messto,
+        isStar:false,
+      }
+      if(main.messtype!=='team'&&stars.length){
+        for(let i of stars){
+          if(i===main.messto){
+            data.isStar = true;
+          }
+        }
+      }
+      postChange('/starOrUnstar',data,function(data_back){
+        if(data.isStar){
+          v_removeThePeopleInStar(data.to);
+          loginlist.star.pull(data.to);
+        }else{
+          v_addThePeopleInStar(data_back);
+          loginlist.star.push(data.to);
+        }
+      })
+    },
+    deleteTheRecentChat(){
+      var data = {
+        uid:uid,
+        to:main.messto
+      }
+      postChange('/deleteRecentChat',data,function(data_back){
+        v_removeThePeopleInRecent(data.to);
+      });
+      main.messageframe_close();
+    },
     exitTeam:function(){
       if(confirm('Ensure to Exit?')){
         var data = {
@@ -507,8 +540,9 @@ var main = new Vue({
           tid:main.messto
         }
         postChange('/exitTeam',data,function(){
-            v_removeTheTeamInList(data.uid,data.tid,'recent');
-            v_removeTheTeamInList(data.uid,data.tid,'team');
+            v_removeTheTeamInList(data.tid,'recent');
+            v_removeTheTeamInList(data.tid,'team');
+            main.messageframe_close();
         });
       }
     },
