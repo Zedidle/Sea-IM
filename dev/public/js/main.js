@@ -107,40 +107,30 @@ var main = new Vue({
           main.nameOfmessageframe = $(this).siblings('#pinfo').find('#name').text();
         })
 
-        $('#star').click(function(){
+        $('#search-star').click(function(){
+          var stars = loginlist.star;
+          var isStar = false;
           var data = { 
             sid:searchComponent.searchId,
             uid:uid
           };
-          var J_data = JSON.stringify(data);
-            $.post('/star','J_data='+J_data,function(data){
-              var t = JSON.parse(data)?'成功标记该用户!':'已经标记过！';
-              $('#search-person').prepend("<li class='alert alert-success' role='alert'>"+t+"</li>");
-              if(j){
-                $('#starContent ul').prepend(`
-                  <li style='height:60px;'>
-                    <div class='info'>
-                      <div class='name'>${j.name} </div>
-                      <span class='uid' >${j.uid}</span>
-                      <div class='introduce'>${j.introduce}</div>
-                    </div>
-                    <div class='avator' style='width:60px; border-radius:50%;'><img src='${j.headImg}'></div>
-                  </li>
-                `);
-                $('#star li').first().click(function(){
-                  main.moreinfoSeen=false;
-                  main.messtype='star';
-                  main.messageframeSeen=true;
-                  main.isteam = false;
-                  main.nameOfmessageframe = this.getElementsByClassName('name')[0].innerText;
-                  main.messto = this.getElementsByClassName('uid')[0].innerText
-                  document.getElementById('messageframe_cont').innerHTML = '';
-                })
-              }
+          if(stars.length){
+            for(let i of stars){
+              if(i===data.sid){ isStar = true; break; }
+            }
+          }
+          if(isStar){
+            $('#search-person').prepend("<li class='alert alert-success' role='alert'>已经标记过！</li>");
+          }else{
+            var J_data = JSON.stringify(data);
+            postChange('/star',data,function(data_back){
+              v_addThePeopleInStar(data_back);
+              loginlist.star.push(data.sid);
+              $('#search-person').prepend("<li class='alert alert-success' role='alert'>成功标记该用户!</li>");
             })
+          }
         })
-
-        },
+      },
 
         addSearchTips:function(isTeamExist,isPersonExist){
           if(!isTeamExist){
@@ -154,8 +144,6 @@ var main = new Vue({
 
       }
     },
-
-
 
     'mess-lis':{
       props:['type','info','punread','tunread'],
@@ -217,25 +205,10 @@ var main = new Vue({
         },
       },
     },
-    // 'member-infos':{
-    //   props:['infos'],
-    //   template:v_member_infos_template(this._infos),
-    //   computed:{
-    //     _infos:function(){ return JSON.parse(regKeepJSON(this.infos)); },
-    //   },
-    //   methods:{
-    //   }
-    // }
   },
 
 
 
-
-
-
-//Functions of the main chatting page. 
-
-    
   el:'#main',
   data:{
     punRead:punRead,
@@ -284,7 +257,6 @@ var main = new Vue({
         receive_uid:uid,
         from_uid:main.messto,
         type:main.messtype,
-        // skip:document.getElementById('messageframe_cont').getElementsByClassName('messli').length,
         skip:document.querySelectorAll('#messageframe_cont>.messli').length,
       }
       postChange('/getmess',data,function(res){
@@ -302,14 +274,7 @@ var main = new Vue({
       postChange('/dealwithunread',data,function(d){});
     },
     addUnReadNumber:function(msg){
-      //check the list in recent,add unread in recent list;
-
       var msg_type = msg.type==='team'?'team':'people';
-
-      //there is two way to judge whether the li exist:
-      //1: check the loginlist; this way is easy and more quitely,
-      //2: check the ul#recent; this way is main to change the unread of the li,
-
       var recent_lis = $('ul#recent').find('li');
       for(var i=0;i<recent_lis.length;i++){
         //get every li in recent's type,uid and unreadnumber;
@@ -336,23 +301,9 @@ var main = new Vue({
         },1500)
         return false;
       }
-      // if(msg.type==='team'){
-      //   var f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
-      // }else{
-      //   var f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
-      // }
       var f = judgeTypeforFloatDirection(msg,uid);
       var msgContent = main.expressionsParse(msg.content);
       $('#messageframe_cont').prepend(v_createMessDiv(msg,f,msgContent));
-      // $('#messageframe_cont').prepend(`
-      //   <div class="messli" ${f}>
-      //     <div class='avator' ${f}><img src='${msg.headImg}'/></div>
-      //     <div class='info' ${f}>
-      //       <div><div class='name' ${f}>${msg.name}  ${msg.time}</div></div>
-      //       <div class="content" ${f}>${msgContent}</div>
-      //     </div>
-      //   </div>
-      //   `);
       var cont = document.getElementById('messageframe_cont');
       cont.scrollTop = 0;
     },

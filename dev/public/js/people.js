@@ -4,10 +4,7 @@ console.log('uid:'+uid);
 
 var people = new Vue({
      el:'.container',
-     data:{
-          uid:uid,
-
-     },
+     data:{ uid:uid },
      methods:{
           showPeopleHeadForm:function(){
 		   document.getElementById('peopleHeadForm').style.display = 'block';
@@ -19,13 +16,6 @@ var people = new Vue({
                var avator = $('#avator').val();
                if(avator.length){
                     $('#peopleHeadForm').submit();
-               // var input = document.createElement('input');
-               //      input.style.display = 'none';
-               //      input.name = 'uid';
-               //      input.value = uid;
-               // var peopleHeadForm = $('#peopleHeadForm');
-               //      peopleHeadForm.append(input);
-               //      peopleHeadForm.submit();
                }else{
                     $('#avator').css('border','solid 1px #449933');
                }
@@ -44,12 +34,10 @@ var people = new Vue({
                     setTimeout(function(){
                          $('button#textUpdate').text('更新');
                     },2000)
-                    return false;
                }else if(introduce.length>60){
                     $('textarea#introduce').css('border','solid 1px red');
                     $('button#textUpdate').text('简介字数不能超过6０');
                     setTimeout(function(){ $('button#textUpdate').text('更新'); },2000);
-                    return false;
                }else{
                     var data = {
                          uid:uid,

@@ -86,7 +86,7 @@ function v_createSearchPersonInfo_template(p){
         <div id='send'> 
           <span class='glyphicon glyphicon-envelope' aria-hidden='true'></span>Mess
         </div>
-        <div id='star'>
+        <div id='search-star'>
           <span class='glyphicon glyphicon-star-empty' aria-hidden='true'></span>Star
         </div>
       </div>
@@ -99,8 +99,8 @@ function v_mess_li_template(){
         <li v-for='i in _info' v-on:click='show_messageFrame($event,i.uid,i.level)' :style='li_height(i.level)'>
           <div class='info'>
             <div class='name'>{{i.name}} 
-              <span class="badge" v-if=!i.level>{{punR[i.uid]}}</span> 
-              <span class="badge" v-if=i.level>{{tunR[i.uid]}}</span>
+              <span class="badge" v-if=!i.level>{{punR[i.uid]?punR[i.uid]:''}}</span> 
+              <span class="badge" v-if=i.level>{{tunR[i.uid]?tunR[i.uid]:''}}</span>
             </div>
             <div class='li_type'>
               <span v-if=i.level>team</span>
@@ -196,6 +196,15 @@ function v_addThePeopleInStar(info){
         </div>
       </li>
     `);
+    $('#star li').first().click(function(){
+      main.moreinfoSeen=false;
+      main.messtype='star';
+      main.messageframeSeen=true;
+      main.isteam = false;
+      main.nameOfmessageframe = this.getElementsByClassName('name')[0].innerText;
+      main.messto = this.getElementsByClassName('uid')[0].innerText
+      document.getElementById('messageframe_cont').innerHTML = '';
+    })
 }
 
 function v_removeThePeopleInRecent(id){

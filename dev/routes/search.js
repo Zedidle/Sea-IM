@@ -92,8 +92,8 @@ router.post('/join_ok',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g173,
 router.post('/star',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	LIB.userRelogin(User,data.uid);
-	LIB.check(data,'star check:');
+	// LIB.userRelogin(User,data.uid);
+	// LIB.check(data,'star check:');
 	//update the loginlist of the user,
 	Loginlist.update({uid:data.uid},{$addToSet:{star:data.sid}},(err)=>{});
 	//update the unread of the user in recent,
@@ -107,7 +107,7 @@ router.post('/star',urlencodedParser,(req,res)=>{
 	});
 	//get the information of the star,and send to the page,
 	People.find({uid:data.sid},null,{limit:1},(err,detail)=>{
-		LIB.check(detail[0],'the information of the star:');
+		// LIB.check(detail[0],'the information of the star:');
 		var J_data = JSON.stringify(detail[0]);
 		//the J_data for render in main.ejs, add star information to the star list immediately,
 		res.send(J_data);
