@@ -7,8 +7,5 @@ logs
 *.log
 npm-debug.log*
 
-#jshintrc
-.jshintrc
-
 #test
 test/
