@@ -9,25 +9,17 @@
 	<audio id='tipvoice' src="voice/successLogin.wav" autoplay="autoplay"></audio>
 </head>
 <body >
-
-
-<div class='container' id='main' >
 <input style='display: none;' id='getuid' value='<%=uid%>'>
 <input style='display: none;' id='getloginlist' value='<%=loginlist%>'>
 <input style='display: none;' id='getpunRead' value='<%=punRead%>'>
 <input style='display: none;' id='gettunRead' value='<%=tunRead%>'>
 
-
+<div class='container' id='main' >
 	<div id="content" >
-		<div id='getRender'></div>
-
 		<domore-part></domore-part>
-
 		<div id="checkMess" >
-			
 			<user-info  user_info="<%=user_info%>" ></user-info>
 			<search-content></search-content>
-
 			<div id="messOption" v-on:click='hideDomore'>
 				<div v-on:click="listSeen($event,'recent')" id='recentOption' class='sOption'>
 					<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
@@ -39,7 +31,6 @@
 					<span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
 				</div>
 			</div>
-
 			<div id="messContent" v-on:click='hideDomore'>
 				<div v-show='isMessageListSeen.recent' id="recentContent" class='sContent' >
 					<mess-lis type='recent' info='<%=recentinfo%>' punread='<%=punRead%>' tunread='<%=tunRead%>'></mess-lis>
@@ -52,12 +43,19 @@
 				</div>
 			</div>
 		</div>
-
 	</div>
 
+</div>
 
+<script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
+<script src='https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js'></script>
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>var socket = io();</script>
 
-<div v-show='messageframeSeen' class='messageframe'>
+<script>
+	$('#main').append(`
+	<div v-show='messageframeSeen' class='messageframe'>
     <div class='messageframe_top'>
       <div v-on:click='messageframe_close' class='messageframe_close'>
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -67,9 +65,8 @@
         <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
       </div>
     </div>
-	<div class="getMoreMessageOnFrame_btn" v-on:click='getMoreMessageOnFrame'>Get More Message</div>
-    <div id='messageframe_cont' class='messageframe_cont'>
-    </div>
+		<div class="getMoreMessageOnFrame_btn" v-on:click='getMoreMessageOnFrame'>Get More Message</div>
+    <div id='messageframe_cont' class='messageframe_cont'></div>
     <div v-show='expressionSeen' class='messageframe_expression'></div> 
     <div class='messageframe_say'>
       <div class='messageframe_face' v-on:click='showExpressions'>
@@ -80,57 +77,47 @@
         <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
       </button>
     </div>
-
-
-
-	<div v-show='moreinfoSeen' class='moreinfo'>
-		<div v-show='teamMembersSeen' class='teamMembers'>
-			<div v-on:click='closeTeamMembers'>
-				<span style='cursor: pointer;' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+		<div v-show='moreinfoSeen' class='moreinfo'>
+			<div v-show='teamMembersSeen' class='teamMembers'>
+				<div v-on:click='closeTeamMembers'>
+					<span style='cursor: pointer;' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				</div>
+				<ul></ul>
 			</div>
-			<ul></ul>
-		</div>
-		<div style='float:left;'>
-			<div class='exit'  v-on:click='closeMoreinfo'>
-				<span style='cursor: pointer;' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			</div>
-			<img v-bind:src="messInfo.headImg" />
-			<hr style='border-color: #C0D0D0;border-width: 2px;'>
-			<div class="info">
-				<div><h3>UID&nbsp: </h3><h4>{{messInfo.uid}}</h4></div>
-				<div><h3>名称&nbsp: </h3><h4>{{messInfo.name}}</h4></div>
-				<div v-show='isteam'><h3> 等级&nbsp: </h3><h4>{{messInfo.level}}</h4></div>
-				<div v-show='isteam'><h3>人数&nbsp: </h3><h4>{{messInfo.membernumber}}</h4></div>
-				<div v-show='!isteam'><h3>性别&nbsp: </h3><h4>{{messInfo.sex}}</h4></div>
-				<div v-show='!isteam'><h3>爱好&nbsp: </h3><h4>{{messInfo.hobby}}</h4></div>
-				<div v-show='!isteam'><h3>生日&nbsp: </h3><h4>{{messInfo.birthday}}</h4></div>
-				<div><h3>介绍&nbsp: </h3><h4>{{messInfo.introduce}}</h4></div>
-			</div>
-			<hr style=' float:left; width:100%;border-color: #C0D0D0;border-width: 1px;'>
-			<div class="more">
-				<button type="button" v-show='!isteam'  v-on:click='starOrUnstar' class="btn btn-success" aria-haspopup="true" aria-expanded="false">Star/Unstar</button>
-				<button type="button" v-show='!isteam'  v-on:click='deleteTheRecentChat' class="btn btn-warning" aria-haspopup="true" aria-expanded="false">Delete Chat</button>
-				<button type="button" v-show='isteam' v-on:click='exitTeam' class="btn btn-danger" aria-haspopup="true" aria-expanded="false">Exit Team</button>
-				<button type="button" v-show='isteam' v-on:click='showMembers' class="btn btn-primary" aria-haspopup="true" aria-expanded="false">Show Members</button>
+			<div style='float:left;'>
+				<div class='exit'  v-on:click='closeMoreinfo'>
+					<span style='cursor: pointer;' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+				</div>
+				<img v-bind:src="messInfo.headImg" />
+				<hr style='border-color: #C0D0D0;border-width: 2px;'>
+				<div class="info">
+					<div><h3>UID&nbsp: </h3><h4>{{messInfo.uid}}</h4></div>
+					<div><h3>名称&nbsp: </h3><h4>{{messInfo.name}}</h4></div>
+					<div v-show='isteam'><h3> 等级&nbsp: </h3><h4>{{messInfo.level}}</h4></div>
+					<div v-show='isteam'><h3>人数&nbsp: </h3><h4>{{messInfo.membernumber}}</h4></div>
+					<div v-show='!isteam'><h3>性别&nbsp: </h3><h4>{{messInfo.sex}}</h4></div>
+					<div v-show='!isteam'><h3>爱好&nbsp: </h3><h4>{{messInfo.hobby}}</h4></div>
+					<div v-show='!isteam'><h3>生日&nbsp: </h3><h4>{{messInfo.birthday}}</h4></div>
+					<div><h3>介绍&nbsp: </h3><h4>{{messInfo.introduce}}</h4></div>
+				</div>
+				<hr style=' float:left; width:100%;border-color: #C0D0D0;border-width: 1px;'>
+				<div class="more">
+					<button type="button" v-show='!isteam'  v-on:click='starOrUnstar' class="btn btn-success" aria-haspopup="true" aria-expanded="false">Star/Unstar</button>
+					<button type="button" v-show='!isteam'  v-on:click='deleteTheRecentChat' class="btn btn-warning" aria-haspopup="true" aria-expanded="false">Delete Chat</button>
+					<button type="button" v-show='isteam' v-on:click='exitTeam' class="btn btn-danger" aria-haspopup="true" aria-expanded="false">Exit Team</button>
+					<button type="button" v-show='isteam' v-on:click='showMembers' class="btn btn-primary" aria-haspopup="true" aria-expanded="false">Show Members</button>
+				</div>
 			</div>
 		</div>
-	</div>
-
-
-
   </div>
-  
+		`);
+
+</script>
 
 
-</div>
 
-<script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
-<script src='https://cdn.bootcss.com/jquery/1.11.3/jquery.min.js'></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	
-<script src="/socket.io/socket.io.js"></script>
-<script>var socket = io();</script>
-<script src='js/lib.js'></script>	
+
+<script src='js/lib.js'></script>
 <script src='js/main-help.js'></script>
 <script src='js/main-methods.js'></script>
 <script src='js/main.js'></script>

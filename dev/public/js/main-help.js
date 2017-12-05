@@ -308,7 +308,7 @@ function v_removeTheTeamInList(tid,li_type){
               case '钱':t = 13; break;
               case '疑问':t = 14; break;
               case '阴险':t = 15; break;
-              case '吐':t = 15; break;
+              case '吐':t = 16; break;
               case '咦':t = 17; break;
               case '委屈':t = 18; break;
               case '花心':t = 19; break;
