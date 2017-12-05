@@ -299,7 +299,7 @@ function v_methods(){
       this.isMessageListSeen.star=false;
       this.isMessageListSeen.team=false;
       var target = event.target.querySelector('span')||event.target;
-      $(target).css('color','#70C1B9');
+      $(target).css('color','#60DDFF');
       this.isMessageListSeen[type]=true;
     },
   }

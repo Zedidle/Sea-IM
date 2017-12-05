@@ -40,7 +40,6 @@ var main = new Vue({
       },
     },
 
-    //search content 
     'search-content':{
       template:v_search_content_template(),
       methods:{
@@ -60,9 +59,9 @@ var main = new Vue({
           this.searchId = document.getElementById('search_uid').value.trim();; 
           if(!this.searchId||this.searchId===uid){ return; }
           document.getElementById('search_uid').style.width='70%';
-          var J_data = JSON.stringify({ uid:this.searchId });
+          var data = { uid:this.searchId };
           var searchComponent = this;
-          $.post("/search","J_data="+J_data,function(data){
+          postChange("/search",data,function(data){
             var team = data.team;
             var person = data.person;
             $('#search-content').append("<div id='search-info'></div>");
@@ -76,6 +75,7 @@ var main = new Vue({
             }
               searchComponent.addSearchTips(team,person);
           })
+
         },
         createSearchTeamInfo:function(t){
           $('#search-info').append(v_createSearchTeamInfo_template(t));
@@ -84,13 +84,14 @@ var main = new Vue({
           var searchContent = this;
           $('#join').click(function(){
             var data = { uid:uid, tid:searchContent.searchId }
-            var J_data = JSON.stringify(data);
-            $.post('/join_judge','J_data='+J_data,function(judge){
-              if(judge==='ok'){ formPost('/join',data); }
-              else{
-                $('#search-team').append("<li class='alert alert-info' role='alert'>"+judge+"</li>");
+            postChange('/join_judge',data,function(judge){
+              if(judge==='ok'){ 
+                formPost('/join',data); 
+              }else{
+                $('#search-team').append("<li class='alert alert-info'>"+judge+"</li>");
               }
             })
+
           }) 
         },
 
@@ -134,10 +135,10 @@ var main = new Vue({
 
         addSearchTips:function(isTeamExist,isPersonExist){
           if(!isTeamExist){
-            $('#search-info').append("<li class='alert alert-warning' role='alert'>没有团队</li>");
+            $('#search-info').append("<div>没有团队</div>");
           }
           if(!isPersonExist){
-            $('#search-info').append("<li class='alert alert-danger' role='alert'>没有用户</li>");
+            $('#search-info').append("<div>没有用户</div>");
           }
         },
 

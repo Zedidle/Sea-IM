@@ -23,7 +23,6 @@
 		width:100%;
 	}
 }
-
 .ele{
 	width:50px;
 	height:50px;
@@ -191,19 +190,10 @@
 	}
 	#search-info{
 		position:relative;
-		top:40px;
-		display: block;
-		width: 100%;
-		li{
-			display: block;
-			margin:1px 0;
-			padding:1px 5px;
-		}
+		background: rgba(250,250,250,0.7);
 		#search-team{
-			display: block;
 			float: left;
-			border-bottom: solid 0.2em #222;
-			margin-bottom: 30px;
+			border-bottom: solid 2px #222;
 			li{
 				margin:1px 0;
 				padding:1px 5px;
@@ -226,48 +216,30 @@
 					color:#222;
 					font-size:1.1em;
 				}
-				#teamname{
-					.tifo_base;
-				}
-				#builder{
-					.tifo_base;
-				}
-				#level{
-					.tifo_base;
-				}
-				#membernumber{
-					.tifo_base;
-				}
-				#major{
-					.tifo_base;
-				}
-				#teamintro{
-					.tifo_base;
-				}				
+				#teamname{.tifo_base;}
+				#builder{.tifo_base;}
+				#level{.tifo_base;}
+				#membernumber{.tifo_base;}
+				#major{.tifo_base;}
+				#teamintro{.tifo_base;}				
 			}
 			#join{
 				width: 100px;
-				height:30px;
+				height:40px;
+				line-height: 40px;
 				text-align: center;
-				border:solid 2px #70C1B9;
-				color:#2294AE;
-				font-size: 18px;
-				line-height: 150%;
+				border:solid 3px #2F7280;
+				color:#234951;
+				font-size: 22px;
 				border-radius: 0.2em;
 				margin:2px;
 				cursor: pointer;
-				&:hover{
-					border-color: #A0F1E9;
-					color:#02748E;
-				}
 			}
 		}
 		#search-person{
-			margin-top: -30px;
 			padding-top:5px;
 			float: left;
 			border-bottom:2px solid #444;
-			display: block;
 			#personImg{
 				float: left;
 				display: block;
@@ -295,65 +267,26 @@
 				#personIntro{.inf;}
 			}
 			#send{
-				width:80px;
-				height:30px;
+				width:100px;
+				height:40px;
 				margin:2px;
-				border:solid 2px #70C1B9;
-				color:#AA808E;
-				font-size: 18px;
+				border:solid 3px #32847C;
+				color:#2E615C;
+				font-size: 22px;
 				border-radius: 0.2em;
 				text-align: center;
 				cursor: pointer;
-				&:hover{
-					border-color:#A0F1E9;
-					color:#7A505E;	
-				}
 			}
 			#search-star{
-				width:80px;
-				height:30px;
+				width:100px;
+				height:40px;
 				margin:2px;
-				font-size: 18px;
-				border:solid 2px #70C1B9;
-				color:#9CC51D;
+				font-size: 22px;
+				border:solid 3px #3D7570;
+				color:#274B48;
 				border-radius: 0.2em;
 				text-align: center;
 				cursor: pointer;
-				&:hover{
-					border-color:#A0F1E9;
-					color:#7C951D;
-				}
-			}
-			#sms{
-				display: block;
-				width:90%;
-				background:transparent;
-				height:0;
-				overflow: hidden;
-				textarea{
-					display: block;
-					border:solid 2px #777;
-					height:80px;
-					min-width:98%;
-					max-width:98%;
-					min-height:80px;
-					max-height:80px;
-					padding:0.5em;
-				}
-				#tosend{
-					width:98%;
-					height:30px;
-					font-size: 1.2em;
-					border:solid 2px #434;
-					border-radius: 0.2em;
-					text-align: center;
-					cursor: pointer;
-					background-color: #E6EBF2;
-				&:hover{
-					color:#036497;
-					background-color: #f6EBF3;
-				}
-				}
 			}
 		}
 	}
@@ -382,7 +315,7 @@
 	background-color:#577773;
 	color:#fff;
 	&:first-child{
-		color:#70C1B9;
+		color:#60DDFF;
 	}
 }
 #recentOption{

@@ -47,10 +47,13 @@ router.post('/join_judge',urlencodedParser,(req,res)=>{
 		LIB.check(detail[0].team,'the teams that the user has joined in:');
 		if(detail[0].team.length<4){
 			for(var teamid of detail[0].team){
-				if(teamid===data.tid){ judge = 'You had already joined.'; break; }
+				if(teamid===data.tid){ 
+					judge = 'You had joined this team.'; 
+					break; 
+				}
 			}
 		}else{
-			judge = 'You can just join four teams mostly.';
+			judge = '4 teams mostly.';
 		}
 		res.send(judge);
 	});

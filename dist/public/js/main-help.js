@@ -65,7 +65,7 @@ function v_createSearchTeamInfo_template(t){
           <div id='teamintro'>简介: `+t.introduce+`</div>
         </div>
         <div id='join'> 
-          <span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span>  Join in
+          <span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span>JOIN
         </div>
       </div>
       `;

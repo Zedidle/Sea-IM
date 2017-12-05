@@ -1,4 +1,4 @@
-var 
+const
 	gulp = require('gulp'),
 	less = require('gulp-less'),  // for less > css
     autoprefixer = require('gulp-autoprefixer'),
@@ -23,7 +23,6 @@ gulp.task('lib', function() {
 	gulp.src('./dev/lib/*.js')
 	.pipe(gulp.dest('./dist/lib'));
 }); 
-
 gulp.task('public_less', function() {
 	gulp.src('./dev/public/less/*.less')
 	.pipe(less())
@@ -44,6 +43,10 @@ gulp.task('public_js', function() {
 	// .pipe(uglify())
     // .pipe(concat('index.js'))
 	.pipe(gulp.dest('./dist/public/js'));
+
+	gulp.src('./dev/public/js/main/*.js')
+	// .pipe(concat('bundle.js'))
+	.pipe(gulp.dest('./dist/public/js'))
 });
 gulp.task('public_img', function() {
 	gulp.src('./dev/public/img/**/*')

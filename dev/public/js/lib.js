@@ -1,3 +1,33 @@
+// void function(){
+//   const cdnurl = [
+//       'https://cdn.bootcss.com/vue/2.5.7/vue.min.js',
+//       'https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js',
+//       'https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js'
+//       ];
+//   var body = document.getElementsByTagName('body')[0]; 
+//   console.log(body);
+//   for(let i of cdnurl){
+//     console.log(i);
+//     var s = document.createElement('script');
+//     s.src=i;
+//     body.appendChild(s);
+//   }
+// }();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Array.prototype.pull = function(o){
   for(let i in this){
     if(this[i] === o){

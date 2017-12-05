@@ -19,11 +19,6 @@ var buildTeam = new Vue({
 					var name_v = $('#teamname').val().trim();
 					var pw_v = $('#pw').val().trim();
 					var pww_v = $('#pww').val().trim();
-					console.log(this.reg.tn)
-					console.log(name_v)
-					console.log(this.reg.tn.test(name_v))
-					console.log(pw_v)
-					console.log(pww_v)
 
 					if(this.reg.tn.test(name_v)){
 						this.flag.tn = true;
