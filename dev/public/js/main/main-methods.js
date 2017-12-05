@@ -100,7 +100,7 @@ function v_methods(){
       con.borderR = havelevel?'0%':'50%';
       con.avator_w = havelevel?'70px':'50px';
       con.type = havelevel?'team':'people';
-      $('#recent').prepend(v_addRecentLi_recent());
+      $('#recent').prepend(v_addRecentLi_recent(con));
       $('#recent li').first().click(function(){
         var unread_badge = $(this).find('.badge')[0]||$(this).parent('li').find('span.badge')[0];
         var unreadNumber = unread_badge.innerText;
