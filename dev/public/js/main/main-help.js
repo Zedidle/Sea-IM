@@ -78,7 +78,7 @@ function v_createSearchPersonInfo_template(p){
           <img src=`+p.headImg+`>
         </div>
         <div id='pinfo'>
-          <div id='name'>昵称: `+p.name+`</div>
+          昵称: <div id='name'>`+p.name+`</div>
           <div id='sex'>性别: `+p.sex+`</div>
           <div id='hobby'>爱好: `+p.hobby+`</div>
           <div id='personIntro'>简介: `+p.introduce+`</div>
@@ -148,7 +148,7 @@ function v_createMessDiv(msg,f,msgContent){
 
 }
 
-function v_addRecentLi_recent(){
+function v_addRecentLi_recent(con){
   return `
         <li style='height:${con.h};'>
           <div class='info'>

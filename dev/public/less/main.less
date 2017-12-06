@@ -1,25 +1,27 @@
-*{margin:0;padding:0;border:none;transition: all 0.3s;font-family: "微软雅黑";}
+*{margin:0;padding:0;border:none;transition: all 0.2s;font-family: "微软雅黑";}
 
 .badge{
 	background: #F4102E;
-	padding:2px 5px 3px 5px;
-	font-size: 0.8em;
-	height:18px;
+	// padding:2px 5px 3px 5px;
+	// font-size: 0.8em;
+	// height:18px;
+	padding:2px;
+	font-size: 1.2rem;
+	width:1.7rem;
+	height:1.7rem;
 }
 .li_type{
 	display: none;
 	visibility: hidden;
 }
 .container{
-	background-image:url(../img/seaFlower.png);
+	background-color: #D6EEDC;
 	padding:0 5px;
 	width: auto;
 	border:solid 10px #61C5E1;
 	border-left: none;
 	border-right:none;
 	@media (max-width:450px){
-		margin:0;
-		padding:0;
 		width:100%;
 	}
 }
@@ -126,19 +128,19 @@
 	}
 	.userinfo_set{
 		float: right;
-		color:#70C1B9;
-		margin-right: 2px;
+		color:#45BAAF;
+		margin-right: 5px;
 		display: inline-block;
 		height: 100%;
 		text-align: center;
-		width:40px;
-		font-size: 1.8em;
-		line-height: 270%;
+		// width:40px;
+		width: 4rem;
+		font-size: 3rem;
+		// line-height: 270%;
+		line-height: 7rem;
 		cursor: pointer;
-		&:hover{
-			background-color: #70C1B9;
-			color:#fff;
-			transform:rotateX(30deg); 
+		&:active{
+			color:#21DBCA;
 		}
 	}
     
@@ -152,8 +154,8 @@
 		width:100%;
 		display: inline-block;
 		float: right;
-		height:40px;
-		background-color:#70C1B9;
+		height:44px;
+		background-color:#25A0AE;
 		overflow: hidden;
 		.search_close{
 			display: inline-block;
@@ -166,10 +168,6 @@
 			cursor: pointer;
 			font-size: 1.8em;
 			padding-bottom: 2px;
-			&:hover{
-				background-color: #fff;
-				color: #70C1B9;	
-			}
 		}
 		#search_uid{
 			padding-left: 0.5em;
@@ -182,7 +180,7 @@
 		#sub{
 			float: right;
 			color:#fff;
-			background-color:#70C1B9;
+			background-color:#2A6574;
 			width:20%;
 			font-size:20px;
 			height:38px;
@@ -224,13 +222,17 @@
 				#teamintro{.tifo_base;}				
 			}
 			#join{
-				width: 100px;
-				height:40px;
-				line-height: 40px;
+				// width: 100px;
+				// height:40px;
+				// line-height: 40px;
+				width: 10rem;
+				height: 4rem;
+				line-height: 4rem;
 				text-align: center;
 				border:solid 3px #2F7280;
 				color:#234951;
-				font-size: 22px;
+				// font-size: 22px;
+				font-size: 2.2rem;
 				border-radius: 0.2em;
 				margin:2px;
 				cursor: pointer;
@@ -266,28 +268,22 @@
 				#hobby{.inf;}
 				#personIntro{.inf;}
 			}
-			#send{
-				width:100px;
-				height:40px;
+			.p_do{
+				// width:100px;
+				// height:40px;
+				// font-size: 22px;
+				width: 12rem;
+				height: 4rem;
+				font-size: 2.2rem;
 				margin:2px;
 				border:solid 3px #32847C;
 				color:#2E615C;
-				font-size: 22px;
 				border-radius: 0.2em;
 				text-align: center;
 				cursor: pointer;
 			}
-			#search-star{
-				width:100px;
-				height:40px;
-				margin:2px;
-				font-size: 22px;
-				border:solid 3px #3D7570;
-				color:#274B48;
-				border-radius: 0.2em;
-				text-align: center;
-				cursor: pointer;
-			}
+			#send{ .p_do; }
+			#search-star{ .p_do; }
 		}
 	}
 }
@@ -298,7 +294,8 @@
 	position: relative;
 	top:40px;
 	left: 0px;
-	height:40px;
+	// height:44px;
+	height: 4.4rem;
 	width:100%;
 	border-top:solid 2px #70C1B9;
 	border-left:solid 4px #70C1B9;
@@ -312,7 +309,7 @@
 	height:99%;
 	line-height: 250%;
 	cursor:pointer;
-	background-color:#577773;
+	background-color:#36887E;
 	color:#fff;
 	&:first-child{
 		color:#60DDFF;
@@ -338,7 +335,6 @@
 	height:560px;
 	width:100%;
 	li{
-		border-bottom: solid 1px #70C1B9;
 		padding-left: 0.3em;
 		.info{
 			display: inline-block;
@@ -491,7 +487,8 @@
 	.getMoreMessageOnFrame_btn {
 		background: rgba(252,254,253,0.9);
 		color:#555;
-		width:150px;
+		// width:150px;
+		width: 15rem;
 		text-align: center;
 		cursor:pointer;
 		padding:0 0.5em 0 0.5em;
@@ -501,14 +498,15 @@
 		position: absolute;
 		top:45px;
 		left:40%;
-		&:hover{ box-shadow: 0 0 3px #fff; }
+		&:active{ box-shadow: 0 0 3px #fff; }
 		@media(max-width:420px){left:27%;}
 	}
 	.messageframe_top{
 		border-top-left-radius: 10px;
 		border-top-right-radius: 10px;
 		display: block;
-		height:40px;
+		// height:40px;
+		height: 4rem;
 		color: #fff;
 		background-color: #70C1B9;
 		@media (max-width:600px){
@@ -550,7 +548,6 @@
 			height:100%;
 			&:hover{
 				color:#70C1B9;
-				background-color: #FBFCFD;
 			}
 			@media (max-width:600px){
 				font-size: 1em;
@@ -637,7 +634,8 @@
 		border:solid 2px #70C1B9;
 		display: block;
 		text-align: center;
-		height:37px;
+		// height:37px;
+		height:4rem;
 		color:#fff;
 		position:absolute;
 		bottom:0;
@@ -654,10 +652,7 @@
 			height:100%;
 			width:10%;
 			cursor: pointer;
-			&:hover{
-				color:#70C1B9;
-				background-color: #FFFFFF;
-			}
+			&:active{ color:#42E4EA; }
 		}
 		input{
 			padding-left: 0.2em;
@@ -682,10 +677,7 @@
 			height:100%;
 			width:10%;
 			cursor: pointer;
-			&:hover{
-				color:#70C1B9;
-				background-color: #FFF;
-			}
+			&:active{ color:#42E4EA; }
 			@media (max-width:600px){
 				width:15%;
 			}
