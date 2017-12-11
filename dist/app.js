@@ -7,13 +7,13 @@ const io = require('socket.io')(server);
 const routes = require('./routes/routes')(app);
 const path = require('path');
 const mongoose=require('mongoose');
-const User = require('../model/user');
-const Unread = require('../model/unread');
-const Message = require('../model/message');
-const Tmessage = require('../model/tmessage');
-const People = require('../model/people');
-const Team = require('../model/team');
-const Loginlist = require('../model/loginlist');
+const User = require('./model/user');
+const Unread = require('./model/unread');
+const Message = require('./model/message');
+const Tmessage = require('./model/tmessage');
+const People = require('./model/people');
+const Team = require('./model/team');
+const Loginlist = require('./model/loginlist');
 
 mongoose.Promise = global.Promise;  
 
@@ -32,7 +32,7 @@ User.update({},{$set:{login:false}},{multi:true},(err)=>{
 
 //设置公共静态路由
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.set('views',__dirname + "/views");
 app.get('*', function(req, res){
     res.render('404.ejs', {})
 });
