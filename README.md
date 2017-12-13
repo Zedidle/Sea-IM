@@ -1,24 +1,19 @@
 <h1>Sea Net</h1>
-http://39.108.154.125
-<p>ACCOUNTS:z00000,z00001,z00002,z00005,z00006,z00007,z00008,z00009</p>
-<p>PASSWORD:123456789</p>
-<p>You also register your own account.</p>
 
 <br>
 
 <h3>Download</h3>
 git clone https://github.com/DoubleCG/seanet.git
 
-<h4>TEST</h4>
-<pre>cd seanet
-npm install
-npm run sup
-</pre>
+<h4>Start</h4>
+>cd seanet
+>npm install
+>npm run sup
 
 <br>
-<h2>Technical Stack</h2>
-<p>Vue2.0：build the front page.</p>
-<p>Socket.io：transport messages in true time.</p>
+<h2>技术栈</h2>
+<p>Vue2.0：构建客户端页面</p>
+<p>Socket.io：transport messages in true time</p>
 <p>Express</p>
 <p>Client use ES5, Server use ES6，promise deal with async program.</p>
 <p>localStorage：Save the user's information locally.</p>

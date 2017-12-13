@@ -137,22 +137,6 @@ User.update({uid},{$set:{login:true}},err=>{
 		};
 		makeUserLogout();
 	}();
-	// sess.makeUserSessLogout = setInterval(function(){
-	// 	//make user logout every 5 minutes,and user can do any action to relogin.
-	// 	console.log('Make (user)'+uid+' logout in session!');
-	// 	sess.login = false;
-	// },300000);//5min
-	
-	// sess.makeUserDBLogout = setInterval(function(){
-	// 	if(!sess.login){
-	// 		User.update({uid},{$set:{login:false}},(err)=>{
-	// 			console.log('Make (user)'+uid+' logout in DB!');
-	// 			clearInterval(sess.makeUserSessLogout);
-	// 			clearInterval(sess.makeUserDBLogout);
-	// 			delete sess.login;
-	// 		})
-	// 	}
-	// },1800000)//30min
 });
 
 		res.render('main.ejs',{
