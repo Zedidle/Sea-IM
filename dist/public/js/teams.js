@@ -1,22 +1,20 @@
-const uid = document.getElementById('getuid').value;
-
-
-var teams = new Vue({
+var uid = document.getElementById('getuid').value;
+new Vue({
   components:{
-
-     'text-info':{
+    'text-info':{
       props:['uid','name','level','membernumber','introduce'],
-      template:`
-      <div id='brief'>
-        <div id='uid'>ID: {{uid}}</div>
-        <div>团队名称: <textarea id='name'>{{name}}</textarea></div>
-        <div id='level'>等级:  {{level}}</div>
-        <div id='membernumber'>人数:  {{membernumber}}</div>
-        <h3>简介:</h3>
-        <textarea id='introduce'>{{introduce}}</textarea>
-        <button id='textUpdate' style='float:right;width:80px;height:30px;margin:10px 0;' v-on:click='textUpdate' class="btn btn-primary">更新</button>
-      </div>
-      `,
+      template:
+        '<div id="brief">'+
+          '<div id="uid">ID:{{uid}}</div>'+
+          '<div>团队名称: <textarea id="name">{{name}}</textarea></div>'+
+          '<div id="level">等级:{{level}}</div>'+
+          '<div id="membernumber">人数:{{membernumber}}</div>'+
+          '<h3>简介:</h3>'+
+          '<textarea id="introduce">{{introduce}}</textarea>'+
+          '<button id="textUpdate" style="float:right;width:80px;height:30px;margin:10px 0;" v-on:click="textUpdate" class="btn btn-primary">'+
+            '更新'+
+          '</button>'+
+        '</div>',
       methods:{
         textUpdate:function(){
           var
@@ -28,7 +26,11 @@ var teams = new Vue({
             setTimeout(function(){ $('button#textUpdate').text('更新'); },2000);
             return false;
           }else{
-            var data = {uid:this.uid, name:name, introduce:introduce, }
+            var data = {
+              uid:this.uid, 
+              name:name, 
+              introduce:introduce
+            };
             text_filter(data);
             postChangeText('/teamsT',data,function(data){
               $('#name').val(data.name);
@@ -53,13 +55,6 @@ var teams = new Vue({
       if(!avator.length){
         $('#avator').css('border','solid 1px #449933'); 
       }else{
-        // var input = document.createElement('input');
-        // input.style.display = 'none';
-        // input.name = 'uid';
-        // input.value = this.uid;
-        // var teamHeadForm = $('#teamHeadForm');
-        // teamHeadForm.append(input);
-        // teamHeadForm.submit();
         $('#teamHeadForm').submit();
       }
     },
@@ -70,11 +65,12 @@ var teams = new Vue({
       r.readAsDataURL(that.files[0]);
       r.onload = function(e){
         img.src=this.result;
-      }
+      };
     },
     backToMainPage:function(){
-      formPost('/main',{uid:uid});
+      formPost('/main',{
+        uid:uid
+      });
     }
   }
 });
-

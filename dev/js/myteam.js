@@ -44,37 +44,52 @@ Vue.component('team-info',{
   `,
   data:function(){
     return {
-      uidEnsure:{ uid:this.uid }
-    }
-  }
-  ,computed:{
+      uidEnsure:{ 
+        uid: this.uid
+      }
+    };
+  },
+  computed:{
     _teaminfo:function(){
       return JSON.parse(this.teaminfo);
     },
     build:function(){
       var b=false;
-      for(let i of this._teaminfo){
-        if(i.uid===this.uid){ console.log(602); b = i; break;}
+      var t = this._teaminfo;
+      for(var i=0;i<t.length;i++){
+        if(t[i].uid===this.uid){
+          b = i;
+          break;
+        }
       }
       return b;
     },
     join:function(){
       var j=[];
-      for(let i of this._teaminfo){
-        if(i.uid!==this.uid){ j.push(i) }
+      var t = this._teaminfo;
+      for(var i=0;i<t.length;i++){
+        if(t[i].uid!==this.uid){ 
+          j.push(i);
+        }
       }
       return j;
     }
+  },
+  methods:{
+    test:function(){
+
+    },
+    back:function(){
+      formPost('/main',this.uidEnsure);
+    },
+    update:function(){
+      formPost('/teams',this.uidEnsure);
+    }
   }
-  ,methods:{
-    test:function(){},
-    back:function(){ formPost('/main',this.uidEnsure); },
-    update:function(){ formPost('/teams',this.uidEnsure); }
-  }
-})
+});
 
 var app = new Vue({
   el:'#myteam',
   data:{},
   methods:{}
-})
+});

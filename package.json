@@ -6,6 +6,8 @@
   "scripts": {
 
     "start": "node dist/app.js",
+    "inidb": "node inidb.js",
+    "clearlogin": "node clearlogin.js",
     "sup": "supervisor dist/app.js",
     "pm2": "pm2 start dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"

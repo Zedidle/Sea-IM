@@ -13,7 +13,7 @@ var regist = new Vue({
 		formSubmit:function(){
 			var 
 				flaguser = this.uidReg.test($("#uid").val()),
-				flagpw = this.pwReg.test($("#password").val())			
+				flagpw = this.pwReg.test($("#password").val()),		
 				flagpww = issame($("#password").val(),$("#passwordCheck").val());
 
 			if(flaguser&&flagpw&&flagpww){
@@ -38,4 +38,4 @@ var regist = new Vue({
 			$('#tip').html(tipText);
 		},
 	}
-})
+});

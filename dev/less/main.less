@@ -1,0 +1,212 @@
+@import "config.less";
+
+.container{
+    border:3px solid @deepBlue;
+	background-color:@easyGray;
+	padding:0;
+	width: auto;
+	@media (max-width:450px){
+		width:100%;
+	}
+	#content{
+		display: inline-block;
+		width:auto;
+		height:600px;
+		@media (max-width:450px){
+			width:100%;
+		}
+		#domore{
+			height:100%;
+			width:0px;
+			overflow: hidden;
+			float: right;
+			@media (max-width:450px){
+				position:absolute;
+				z-index: 20;
+				right:0;
+				top:80px;
+			}
+			#logOff{
+				width:100%;
+				margin-top:5px;
+				font-weight: 600;
+				height:40px;
+				line-height: 40px;
+				font-size: 20px;
+				text-align:center;
+				float: right;
+				cursor:pointer;
+				border-radius: 0.2em;
+				color:#fff;
+				background-color: @seaBlue;
+			}
+			.ele{
+				width:50px;
+				height:50px;
+				line-height: 50px;
+				border-radius: 10%;
+				margin:10px;
+				font-size: 1.8em;
+				text-align: center;
+				display: inline-block;
+				cursor:pointer;
+				color:#7EBCB7;
+				background:rgba(255,255,255,0.8);
+			}
+		}
+		#checkMess{
+			overflow-x: hidden;
+			overflow-y: scroll;
+			height:100%;
+			width:320px;
+			display: inline-block;
+			float: left;
+			@media (max-width:450px){
+				height:100%;
+				width:100%;
+			}
+			.userinfo_wrap{
+				height:80px;
+				.userinfo_avator{
+				    float: left;
+				    display: inline-block;
+				    height:100%;
+				    width:80px;
+				    border: solid 1px #999;
+				    border-radius: 50%;
+				    overflow: hidden;
+					.userinfo_avator_img{
+					  width:100%;
+					  height:100%;
+					}
+				}
+				.userinfo_intro{
+					width: 140px;
+					float: left;
+					display: inline-block;
+					#nick_name{
+						display: inline-block;
+						font-size:1.2em;
+					}
+					#user_name{
+						display: inline-block;
+						font-size:1em;
+					}
+					.userinfo_introduce{
+						height:60px;
+						overflow: hidden;
+						font-size:1em;
+					}
+				}
+				.userinfo_set{
+					float: right;
+					color:#44BBAA;
+					margin-right: 5px;
+					display: inline-block;
+					height: 100%;
+					text-align: center;
+					width: 4rem;
+					font-size: 3rem;
+					line-height: 7rem;
+					cursor: pointer;
+					&:active{
+						color:#22DDCC;
+					}
+				}
+			}
+		}
+		#messOption{
+			position: relative;
+			top: 40px;
+			left: 0px;
+			height: 4.4rem;
+			width: 100%;
+			border-top:2px solid @seaBlue;
+			@messOptionWidth:33.3%;
+			.sOption{
+				text-align: center;
+				position: absolute;
+				width:@messOptionWidth;
+				height:99%;
+				line-height: 250%;
+				cursor:pointer;
+				background-color:#36887E;
+				color:#fff;
+				&:first-child{
+					color:#60DDFF;
+				}
+			}
+			#recentOption{
+				left:@messOptionWidth*0;
+			}
+			#starOption{
+				left:@messOptionWidth*1;
+			}
+			#teamOption{
+				left:@messOptionWidth*2;
+			}
+		}
+		#messContent{
+			position: relative;
+			top:40px;
+			display: inline-block;
+			height:560px;
+			width:100%;
+			.sContent{
+				height:100%;
+				width:100%;
+				ul{
+					li{
+						text-decoration: none;
+						list-style: none;
+						cursor: pointer;
+						padding-left: 0.3em;
+						.info{
+							display: inline-block;
+							float: left;
+							width:60%;
+							height:100%;
+							.name{
+
+								font-size: 1.1em;
+								width: 100%;
+								height:35%;
+							}
+							.li_type{
+								.none;
+							}
+							.uid{display: none;}
+							.introduce{
+								font-size:0.9em;
+								display: block;
+								height:65%;
+							}	
+						}
+						.avator{
+							display: inline-block;
+							float: right;
+							overflow: hidden;
+							margin-top: 0.2em;
+							height:95%;
+							img{
+								width:100%;
+								height:100%;
+							}
+						}
+						.badge{
+							background: #F4102E;
+							padding:2px;
+							font-size: 1.2rem;
+							width:1.7rem;
+							height:1.7rem;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+

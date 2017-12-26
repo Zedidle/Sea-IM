@@ -6,63 +6,16 @@
 	<title>Seanet-登录</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
-    *{
-        transition:all 0.3s;
-    }
-    body{
-      /*background-color:#669999;*/
-        /*background: url(img/seaFlower.png);*/
-        /*background-image: url(img/.png);*/
-    }
-
     .container{
         z-index:100;
         overflow: hidden;
-        margin:10% auto;
+        width:100%;
+        height:650px;
+        background-color: #555;
+        align-items: center;
         display: flex;
         justify-content: space-between;
-}
-/*#logo{
-    float: left;
-    position:relative;
-    width:360px;
-    height:210px;
-    min-width:300px;
-    min-height:180px;
-    background-image:url(img/hait.png);
-    background-size: 100%;
-    background-repeat: no-repeat;
-}*/
-/*#logo>h1{
-    position: absolute;
-    display: inline-block;
-    width:55%;
-    height:40%;
-    bottom:0;
-    right: 0;
-    font:40px "Helvetica Neue",Helvetica,Arial,"Microsoft Yahei","Hiragino Sans GB","Heiti SC","WenQuanYi Micro Hei",sans-serif;
-    color:#fff;
-    text-align: center;
-    margin:0; 
-    padding:0;
-}*/
-    @media(max-width: 960px) {
-        .container{
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-    }
-    @media(max-width: 393px) {
-        #logo{
-            width:100%;
-        }
-        #logo>h1{
-            font-size:31px;
-        }
     }
     #loginForm{
         width:360px;
@@ -70,7 +23,7 @@
         float: left;
         box-shadow: 0 0 3px #fff;
         display:inline-block;
-        background: rgba(250,250,250,0.7);
+        background: rgba(250,250,250,0.5);
         padding:10px;
     }
     @media(max-width: 393px) {
@@ -126,9 +79,6 @@
 <body>
 
 <div class="container" id='login'>
-<!--     <div id="logo">
-        <h1>Sea Net</h1>
-    </div>   -->  
     <form id='loginForm' class="bs-example bs-example-form"  role="form" action="/" method="post">
         <h4 id='tipinfo'><%=tipInfo%></h4>
         <div class="input-group">
@@ -154,8 +104,7 @@
 <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src='js/config.js'></script>
-<script src='/js/lib.js'></script>
-<script src="/js/login.js"></script>
+<script src='js/lib.js'></script>
+<script src="js/login.js"></script>
 </body>
 </html>

@@ -1,0 +1,142 @@
+@import "config.less";
+
+#search-content{
+	div{ 
+		display: inline-block; 
+	}
+	margin-bottom: 5px;
+	#search{
+		width:100%;
+		display: inline-block;
+		float: right;
+		height:44px;
+		overflow: hidden;
+		.search_close{
+			display: inline-block;
+			text-align: center;
+			overflow: hidden;
+			width:8%;
+			height: 38px;
+			color: @grayRed;
+			cursor: pointer;
+			font-size: 1.8em;
+			padding-bottom: 2px;
+		}
+		#search_uid{
+			border:2px solid @lightBlue;
+			padding-left: 0.5em;
+			float: right;
+			margin:0 2px;
+			font-size: 16px;
+			height:38px;
+			width:78%;
+		}
+		#sub{
+			float: right;
+			color:#fff;
+			width:18%;
+			height:38px;
+			margin-right:2px;
+			font-size: 20px;
+			line-height: 20px;
+			background-color: @seaBlue;
+			border:none;
+		}
+	}
+	#search-info{
+		position:relative;
+		background: rgba(250,250,250,0.7);
+		#search-team{
+			float: left;
+			border-bottom: solid 2px #222;
+			li{
+				margin:1px 0;
+				padding:1px 5px;
+			}
+			#teamImg{
+				display: block;
+				width: 170px;
+				height:150px;
+				img{
+					width: 100%;
+					height: 100%;
+				}
+			}
+			#tinfo{
+				padding:0.3em;
+				width:90%;
+				.tifo_base{
+					margin:2px;
+					display: block;
+					color:#222;
+					font-size:1.1em;
+				}
+				#teamname{.tifo_base;}
+				#builder{.tifo_base;}
+				#level{.tifo_base;}
+				#membernumber{.tifo_base;}
+				#major{.tifo_base;}
+				#teamintro{.tifo_base;}				
+			}
+			#join{
+				width: 10rem;
+				height: 4rem;
+				line-height: 4rem;
+				text-align: center;
+				border:solid 3px #2F7280;
+				color:#234951;
+				font-size: 2.2rem;
+				border-radius: 0.2em;
+				margin:2px;
+				cursor: pointer;
+			}
+		}
+		#search-person{
+			padding-top:5px;
+			float: left;
+			border-bottom:2px solid #444;
+			#personImg{
+				float: left;
+				display: block;
+				width: 100px;
+				height: 100px;
+				img{
+					width: 100%;
+					height: 100%;
+				}
+			}
+			#pinfo{
+				float:left;
+				display: block;
+				width:90%;
+				.inf{
+					margin:2px;
+					display: block;
+					height:auto;
+					color:#222;
+					font-size:1.1em;
+				}
+				#nickname{.inf;}
+				#sex{.inf;}
+				#hobby{.inf;}
+				#personIntro{.inf;}
+			}
+			.p_do{
+				// width:100px;
+				// height:40px;
+				// font-size: 22px;
+				width: 12rem;
+				height: 4rem;
+				font-size: 2.2rem;
+				margin:2px;
+				border:solid 3px #32847C;
+				color:#2E615C;
+				border-radius: 0.2em;
+				text-align: center;
+				cursor: pointer;
+			}
+			#send{ .p_do; }
+			#search-star{ .p_do; }
+		}
+	}
+}

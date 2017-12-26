@@ -5,10 +5,6 @@
 	<title>Seanet-Buildteam successfully</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<style>
-	body{
-      /*background: url(img/seaFlower.png);*/
-      /*background-color:#669999;*/
-    }
     @media (max-width: 970px) {
         body{
             background-size:1000px 100%;
@@ -39,10 +35,11 @@
 	<script>
 		var uid = '<%=uid%>';
 		document.getElementById('back').onclick = function(){
-			var data = { uid:uid }
-			formPost('/main',data)
+			var data = { 
+				uid:uid
+			};
+			formPost('/main',data);
 		}
 	</script>
-<script src='js/config.js'></script>
 </body>
 </html>

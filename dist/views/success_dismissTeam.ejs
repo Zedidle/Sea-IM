@@ -6,15 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<style>
-	body{
-	/*background-color:#669999;*/
-      /*background: url(img/seaFlower.png);*/
-    }
-    @media (max-width: 970px) {
-        body{
-            background-size:1000px 100%;
-        }
-    }
+	    @media (max-width: 970px) {
+	        body{
+	            background-size:1000px 100%;
+	        }
+	    }
 		#container{
 			border:solid 2px #8619cc;
 			border-radius: 0.5em;
@@ -37,6 +33,5 @@
 		document.getElementById('back').onclick = function(){formPost('/main',data);}
 		document.getElementById('build').onclick =function(){formPost('/DealWithTeam',data);}
 	</script>
-<script src='js/config.js'></script>
 </body>
 </html>

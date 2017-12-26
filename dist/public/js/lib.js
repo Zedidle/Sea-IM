@@ -1,17 +1,18 @@
-  // const cdnurl = [
-  //     'https://cdn.bootcss.com/vue/2.5.7/vue.min.js',
-  //     'https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js',
-  //     'https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js'
-  //     ];
-  // var cdnsrc = document.getElementById('cdnsrc'); 
-  // console.log(cdnsrc);
-  // for(let i of cdnurl){
-  //   console.log(i);
-  //   var s = document.createElement('script');
-  //   s.src=i;
-  //   console.log(s)
-  //   cdnsrc.appendChild(s);
-  // }
+// void function(){
+//   const cdnurl = [
+//       'https://cdn.bootcss.com/vue/2.5.7/vue.min.js',
+//       'https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js',
+//       'https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js'
+//       ];
+//   var body = document.getElementsByTagName('body')[0]; 
+//   console.log(body);
+//   for(let i of cdnurl){
+//     console.log(i);
+//     var s = document.createElement('script');
+//     s.src=i;
+//     body.appendChild(s);
+//   }
+// }();
 
 
 
@@ -60,6 +61,14 @@ function getDayTime(){
   var month = parseInt(time.getMonth())+1;
   return month+ '.' +time.getDate()+'  '+time.getHours()+':'+time.getMinutes();
 }
+
+function ytime(){
+     var time = new Date();
+     var month = time.getMonth()+1;
+     time = time.getFullYear()+'-'+month+ '-' +time.getDate()+'   '+time.getHours()+':'+time.getMinutes();
+     return time;
+}
+
 function issame(v1,v2){
   return (v1===v2)?true:false;
 }
@@ -136,12 +145,7 @@ function postChangeText(url,data,callback){
 }
 
 
-function ytime(){
-     var time = new Date();
-     var month = parseInt(time.getMonth())+1;
-     time = time.getFullYear()+'.'+month+ '.' +time.getDate()+'   '+time.getHours()+':'+time.getMinutes();
-     return time;
-}
+
 
 function regKeepJSON(data){
   return data.replace(/&#34;/g, '\"');

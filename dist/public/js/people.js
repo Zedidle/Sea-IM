@@ -1,4 +1,4 @@
-const uid = document.getElementById('getuid').value;
+var uid = document.getElementById('getuid').value;
 console.log('uid:'+uid);
 
 
@@ -33,7 +33,7 @@ var people = new Vue({
                     $('button#textUpdate').text('昵称字数过长');
                     setTimeout(function(){
                          $('button#textUpdate').text('更新');
-                    },2000)
+                    },2000);
                }else if(introduce.length>60){
                     $('textarea#introduce').css('border','solid 1px red');
                     $('button#textUpdate').text('简介字数不能超过6０');
@@ -46,7 +46,7 @@ var people = new Vue({
                          sex:sex,
                          hobby:hobby,
                          birthday:birthday
-                    }
+                    };
                     text_filter(data);
                     postChangeText('/peopleT',data,function(data_back){
                          $('#name').val(data_back.name);
@@ -66,10 +66,7 @@ var people = new Vue({
                r.readAsDataURL(that.files[0]);
                r.onload = function(e){
                     img.src=this.result;
-               }
+               };
           }
      }
-})
-
-
-
+});
