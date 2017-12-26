@@ -11,7 +11,6 @@ const
     rename = require('gulp-rename'),
     livereload = require('gulp-livereload');
 
-
 gulp.task('default',function(){
 	gulp.start('less','js');
 })
@@ -22,8 +21,6 @@ gulp.task('less', function() {
 	.pipe(minifyCSS())
 	.pipe(gulp.dest('./dist/public/css'));
 });
-
-
 gulp.task('js', function() {
 	gulp.src('./dev/public/js/*.js')
 	// .pipe(jshint('.jshintrc'))
@@ -36,7 +33,7 @@ gulp.task('js', function() {
 	// .pipe(concat('bundle.js'))
 	.pipe(gulp.dest('./dist/public/js'))
 });
-	
+
 // 看守
 gulp.task('watch', function() {
   gulp.watch('./dev/public/less/*.less', ['less']);

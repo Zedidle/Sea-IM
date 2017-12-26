@@ -4,6 +4,4 @@ npm-debug.log
 npm-debug.log*
 test/
 dev/clearlogin.js
-dev/ini.js
-ini.js
-clearlogin.js
+dev/inidb.js

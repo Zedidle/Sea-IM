@@ -12,7 +12,9 @@
         transition:all 0.3s;
     }
     body{
-        background: url(img/seaFlower.png);
+      /*background-color:#669999;*/
+        /*background: url(img/seaFlower.png);*/
+        /*background-image: url(img/.png);*/
     }
 
     .container{
@@ -22,7 +24,7 @@
         display: flex;
         justify-content: space-between;
 }
-#logo{
+/*#logo{
     float: left;
     position:relative;
     width:360px;
@@ -32,8 +34,8 @@
     background-image:url(img/hait.png);
     background-size: 100%;
     background-repeat: no-repeat;
-}
-#logo>h1{
+}*/
+/*#logo>h1{
     position: absolute;
     display: inline-block;
     width:55%;
@@ -45,7 +47,7 @@
     text-align: center;
     margin:0; 
     padding:0;
-}
+}*/
     @media(max-width: 960px) {
         .container{
             flex-direction: column;
@@ -124,9 +126,9 @@
 <body>
 
 <div class="container" id='login'>
-    <div id="logo">
+<!--     <div id="logo">
         <h1>Sea Net</h1>
-    </div>    
+    </div>   -->  
     <form id='loginForm' class="bs-example bs-example-form"  role="form" action="/" method="post">
         <h4 id='tipinfo'><%=tipInfo%></h4>
         <div class="input-group">
@@ -152,6 +154,7 @@
 <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src='js/config.js'></script>
 <script src='/js/lib.js'></script>
 <script src="/js/login.js"></script>
 </body>

@@ -61,6 +61,14 @@ function getDayTime(){
   var month = parseInt(time.getMonth())+1;
   return month+ '.' +time.getDate()+'  '+time.getHours()+':'+time.getMinutes();
 }
+
+function ytime(){
+     var time = new Date();
+     var month = time.getMonth()+1;
+     time = time.getFullYear()+'-'+month+ '-' +time.getDate()+'   '+time.getHours()+':'+time.getMinutes();
+     return time;
+}
+
 function issame(v1,v2){
   return (v1===v2)?true:false;
 }
@@ -137,12 +145,7 @@ function postChangeText(url,data,callback){
 }
 
 
-function ytime(){
-     var time = new Date();
-     var month = parseInt(time.getMonth())+1;
-     time = time.getFullYear()+'.'+month+ '.' +time.getDate()+'   '+time.getHours()+':'+time.getMinutes();
-     return time;
-}
+
 
 function regKeepJSON(data){
   return data.replace(/&#34;/g, '\"');
