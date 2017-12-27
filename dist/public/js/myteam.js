@@ -17,7 +17,6 @@ Vue.component('team-info',{
             <div class="teamname">Teamname: {{build.name}}</div>
             <div class="level">Level: {{build.level}}</div>
             <div class="membernumber">Member number: {{build.membernumber}}</div>
-
             <div class="introduce">Introduce: {{build.introduce}}</div>
           </div>
         </div>

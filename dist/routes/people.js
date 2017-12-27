@@ -14,7 +14,6 @@ const Tmessage = require('../model/tmessage');
 const People = require('../model/people');
 const Team = require('../model/team');
 const Loginlist = require('../model/loginlist');
-
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
 const router = express.Router()
@@ -33,10 +32,10 @@ router.post('/people',urlencodedParser,(req,res)=>{
 			sex:info.sex,
 			introduce:info.introduce,
 			hobby:info.hobby,
-			birthday:info.birthday,
-		})
-	})
-})
+			birthday:info.birthday
+		});
+	});
+});
 
 //used by views/people.ejd g158
 //peoples images uploads
@@ -57,32 +56,9 @@ router.post('/peopleT',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 	LIB.check(data,'text information of people to change:');
 	res.send(req.body.J_data);
-	People.update({uid:data.uid},{$set:data},(err)=>{});
+	People.update({uid:data.uid},{$set:data},(err)=>{
+
+	});
 })
-
-// router.post('/Blob_test',urlencodedParser,(req,res)=>{
-// 	var sess = req.session;
-// 	var data = req.body;
-// 	CHECK(data);
-
-// 	// var img = req.files;
-// 	// CHECK(img);
-// 	// fs.writeFile('dataURL',dataURL,function(){
-// 	// 	console.log('File had write.')
-// 	// })
-// 	// res.send(req.body.J_data);
-// })
-
-
-// router.post('/dataURL_test',urlencodedParser,(req,res)=>{
-// 	var sess = req.session;
-// 	var data = JSON.parse(req.body.J_data);
-// 	var dataURL = data.url;
-
-// 	fs.writeFile('dataURL',dataURL,function(){
-// 		console.log('File had write.')
-// 	})
-// 	res.send(req.body.J_data);
-// })
 
 module.exports = router;  

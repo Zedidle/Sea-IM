@@ -254,7 +254,6 @@ var main = new Vue({
     loginlist:loginlist,
     messtype:'',
     messto:'',
-    messgetTimes:0,
     nameOfmessageframe:'',
     messageframeSeen:false,
     expressionSeen:false,

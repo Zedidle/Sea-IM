@@ -5,7 +5,10 @@ var peopleSchema = new Schema({
 	createTime: { type: Date, default: Date.now, index: true },
     updateTime: { type: Date, default: Date.now },
 	uid:String,
-	headImg:String,
+	headImg:{
+		type: String,
+		default: '/img/defaultHead.png'
+	},
     name : String,
     introduce:String,
     hobby : String,

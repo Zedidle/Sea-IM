@@ -64,7 +64,10 @@ router.post('/join',urlencodedParser,(req,res)=>{
 	var data = req.body;
 	LIB.userRelogin(User,data.uid);
 	LIB.check(data,'join:');
-	res.render('join.ejs',{ uid:data.uid, tid:data.tid, });
+	res.render('join.ejs',{
+		uid:data.uid,
+		tid:data.tid
+	});
 });
 
 

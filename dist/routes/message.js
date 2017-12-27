@@ -18,31 +18,35 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
 const router = express.Router();
 
-//used by public/js/main.js g370;
 router.post('/getmess',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-	var msend = [];
-	var getMessNumber = 5;
+	var data = req.body;
 	new Promise((resolve,reject)=>{
 		if(data.type!=='team'){
-			Message.find({uid:data.receive_uid},null,null,(err,detail)=>{
-				resolve(detail[0]['mess'][data.from_uid]);
+			Message.find({uid:data.receive_uid}, null, {limit:1}, (err,mess) => {
+				if(err) throw err;
+				if(mess.length){
+					resolve(mess[0]['mess'][data.from_uid]);
+				}else{
+					resolve(false);
+				}
 			});
 		}else{
-			Tmessage.find({uid:data.from_uid},(err,detail)=>{
-				resolve(detail[0].mess);
+			Tmessage.find({uid:data.from_uid}, null, {limit:1}, (err,tmess) => {
+				if(err) throw err;
+				if(tmess.length){
+					resolve(tmess[0].mess);
+				}else{
+					resolve(false);
+				}
 			});
 		}
-	}).then(gotMessages=>{
-		for(let i=0;gotMessages.length&&i<5;i++){
-			msend.push(gotMessages[gotMessages.length-1-data.skip-i]);
-		}
-		var J_msend = JSON.stringify(msend);
-		res.send(J_msend);
-	})
-})
+	}).then((messages) => {
+		res.send(messages);
+	});
+});
 
-router.post('/starOrUnstar',urlencodedParser,(req,res)=>{
+
+router.post('/starOrUnstar', urlencodedParser, (req,res) => {
 	var data = JSON.parse(req.body.J_data);
 	if(data.isStar){
 		Loginlist.update({uid:data.uid},{$pull:{star:data.to}},err=>{
@@ -64,45 +68,5 @@ router.post('/deleteRecentChat',urlencodedParser,(req,res)=>{
 	})
 	res.send(true);
 })
-
-
-
-
-// router.post('/getmess',urlencodedParser,(req,res)=>{
-
-// 	var data = JSON.parse(req.body.J_data);
-// 	// LIB.userRelogin(User,data.uid);
-//     LIB.check(data,'Get mess : ');
-// 	var gotMessages;
-// 	var msend = { isteam:null, mess:[],};
-// 	var getMessNumber = data.unRead;
-
-// 	new Promise((resolve,reject)=>{
-// 		if(data.type!=='team'){
-// 			Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-// 				LIB.check(detail[0],'getmess_NotTeam');
-// 				gotMessages = detail[0]['mess'][data.mid];
-// 				msend.isteam = false;
-// 				resolve(gotMessages);
-// 			});
-// 		}else{
-// 			Tmessage.find({uid:data.mid},null,{limit:1},(err,detail)=>{
-// 				LIB.check(detail[0],'getmess_Team');
-// 				gotMessages = detail[0].mess;
-// 				msend.isteam = true;
-// 				resolve(gotMessages);
-// 			});
-// 		}
-// 	}).then(gotMessages=>{
-// 		while(getMessNumber&&gotMessages.length){
-// 			msend.mess.unshift(gotMessages.pop());
-// 			getMessNumber -= 1;
-// 		}
-// 		var J_msend = JSON.stringify(msend);
-// 		res.send(J_msend);
-// 	})
-// })
-
-
 
 module.exports = router;

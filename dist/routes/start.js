@@ -57,7 +57,6 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 			}); 
 			var people = new People({
 				uid,
-				headImg:'/img/defaultHead.png',
 				sex : '保密',
 		    	name : 'User'+Math.random()*Math.random()*10000,
 		    	introduce:'这家伙很懒,什么也没有写．',
@@ -73,10 +72,13 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 			});
 			var message = new Message({
 				uid,
-				mess:{'0':'0'},
+				mess:{'0':'0'}
 			});
-
-			user.save((err)=>{ res.render('registInfo.ejs', {  tipInfo:'注册成功！'  }) });
+			user.save((err)=>{
+				res.render('registInfo.ejs', {
+					tipInfo:'注册成功！' 
+				});
+			});
 			unread.save();
 			people.save();
 			loginlist.save();

@@ -15,17 +15,23 @@ function v_methods(){
       this.moreinfoSeen=true;
     },
     getMoreMessageOnFrame:function(){
+      var skip = document.querySelectorAll('#messageframe_cont>.messli').length;
+      console.log(skip);
       var data = {
         receive_uid:uid,
         from_uid:main.messto,
-        type:main.messtype,
-        skip:document.querySelectorAll('#messageframe_cont>.messli').length,
+        type:main.messtype
       };
-      postChange('/getmess',data,function(res){
-        for(let i of res){
-          main.gotMessCreateMessDiv(i);
+      $.post('/getmess', data, function(messages){
+        console.log(messages);
+        if(messages){
+          var l = messages.length;
+          for(var i=0;i<5;i++){
+            main.gotMessCreateMessDiv(messages[l-1-skip-i]);
+          }
+        }else{
+          main.changeGetMoreContent();
         }
-        main.messgetTimes += 1;
       });
     },
     addUnReadInDB:function(msg_type,msg_uid,msg_to){
@@ -58,11 +64,7 @@ function v_methods(){
     },  
     gotMessCreateMessDiv:function(msg){
       if(!msg){
-        var getMessBtn = document.getElementsByClassName('getMoreMessageOnFrame_btn')[0];
-        getMessBtn.innerText = 'No More';
-        setTimeout(function(){
-          getMessBtn.innerText = 'Get More Message';
-        },1500);
+        this.changeGetMoreContent();
         return false;
       }
       var f = judgeTypeforFloatDirection(msg,uid);
@@ -70,6 +72,13 @@ function v_methods(){
       $('#messageframe_cont').prepend(v_createMessDiv(msg,f,msgContent));
       var cont = document.getElementById('messageframe_cont');
       cont.scrollTop = 0;
+    },
+    changeGetMoreContent:function(){
+        var getMessBtn = $('.getMoreMessageOnFrame_btn')[0];
+        getMessBtn.innerText = 'No More';
+        setTimeout(function(){
+          getMessBtn.innerText = 'Get More Message';
+        },1500);
     },
     //when the mess come, if messageFrame is opning, check the messtype and messto, 
     //if satisfy the condition, it will run this function to show the message.
@@ -84,7 +93,6 @@ function v_methods(){
     expressionsParse:function(msgContent){
       while(msgContent.match(/\#\(.{1,4}\)/)){
         var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/));
-        check(msgMatch,'msgMatch');
         var t = help_expressionSwitch(msgMatch.slice(2,-1));
         msgContent = msgContent.replace(/#\(.{1,4}\)/,
           `<div class='expression_chatting'
@@ -95,8 +103,8 @@ function v_methods(){
       }
       return msgContent;
     },
-
     addRecentLi:function(info){
+      
       var havelevel = info.level;
       var con = new Object({});
       con.h = havelevel?'80px':'55px';
@@ -216,7 +224,7 @@ function v_methods(){
       var v = document.getElementById('messageframe_input').value.trim();
       if(v.length){
         var msg = {
-          time:getTime(),
+          time:mTime(),
           type:this.messtype,
           content:v,
           to:this.messto,
@@ -299,7 +307,6 @@ function v_methods(){
       this.teamMembersSeen=false;
       this.messtype='';
       this.messto='';
-      this.messgetTimes=0;
       document.getElementById('messageframe_cont').innerHTML = '';
       document.getElementById('messageframe_input').value = '';
     },

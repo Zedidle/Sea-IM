@@ -2,8 +2,11 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var messageSchema = new Schema({
-    uid:String,
-    mess:Object,
+    uid:{
+        type: String,
+        unique: true
+    },
+    mess:Object
     // "mess" : {
     //     "0" : "0",
     //     "userId" : [
@@ -21,8 +24,7 @@ var messageSchema = new Schema({
     //     ],
     //     ...
     // },
-
-})
+});
 
 var Message = mongoose.model('Message', messageSchema);
 module.exports = Message;
