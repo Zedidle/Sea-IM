@@ -17,7 +17,6 @@ const Loginlist = require('./model/loginlist');
 
 mongoose.Promise = global.Promise;  
 
-
 mongoose.connect('mongodb://localhost/test',{useMongoClient:true},err=>{
   if(err){
     console.log('connect database error -->',err);

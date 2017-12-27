@@ -2,17 +2,17 @@ var buildTeam = new Vue({
 	components:{
 		'submit-button':{
 			props:['uid'],
-      template:` 
-      	<input v-on:click='tipSubmit' type="button" id='sub' value='Bulid'>
+      		template:` 
+      			<input v-on:click='tipSubmit' type="button" id='sub' value='Bulid'>
 			`,
 			data:function(){
 				return {		
 					flag:{},
 					reg:{
 						tn:/^.{2,20}$/,
-						pw:/^\w{3,8}$/,
+						pw:/^\w{3,8}$/
 					}
-				}
+				};
 			},
 			methods:{
 				tipSubmit:function(){
@@ -57,16 +57,18 @@ var buildTeam = new Vue({
 
 		'back-button':{
 			props:['uid'],
-      template:`
-      	<button v-on:click='backtomain' type='button' id='back'>Cancel</button>
+      		template:`
+      			<button v-on:click='backtomain' type='button' id='back'>Cancel</button>
 			`,
 			data:function(){
 				return{
 					userEnsure:{ uid:this.uid },
-				}
+				};
 			},
 			methods:{
-				backtomain:function(){ formPost('/main',this.userEnsure); },
+				backtomain:function(){ 
+					zPost('/main',this.userEnsure);
+				}
 			},
 		}
 	},

@@ -10,6 +10,43 @@ const
 	clean = require('gulp-clean'),
     concat = require('gulp-concat');
 
+
+
+
+
+gulp.task('pro',function(){
+	gulp.start('pro-less','pro-js');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 gulp.task('dev',function(){
 	gulp.start('dev-less','dev-js');
 });
@@ -23,23 +60,23 @@ gulp.task('dev-less', function() {
 });
 
 gulp.task('dev-js', function() {
-	// var map = require("map-stream");
-	// var customerReporter = map(function(file,cb){  
-	// 	if(!file.jshint.success){  
-	// 	 //打印出错误信息
-	// 	 console.log("jshint fail in:" + file.path);  
-	// 	 file.jshint.results.forEach(function(err){  
-	// 	     if(err){  
-	// 	        console.log(err);  
-	// 	        console.log("在 "+file.path+" 文件的第"+err.error.line+" 行的第"+err.error.character+" 列发生错误");  
-	// 	     }  
-	// 	 });  
-	// 	}  
-	// });
+	var map = require("map-stream");
+	var customerReporter = map(function(file,cb){  
+		if(!file.jshint.success){  
+		 //打印出错误信息
+		 console.log("jshint fail in:" + file.path);  
+		 file.jshint.results.forEach(function(err){  
+		     if(err){  
+		        console.log(err);  
+		        console.log("在 "+file.path+" 文件的第"+err.error.line+" 行的第"+err.error.character+" 列发生错误");  
+		     }  
+		 });  
+		}  
+	});
 	gulp.src('./dev/js/**/*.js')
-	    // .pipe(jshint())
+	    .pipe(jshint())
 	    .pipe(gulp.dest('./dist/public/js'))
-	    // .pipe(customerReporter)
+	    .pipe(customerReporter)
 });
 
 gulp.task('dev-watch', function() {

@@ -1,5 +1,5 @@
 var uid = document.getElementById('getuid').value;
-new Vue({
+var teams = new Vue({
   components:{
     'text-info':{
       props:['uid','name','level','membernumber','introduce'],
@@ -63,12 +63,12 @@ new Vue({
       var img = that.nextElementSibling;
       var r = new FileReader();
       r.readAsDataURL(that.files[0]);
-      r.onload = function(e){
+      r.onload = function(){
         img.src=this.result;
       };
     },
     backToMainPage:function(){
-      formPost('/main',{
+      zPost('/main',{
         uid:uid
       });
     }

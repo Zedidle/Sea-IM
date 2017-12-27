@@ -4,7 +4,6 @@ var loginlist = JSON.parse(document.getElementById('getloginlist').value);
 var punRead = JSON.parse(document.getElementById('getpunRead').value);
 var tunRead = JSON.parse(document.getElementById('gettunRead').value);
 
-
 var main = new Vue({
 
   components:{
@@ -13,11 +12,19 @@ var main = new Vue({
       data:function(){},
       methods:{
         logOff:function(){
-          if(confirm('确认注销？')){ formPost('/logOff',userEnsure); }
+          if(confirm('确认注销？')){ 
+            zPost('/logOff',userEnsure);
+          }
         },
-        getPersonInfo:function(){ formPost('/people',userEnsure);},
-        getTeamsInfo:function(){ formPost('/myteam',userEnsure);},
-        toBuildATeam:function(){ formPost('/DealWithTeam',userEnsure);},
+        getPersonInfo:function(){
+          zPost('/people',userEnsure);
+        },
+        getTeamsInfo:function(){
+          zPost('/myteam',userEnsure);
+        },
+        toBuildATeam:function(){
+          zPost('/DealWithTeam',userEnsure);
+        },
       }
     },
 
@@ -28,14 +35,12 @@ var main = new Vue({
       data:function(){
         return {
           info:JSON.parse(regKeepJSON(this.user_info)),
-        }
+        };
       },
       methods:{
         toggleDomore:function(){
-          var dp = $('#domore').__proto__;
-          if(dp.j===undefined){ dp.j = false; };
-          document.getElementById('domore').style.width = (dp.j?'0':'70')+'px'; 
-          dp.j = !dp.j;
+          $('#domore')[0].style.width = (main.isDomore?'0':'70')+'px'; 
+          main.isDomore = !main.isDomore;
         },
       },
     },
@@ -56,8 +61,10 @@ var main = new Vue({
           this.getSearchResponse(); 
         },
         getSearchResponse:function(){
-          this.searchId = document.getElementById('search_uid').value.trim();; 
-          if(!this.searchId||this.searchId===uid){ return; }
+          this.searchId = document.getElementById('search_uid').value.trim(); 
+          if(!this.searchId||this.searchId===uid){
+            return false;
+          }
           document.getElementById('search_uid').style.width='70%';
           var data = { uid:this.searchId };
           var searchComponent = this;
@@ -74,8 +81,7 @@ var main = new Vue({
               searchComponent.setSearchPersonFunctions();
             }
               searchComponent.addSearchTips(team,person);
-          })
-
+          });
         },
         createSearchTeamInfo:function(t){
           $('#search-info').append(v_createSearchTeamInfo_template(t));
@@ -83,16 +89,18 @@ var main = new Vue({
         setSearchTeamFunctions:function(){
           var searchContent = this;
           $('#join').click(function(){
-            var data = { uid:uid, tid:searchContent.searchId }
+            var data = {
+              uid:uid,
+              tid:searchContent.searchId
+            };
             postChange('/join_judge',data,function(judge){
               if(judge==='ok'){ 
-                formPost('/join',data); 
+                zPost('/join',data); 
               }else{
                 $('#search-team').append("<li class='alert alert-info'>"+judge+"</li>");
               }
-            })
-
-          }) 
+            });
+          });
         },
 
         createSearchPersonInfo:function(p){
@@ -106,7 +114,7 @@ var main = new Vue({
           main.messtype = 'recent';
           main.messto = searchComponent.searchId;
           main.nameOfmessageframe = $(this).siblings('#pinfo').find('#name').text();
-        })
+        });
 
         $('#search-star').click(function(){
           var stars = loginlist.star;
@@ -117,7 +125,10 @@ var main = new Vue({
           };
           if(stars.length){
             for(let i of stars){
-              if(i===data.sid){ isStar = true; break; }
+              if(i===data.sid){
+                isStar = true;
+                break;
+              }
             }
           }
           if(isStar){
@@ -128,9 +139,9 @@ var main = new Vue({
               v_addThePeopleInStar(data_back);
               loginlist.star.push(data.sid);
               $('#search-person').prepend("<li class='alert alert-success' role='alert'>成功标记该用户!</li>");
-            })
+            });
           }
-        })
+        });
       },
 
         addSearchTips:function(isTeamExist,isPersonExist){
@@ -159,7 +170,10 @@ var main = new Vue({
           var h = this.type==='recent'?
                   havelevel?'80':'50':
                   this.type==='star'?'60':'100';
-          return { height:h+'px',overflow:'hidden', };
+          return {
+            height:h+'px',
+            overflow:'hidden'
+          };
         },
 
         avator_w:function(havelevel){
@@ -169,9 +183,17 @@ var main = new Vue({
               w = havelevel?'78':'50';
               b_radius = havelevel?'0':'50';
               break;
-            };
-            case('star'):{w='60'; b_radius='50'; break;};
-            case('team'):{w='90'; b_radius='0'; break;};
+            }
+            case('star'):{
+              w='60';
+              b_radius='50';
+              break;
+            }
+            case('team'):{
+              w='90';
+              b_radius='0';
+              break;
+            }
           }        
           return { width:w+'px', borderRadius:b_radius+'%',};
         },
@@ -184,8 +206,10 @@ var main = new Vue({
             uid:li_uid,
             to:uid,
             checked:true
-          }
-          postChange('/dealwithunread',data,function(d){});
+          };
+          postChange('/dealwithunread',data,function(){
+
+          });
         },
 
         //when a messli be clicked, open the messageframe and get unread messages.
@@ -223,6 +247,7 @@ var main = new Vue({
       birthday: '???',
       introduce: '???',
     },
+    isDomore:false,
     isteam:false,
     moreinfoSeen:false,
     teamMembersSeen:false,

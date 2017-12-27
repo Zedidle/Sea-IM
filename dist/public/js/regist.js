@@ -7,9 +7,15 @@ var regist = new Vue({
 
 	methods:{
 		backtologin:function(){window.location.href='/';},
-		uid:function(){$('#tip').text('字母开头，长度为6-16，数字、大小写字母和特殊字符混合');},
-		Pw:function(){$('#tip').text('长度为8-16，数字和大小写字母混合');},
-		Pww:function(){$('#tip').text('请重复你的密码');},
+		uid:function(){
+			$('#tip').text('字母开头，长度为6-16，数字、大小写字母和特殊字符混合');
+		},
+		Pw:function(){
+			$('#tip').text('长度为8-16，数字和大小写字母混合');
+		},
+		Pww:function(){
+			$('#tip').text('请重复你的密码');
+		},
 		formSubmit:function(){
 			var 
 				flaguser = this.uidReg.test($("#uid").val()),

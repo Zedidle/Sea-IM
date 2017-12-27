@@ -80,10 +80,10 @@ Vue.component('team-info',{
 
     },
     back:function(){
-      formPost('/main',this.uidEnsure);
+      zPost('/main',this.uidEnsure);
     },
     update:function(){
-      formPost('/teams',this.uidEnsure);
+      zPost('/teams',this.uidEnsure);
     }
   }
 });

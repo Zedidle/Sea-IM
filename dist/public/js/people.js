@@ -10,7 +10,9 @@ var people = new Vue({
 		   document.getElementById('peopleHeadForm').style.display = 'block';
           },
           backToMainPage:function(){
-               formPost('/main',{uid:uid});
+               zPost('/main',{
+                    uid:uid
+               });
           },
           headUpdate:function(){
                var avator = $('#avator').val();

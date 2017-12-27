@@ -14,8 +14,6 @@ function v_domore_part_template(){
       </div>
       `;
 }
-
-
 function v_user_info_template(){
 	return `
       <div v-bind:class='{userinfo_wrap:true}'>
@@ -126,10 +124,11 @@ function v_teamMembers_template(li){
 }
 
 function judgeTypeforFloatDirection(msg,uid){
+      let f;
       if(msg.type==='team'){
-        var f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
+        f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
       }else{
-        var f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
+        f=(msg.uid===uid)?"style='float:right'":"style='float:left'";
       }
       return f;
 }
@@ -202,9 +201,9 @@ function v_addThePeopleInStar(info){
       main.messageframeSeen=true;
       main.isteam = false;
       main.nameOfmessageframe = this.getElementsByClassName('name')[0].innerText;
-      main.messto = this.getElementsByClassName('uid')[0].innerText
+      main.messto = this.getElementsByClassName('uid')[0].innerText;
       document.getElementById('messageframe_cont').innerHTML = '';
-    })
+    });
 }
 
 function v_removeThePeopleInRecent(id){

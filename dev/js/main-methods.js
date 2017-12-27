@@ -1,4 +1,3 @@
-
 function v_methods(){
   console.log('v_methods');
   return {
@@ -9,8 +8,10 @@ function v_methods(){
       var data = {
         type:this.messtype,
         check_uid:this.messto
-      }
-      postChange("/getMoreinfo",data,function(d){ main.messInfo = d; });
+      };
+      postChange("/getMoreinfo",data,function(d){
+        main.messInfo = d;
+      });
       this.moreinfoSeen=true;
     },
     getMoreMessageOnFrame:function(){
@@ -19,11 +20,13 @@ function v_methods(){
         from_uid:main.messto,
         type:main.messtype,
         skip:document.querySelectorAll('#messageframe_cont>.messli').length,
-      }
+      };
       postChange('/getmess',data,function(res){
-        for(let i of res){ main.gotMessCreateMessDiv(i); }
+        for(let i of res){
+          main.gotMessCreateMessDiv(i);
+        }
         main.messgetTimes += 1;
-      })
+      });
     },
     addUnReadInDB:function(msg_type,msg_uid,msg_to){
       var data = {
@@ -59,7 +62,7 @@ function v_methods(){
         getMessBtn.innerText = 'No More';
         setTimeout(function(){
           getMessBtn.innerText = 'Get More Message';
-        },1500)
+        },1500);
         return false;
       }
       var f = judgeTypeforFloatDirection(msg,uid);
@@ -88,14 +91,14 @@ function v_methods(){
             style='background-image:url(img/faces.png); 
             background-position: left -${t*30}px; '>
           </div>`
-          )
+          );
       }
       return msgContent;
     },
 
     addRecentLi:function(info){
       var havelevel = info.level;
-      var con = new Object();
+      var con = new Object({});
       con.h = havelevel?'80px':'55px';
       con.borderR = havelevel?'0%':'50%';
       con.avator_w = havelevel?'70px':'50px';
@@ -110,11 +113,11 @@ function v_methods(){
         main.messtype='recent';
         main.messageframeSeen=true;
         main.isteam = false;
-        main.nameOfmessageframe = this.getElementsByClassName('name')[0].innerText
-        main.messto = this.getElementsByClassName('uid')[0].innerText
+        main.nameOfmessageframe = this.getElementsByClassName('name')[0].innerText;
+        main.messto = this.getElementsByClassName('uid')[0].innerText;
         main.getUnreadMess(main.messto,unreadNumber,'recent');
         document.getElementById('messageframe_cont').innerHTML = '';
-      })
+      });
     },
 
     getUnreadMess:function(get_uid,unreadNumber,type){
@@ -123,9 +126,11 @@ function v_methods(){
         get_uid:get_uid,
         unreadNumber:unreadNumber,
         type:type
-      }
+      };
       postChange('/getUnreadMess',data,function(d){
-        for(let i=0;i<d.length;i++){ main.createMessDiv(d[i]); };
+        for(let i=0;i<d.length;i++){
+          main.createMessDiv(d[i]);
+        }
       });
     },
 
@@ -148,13 +153,19 @@ function v_methods(){
       var exist = false;
       if(msg.type==='team'){
         //check whether the recent_team exist;
-        for(var i of loginlist['recent_team']){
-          if(i===msg.uid||i===msg.to){ exist = true; break; }
+        for(var i of loginlist.recent_team){
+          if(i===msg.uid||i===msg.to){
+            exist = true;
+            break;
+          }
         }
       }else{
         //check whether the recent_people exist;
-        for(var i of loginlist['recent_people']){
-          if(i===msg.uid||i===msg.to){ exist = true; break; }
+        for(var j of loginlist.recent_people){
+          if(j===msg.uid||j===msg.to){
+            exist = true;
+            break;
+          }
         }
       }
       if(!exist){
@@ -163,18 +174,22 @@ function v_methods(){
           var d = {  uid:msg.to, type:msg.type };
           //link with router/unreadnumber.js g64,
           postChange('/justGetInfo',d,function(data){
-            msg.type==='team'?
-              loginlist['recent_team'].push(msg.uid):
-              loginlist['recent_people'].push(msg.to);
+            if(msg.type==='team'){
+              loginlist.recent_team.push(msg.uid);
+            }else{
+              loginlist.recent_people.push(msg.to);
+            }
             main.addRecentLi(data);
             var recentFirstLiUnreadnumber = $('ul#recent').find('li').eq(0).find('.name span.badge')[0];
             recentFirstLiUnreadnumber.innerText = '';
             recentFirstLiUnreadnumber.style.display = 'none';
-          })
+          });
         }else{
-          msg.type==='team'?
-            loginlist['recent_team'].push(msg.uid):
-            loginlist['recent_people'].push(msg.uid);
+          if(msg.type==='team'){
+            loginlist.recent_team.push(msg.uid);
+          }else{
+            loginlist.recent_people.push(msg.uid);
+          }
           this.addRecentLi(msg);
         }
       }
@@ -206,7 +221,7 @@ function v_methods(){
           content:v,
           to:this.messto,
           from:uid
-        }
+        };
         var J_msg = JSON.stringify(msg);
         socket.emit('chat',J_msg);
       }
@@ -217,7 +232,7 @@ function v_methods(){
         uid:uid,
         to:main.messto,
         isStar:false,
-      }
+      };
       if(main.messtype!=='team'&&stars.length){
         for(let i of stars){
           if(i===main.messto){
@@ -233,13 +248,13 @@ function v_methods(){
           v_addThePeopleInStar(data_back);
           loginlist.star.push(data.to);
         }
-      })
+      });
     },
     deleteTheRecentChat(){
       var data = {
         uid:uid,
         to:main.messto
-      }
+      };
       postChange('/deleteRecentChat',data,function(data_back){
         v_removeThePeopleInRecent(data.to);
       });
@@ -250,7 +265,7 @@ function v_methods(){
         var data = {
           uid:uid,
           tid:main.messto
-        }
+        };
         postChange('/exitTeam',data,function(){
             v_removeTheTeamInList(data.tid,'recent');
             v_removeTheTeamInList(data.tid,'team');
@@ -261,7 +276,9 @@ function v_methods(){
 
     showMembers:function(){
       console.log('showMembers');
-      var data = { tid:main.messto };
+      var data = {
+        tid:main.messto
+      };
       main.teamMembersSeen = true;
       postChange('/showMembers',data,function(_infos){
         var teamMembers_ul = document.querySelector('.teamMembers>ul');
@@ -270,7 +287,7 @@ function v_methods(){
           console.log(li);
           $(teamMembers_ul).append(v_teamMembers_template(li));         
         }
-      })
+      });
     },
     closeTeamMembers:function(){
       document.querySelector('.teamMembers>ul').innerHTML = '';
@@ -290,7 +307,7 @@ function v_methods(){
     //hide the domore model,
     hideDomore:function(){
       document.getElementById('domore').style.width = '0px';
-      $('#domore').__proto__.j = false;
+      $('#domore').j = false;
     },
 
     listSeen:function(event,type){
@@ -302,5 +319,5 @@ function v_methods(){
       $(target).css('color','#60DDFF');
       this.isMessageListSeen[type]=true;
     },
-  }
+  };
 }
