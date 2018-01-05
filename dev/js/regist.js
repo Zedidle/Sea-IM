@@ -2,11 +2,12 @@ var regist = new Vue({
 	el:'#regist',
 	data:{
 		uidReg:new RegExp(/^[a-zA-Z].{5,15}$/),
-		pwReg:new RegExp(/^[a-zA-Z0-9]{8,16}$/),
+		pwReg:new RegExp(/^[a-zA-Z0-9]{8,16}$/)
 	},
-
 	methods:{
-		backtologin:function(){window.location.href='/';},
+		backtologin:function(){
+			window.location.href='/';
+		},
 		uid:function(){
 			$('#tip').text('字母开头，长度为6-16，数字、大小写字母和特殊字符混合');
 		},

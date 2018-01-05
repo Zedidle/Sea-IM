@@ -11,8 +11,7 @@
     }
     @media (max-width: 970px) {
         body{
-      background-color:#669999;
-            /*background: url(img/seaFlower.png);*/
+      		background-color:#669999;
         }
     }
 	.container{
@@ -62,7 +61,6 @@
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src='js/lib.js'></script> 
 <script>
-
 new Vue({
 	el:'#dismissTeam',
 	data:{
@@ -71,7 +69,6 @@ new Vue({
 		dataforback:{
 			uid:'<%=uid%>',
 		}
-
 	},
 	methods:{
 		subOnclick:function(){
@@ -95,7 +92,9 @@ new Vue({
 			}
 		}
 		},
-		backtomainpage:function(){formPost('/main',this.dataforback);}
+		backtomainpage:function(){
+			zPost('/main',this.dataforback);
+		}
 	}
 })
 </script>

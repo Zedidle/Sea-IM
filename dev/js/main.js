@@ -9,7 +9,8 @@ var main = new Vue({
   components:{
     'domore-part':{
       template:v_domore_part_template(),
-      data:function(){},
+      data:function(){
+      },
       methods:{
         logOff:function(){
           if(confirm('确认注销？')){ 
@@ -49,7 +50,9 @@ var main = new Vue({
       template:v_search_content_template(),
       methods:{
         removeSearchInfo:function(){ 
-          if(document.getElementById('search-info')){ $('#search-info').remove(); }
+          if(document.getElementById('search-info')){ 
+            $('#search-info').remove();
+          }
         },
         closeCheckInfo:function(){
           document.getElementById('search_uid').value = '';
@@ -107,63 +110,65 @@ var main = new Vue({
           $('#search-info').append(v_createSearchPersonInfo_template(p));
         },
 
-      setSearchPersonFunctions:function(){
-        var searchComponent = this;
-        $('#send').click(function(){
-          main.messageframeSeen = true;
-          main.messtype = 'recent';
-          main.messto = searchComponent.searchId;
-          main.nameOfmessageframe = $(this).siblings('#pinfo').find('#name').text();
-        });
+        setSearchPersonFunctions:function(){
+          var searchComponent = this;
+          $('#send').click(function(){
+            main.messageframeSeen = true;
+            main.messtype = 'recent';
+            main.messto = searchComponent.searchId;
+            main.nameOfmessageframe = $(this).siblings('#pinfo').find('#name').text();
+          });
 
-        $('#search-star').click(function(){
-          var stars = loginlist.star;
-          var isStar = false;
-          var data = { 
-            sid:searchComponent.searchId,
-            uid:uid
-          };
-          if(stars.length){
-            for(let i of stars){
-              if(i===data.sid){
-                isStar = true;
-                break;
+          $('#search-star').click(function(){
+            var stars = loginlist.star;
+            var isStar = false;
+            var data = { 
+              sid:searchComponent.searchId,
+              uid:uid
+            };
+            if(stars.length){
+              for(let i of stars){
+                if(i===data.sid){
+                  isStar = true;
+                  break;
+                }
               }
             }
-          }
-          if(isStar){
-            $('#search-person').prepend("<li class='alert alert-success' role='alert'>已经标记过！</li>");
-          }else{
-            var J_data = JSON.stringify(data);
-            postChange('/star',data,function(data_back){
-              v_addThePeopleInStar(data_back);
-              loginlist.star.push(data.sid);
-              $('#search-person').prepend("<li class='alert alert-success' role='alert'>成功标记该用户!</li>");
-            });
-          }
-        });
-      },
-
+            if(isStar){
+              $('#search-person').prepend("<li class='alert alert-success' role='alert'>已经标记过！</li>");
+            }else{
+              var J_data = JSON.stringify(data);
+              postChange('/star',data,function(data_back){
+                v_addThePeopleInStar(data_back);
+                loginlist.star.push(data.sid);
+                $('#search-person').prepend("<li class='alert alert-success' role='alert'>成功标记该用户!</li>");
+              });
+            }
+          });
+        },
         addSearchTips:function(isTeamExist,isPersonExist){
           if(!isTeamExist){
-            $('#search-info').append("<div>没有团队</div>");
+            $('#search-info').append("<div>查找不到团队</div>");
           }
           if(!isPersonExist){
-            $('#search-info').append("<div>没有用户</div>");
+            $('#search-info').append("<div>查找不到用户</div>");
           }
         },
-
-
       }
     },
-
     'mess-lis':{
-      props:['type','info','punread','tunread'],
+      props:['type', 'info', 'punread', 'tunread'],
       template:v_mess_li_template(),
       computed:{
-        punR:function(){ return JSON.parse(regKeepJSON(this.punread)); },
-        tunR:function(){ return JSON.parse(regKeepJSON(this.tunread)); },
-        _info:function(){ return JSON.parse(regKeepJSON(this.info)); },
+        punR:function(){
+          return JSON.parse(regKeepJSON(this.punread));
+        },
+        tunR:function(){
+          return JSON.parse(regKeepJSON(this.tunread));
+        },
+        _info:function(){
+          return JSON.parse(regKeepJSON(this.info));
+        }
       },
       methods:{
         li_height:function(havelevel){
@@ -175,7 +180,6 @@ var main = new Vue({
             overflow:'hidden'
           };
         },
-
         avator_w:function(havelevel){
           var w,b_radius;
           switch(this.type){
@@ -208,10 +212,8 @@ var main = new Vue({
             checked:true
           };
           postChange('/dealwithunread',data,function(){
-
           });
         },
-
         //when a messli be clicked, open the messageframe and get unread messages.
         show_messageFrame:function(event,li_uid,haslevel){
           main.moreinfoSeen = false;
@@ -267,7 +269,7 @@ var main = new Vue({
 });
 
 //listen the port of the user,
-socket.on(uid,function(J_msg){ 
+socket.on(uid,function(J_msg){
   main.messageCome(JSON.parse(J_msg)); 
 });
 

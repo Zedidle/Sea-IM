@@ -12,7 +12,6 @@ const session = require('express-session');
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
-
 module.exports = function(app){
 	app.use(session({
         resave: false,  

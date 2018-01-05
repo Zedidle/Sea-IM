@@ -1,7 +1,4 @@
 var uid = document.getElementById('getuid').value;
-console.log('uid:'+uid);
-
-
 var people = new Vue({
      el:'.container',
      data:{ uid:uid },

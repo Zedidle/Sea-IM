@@ -12,14 +12,36 @@ const
 
 
 
-
-
-gulp.task('pro',function(){
-	gulp.start('pro-less','pro-js');
+gulp.task('clean',function(){
+	gulp.src('./dist/public/js/*.js')
+		.pipe(clean());
+	gulp.src('./dist/public/css/*.css')
+		.pipe(clean());
 });
 
 
+gulp.task('pro',function(){
+	gulp.start('clean','pro-less','pro-js');
+});
 
+
+gulp.task('pro-less',function(){
+	gulp.src('./dev/less/main-*')
+	.pipe(less())
+	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+	.pipe(minifyCSS())
+	.concat('main.less')
+	.pipe(gulp.dest('./dist/public/css'));
+});
+
+
+gulp.task('pro.js',function(){
+	gulp.src('./dev/js/**/*.js')
+	    .pipe(jshint())
+	    .pipe(uglify())
+	    .concat('bundle.js')
+	    .pipe(gulp.dest('./dist/public/js'))
+});
 
 
 
@@ -52,7 +74,7 @@ gulp.task('dev',function(){
 });
 
 gulp.task('dev-less', function() {
-	gulp.src('./dev/less/*.less')
+	gulp.src('./dev/less/main-*')
 	.pipe(less())
 	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
 	.pipe(minifyCSS())
