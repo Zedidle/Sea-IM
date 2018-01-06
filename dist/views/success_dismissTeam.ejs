@@ -29,9 +29,15 @@
 		<button id='build'>另建团队</button>
 	</div>
 	<script>
-		var data = { uid:'<%=uid%>' };
-		document.getElementById('back').onclick = function(){formPost('/main',data);}
-		document.getElementById('build').onclick =function(){formPost('/DealWithTeam',data);}
+		var data = { 
+			uid:'<%=uid%>' 
+		};
+		document.getElementById('back').onclick = function(){
+			zPost('/main',data);
+		}
+		document.getElementById('build').onclick = function(){
+			zPost('/DealWithTeam',data);
+		}
 	</script>
 </body>
 </html>

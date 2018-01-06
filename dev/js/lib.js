@@ -1,5 +1,5 @@
 Array.prototype.pull = function(o){
-  for(let i in this){
+  for(var i = 0; i<this.length; i++){
     if(this[i] === o){
       this.splice(i,1);
     }
@@ -109,6 +109,6 @@ function postChangeText(url,data,callback){
 
 
 
-function regKeepJSON(data){
+function jsonKeep(data){
   return data.replace(/&#34;/g, '\"');
 }

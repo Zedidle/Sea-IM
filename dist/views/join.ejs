@@ -37,39 +37,11 @@
 <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src='js/lib.js'></script>
 <script>
-var join = new Vue({
-	el:'#join',
-	data:{ 
-		uidEnsure:{ uid:'<%=uid%>' }
-	},
-	methods:{
-		back:function(){ formPost('/main',this.uidEnsure); },
-		ok:function(){
-			var okEnsure = {
-				password:document.getElementById('pw').value.trim(),
-				uid:'<%=uid%>',
-				tid:'<%=tid%>',
-			}
-			console.log(okEnsure);
-			var J_data = JSON.stringify(okEnsure);
-			var xmlhttp = new XMLHttpRequest();
-			xmlhttp.open("POST","/join_ok",true);
-			xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-			xmlhttp.send("J_data="+J_data);
-			xmlhttp.onreadystatechange=function(){
- 				if(xmlhttp.readyState==4 && xmlhttp.status==200){
- 					var judge = JSON.parse(xmlhttp.responseText);
- 					console.log(judge)
- 					if(judge){ join.back();}
- 					else{  document.getElementById('tip').innerText='口令不对!'; }
- 				}
- 			}
-		}
-	}
-});
-
-</script>	
+var uid = '<%= uid%>';
+var tid = '<%= tid%>';
+</script>
+<script src='js/lib.js'></script>
+<script src='js/join.js'></script>
 </body>
 </html>

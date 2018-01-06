@@ -1,4 +1,3 @@
-var uid = document.getElementById('getuid').value;
 var teams = new Vue({
   components:{
     'text-info':{

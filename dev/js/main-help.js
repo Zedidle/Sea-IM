@@ -1,130 +1,124 @@
 function v_domore_part_template(){
-	return `
-      <div id='domore'>
-      <div id="logOff" v-on:click="logOff">注销</div>
-      <div id='person' v-on:click='getPersonInfo' class='ele' data-toggle="tooltip" data-placement="left" title="个人信息">
-        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-      </div>
-      <div id='myteam' v-on:click='getTeamsInfo' class='ele' data-toggle="tooltip" data-placement="top" title="团队">
-        <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
-      </div>
-      <div id="buildTeam" v-on:click='toBuildATeam' class='ele' data-toggle="tooltip" data-placement="bottom" title="创建团队">
-        <span class="glyphicon glyphicon-grain" aria-hidden="true"></span>
-      </div>
-      </div>
-      `;
+	return "<div id='domore'>"+
+      "<div id='logOff' v-on:click='logOff'>注销</div>"+
+      "<div id='person' v-on:click='getPersonInfo' class='ele' data-toggle='tooltip' data-placement='left' title='个人信息'>"+
+        "<span class='glyphicon glyphicon-user' aria-hidden='true'></span>"+
+      "</div>"+
+      "<div id='myteam' v-on:click='getTeamsInfo' class='ele' data-toggle='tooltip' data-placement='top' title='团队'>"+
+        "<span class='glyphicon glyphicon-fire' aria-hidden='true'></span>"+
+      "</div>"+
+      "<div id='buildTeam' v-on:click='toBuildATeam' class='ele' data-toggle='tooltip' data-placement='bottom' title='创建团队'>"+
+        "<span class='glyphicon glyphicon-grain' aria-hidden='true'></span>"+
+      "</div>"+
+      "</div>"
+      ;
 }
 function v_user_info_template(){
-	return `
-      <div v-bind:class='{userinfo_wrap:true}'>
-        <div v-bind:class='{userinfo_avator:true}'>
-          <img v-bind:class='{userinfo_avator_img:true}' v-bind:src='info.headImg'>
-        </div>
-        <div id='intro' v-bind:class='{userinfo_intro:true}'>
-          <div id='name' >
-            <div id='nick_name'>{{info.name}}</div>
-          </div>
-          <div id='introduce' v-bind:class='{userinfo_introduce:true}'>{{info.introduce}}</div>
-        </div>
-        <div id='set' v-bind:class='{userinfo_set:true}' v-on:click='toggleDomore' >
-          <span class='glyphicon glyphicon-list' aria-hidden='true'></span>
-        </div>
-      </div>
-      `;
+	return "<div v-bind:class='{userinfo_wrap:true}'>"+
+        "<div v-bind:class='{userinfo_avator:true}'>"+
+          "<img v-bind:class='{userinfo_avator_img:true}' v-bind:src='info.headImg'>"+
+        "</div>"+
+        "<div id='intro' v-bind:class='{userinfo_intro:true}'>"+
+          "<div id='name'>"+
+            "<div id='nick_name'>{{info.name}}</div>"+
+          "</div>"+
+          "<div id='introduce' v-bind:class='{userinfo_introduce:true}'>{{info.introduce}}</div>"+
+        "</div>"+
+        "<div id='set' v-bind:class='{userinfo_set:true}' v-on:click='toggleDomore' >"+
+          "<span class='glyphicon glyphicon-list' aria-hidden='true'></span>"+
+        "</div>"+
+      "</div>"
+      ;
 }
 
 function v_search_content_template(){
-	return `
-      <div id='search-content' >
-        <div id='search' v-on:keyup.13='searchSubmit'>
-          <button id='sub' v-on:click='searchSubmit'>
-            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-          </button>
-          <input type="text" id='search_uid' name='search_uid' placeholder="请输入团队或用户的ID">
-          <div v-bind:class='{search_close:true}' v-on:click='closeCheckInfo'>
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-          </div>
-        </div>
-      </div>
-      `;
+	return "<div id='search-content' >"+
+        "<div id='search' v-on:keyup.13='searchSubmit'>"+
+          "<button id='sub' v-on:click='searchSubmit'>"+
+            "<span class='glyphicon glyphicon-search' aria-hidden='true'></span>"+
+          "</button>"+
+          "<input type='text' id='search_uid' name='search_uid' placeholder='请输入团队或用户的ID'>"+
+          "<div v-bind:class='{search_close:true}' v-on:click='closeCheckInfo'>"+
+            "<span class='glyphicon glyphicon-remove' aria-hidden='true'></span>"+
+          "</div>"+
+        "</div>"+
+      "</div>"
+      ;
 }
 
 function v_createSearchTeamInfo_template(t){
-	return `
-      <div id='search-team'>
-        <div id='teamImg'>
-          <img src=`+t.headImg+`>
-        </div>
-        <div id='tinfo'>
-          <div id='teamname'>团队名: `+t.name+`</div>
-          <div id='builder'>ID: `+t.uid+`</div>
-          <div id='level'>级别: `+t.level+`</div>
-          <div id='membernumber'>人数: `+t.membernumber+`</div>
-          <div id='teamintro'>简介: `+t.introduce+`</div>
-        </div>
-        <div id='join'> 
-          <span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span>JOIN
-        </div>
-      </div>
-      `;
+	return "<div id='search-team'>"+
+          "<div id='teamImg'>"+
+          "<img src="+t.headImg+">"+
+        "</div>"+
+        "<div id='tinfo'>"+
+          "<div id='teamname'>团队名: "+t.name+"</div>"+
+          "<div id='builder'>ID: "+t.uid+"</div>"+
+          "<div id='level'>级别: "+t.level+"</div>"+
+          "<div id='membernumber'>人数: "+t.membernumber+"</div>"+
+          "<div id='teamintro'>简介: "+t.introduce+"</div>"+
+        "</div>"+
+        "<div id='join'> "+
+          "<span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span>JOIN"+
+        "</div>"+
+      "</div>"
+      ;
 }
 
 function v_createSearchPersonInfo_template(p){
-	return `
-      <div id='search-person'>
-        <div id='personImg'>
-          <img src=`+p.headImg+`>
-        </div>
-        <div id='pinfo'>
-          昵称: <div id='name'>`+p.name+`</div>
-          <div id='sex'>性别: `+p.sex+`</div>
-          <div id='hobby'>爱好: `+p.hobby+`</div>
-          <div id='personIntro'>简介: `+p.introduce+`</div>
-        </div>
-        <div id='send'> 
-          <span class='glyphicon glyphicon-envelope' aria-hidden='true'></span>Mess
-        </div>
-        <div id='search-star'>
-          <span class='glyphicon glyphicon-star-empty' aria-hidden='true'></span>Star
-        </div>
-      </div>
-      `;
+	return "<div id='search-person'>"+
+        "<div id='personImg'>"+
+          "<img src="+p.headImg+">"+
+        "</div>"+
+        "<div id='pinfo'>"+
+          "昵称: <div id='name'>"+p.name+"</div>"+
+          "<div id='sex'>性别: "+p.sex+"</div>"+
+          "<div id='hobby'>爱好: "+p.hobby+"</div>"+
+          "<div id='personIntro'>简介: "+p.introduce+"</div>"+
+        "</div>"+
+        "<div id='send'> "+
+         " <span class='glyphicon glyphicon-envelope' aria-hidden='true'></span>Mess"+
+        "</div>"+
+        "<div id='search-star'>"+
+        "  <span class='glyphicon glyphicon-star-empty' aria-hidden='true'></span>Star"+
+        "</div>"+
+      "</div>"
+      ;
 }
 
 function v_mess_li_template(){
-	return `
-      <ul v-bind:id='type'>
-        <li v-for='i in _info' v-on:click='show_messageFrame($event,i.uid,i.level)' :style='li_height(i.level)'>
-          <div class='info'>
-            <div class='name'>{{i.name}} 
-              <span class="badge" v-if=!i.level>{{punR[i.uid]?punR[i.uid]:''}}</span> 
-              <span class="badge" v-if=i.level>{{tunR[i.uid]?tunR[i.uid]:''}}</span>
-            </div>
-            <div class='li_type'>
-              <span v-if=i.level>team</span>
-              <span v-if=!i.level>people</span>
-            </div>
-            <span class='uid' >{{i.uid}}</span>
-            <div class='introduce'>{{i.introduce}}</div>
-          </div>
-          <div class='avator' :style='avator_w(i.level)'><img :src=i.headImg></div>
-        </li>
-      </ul>
-      `;
+	return "<ul v-bind:id='type'>"+
+        "<li v-for='i in _info' v-on:click='show_messageFrame($event,i.uid,i.level)' :style='li_height(i.level)'>"+
+          "<div class='info'>"+
+            "<div class='name'>{{i.name}} "+
+              "<span class='badge' v-if=!i.level>{{punR[i.uid]?punR[i.uid]:''}}</span> "+
+              "<span class='badge' v-if=i.level>{{tunR[i.uid]?tunR[i.uid]:''}}</span>"+
+            "</div>"+
+            "<div class='li_type'>"+
+              "<span v-if=i.level>team</span>"+
+              "<span v-if=!i.level>people</span>"+
+            "</div>"+
+            "<span class='uid' >{{i.uid}}</span>"+
+            "<div class='introduce'>{{i.introduce}}</div>"+
+          "</div>"+
+          "<div class='avator' :style='avator_w(i.level)'><img :src=i.headImg></div>"+
+        "</li>"+
+      "</ul>"
+    ;
 }
 
 
 function v_teamMembers_template(li){
-  return `<li> 
-              <div class='avator'>
-                <img src=${li.headImg} alt='UID:${li.uid}' title='UID:${li.uid}'>
-              </div>
-              <span class='name'>${li.name}</span>
-         </li>`;
+  return "<li> "+
+              "<div class='avator'>"+
+                "<img src="+li.headImg+"alt='UID:"+li.uid+"' title='UID:"+li.uid+"'>"+
+              "</div>"+
+              "<span class='name'>"+li.name+"</span>"+
+         "</li>";
 }
 
 function judgeTypeforFloatDirection(msg,uid){
-      let f;
+      var f;
       if(msg.type==='team'){
         f=(msg.from_user===uid)?"style='float:right'":"style='float:left'";
       }else{
@@ -135,66 +129,63 @@ function judgeTypeforFloatDirection(msg,uid){
 
 
 function v_createMessDiv(msg,f,msgContent){
-  return `
-        <div class="messli" ${f}>
-          <div class='avator' ${f}><img src='${msg.headImg}'/></div>
-          <div class='info' ${f}>
-            <div><div class='name' ${f}>${msg.name}  ${msg.time}</div></div>
-            <div class="content" ${f}>${msgContent}</div>
-          </div>
-        </div>
-      `;
-
+  return "<div class='messli' "+f+">"+
+          "<div class='avator' "+f+"><img src='"+msg.headImg+"'/></div>"+
+          "<div class='info' "+f+">"+
+            "<div>"+
+              "<div class='name' "+f+">"+msg.name+" "+msg.time+"</div></div>"+
+            "<div class='content' "+f+">"+msgContent+"</div>"+
+         " </div>"+
+        "</div>"
+       ;
 }
 
 function v_addRecentLi_recent(con){
-  return `
-        <li style='height:${con.h};'>
-          <div class='info'>
-            <div class='name'>${info.name}
-              <span class="badge">1</span>
-            </div>
-            <div class='li_type'>
-              <span>${con.type}</span>
-            </div>
-            <span class='uid' >${info.uid}</span>
-            <div class='introduce'>${info.introduce}</div>
-          </div>
-          <div class='avator' style='width:${con.avator_w}; border-radius:${con.borderR};' ><img src='${info.headImg}'></div>
-        </li>
-      `;
+  return "<li style='height:"+con.h+";'>"+
+          "<div class='info'>"+
+            "<div class='name'>"+info.name+""+
+              "<span class='badge'>1</span>"+
+            "</div>"+
+            "<div class='li_type'>"+
+              "<span>"+con.type+"</span>"+
+            "</div>"+
+            "<span class='uid' >"+info.uid+"</span>"+
+            "<div class='introduce'>"+info.introduce+"</div>"+
+          "</div>"+
+          "<div class='avator' style='width:"+con.avator_w+"; border-radius:"+con.borderR+";' ><img src='"+info.headImg+"'></div>"+
+        "</li>"
+      ;
 }
 
 
 function v_removeThePeopleInStar(id){
-  console.log('v_removeThePeopleInStar');
   var lis = document.getElementById('star').getElementsByTagName('li');
-  for(let li of lis){
-    if(li.querySelectorAll('.info .uid')[0].innerText===id){
-      li.parentNode.removeChild(li);
+  for(var i=0;i<lis.length;i++){
+    if(lis[i].querySelectorAll('.info .uid')[0].innerText===id){
+      lis[i].parentNode.removeChild(lis[i]);
       break;
     }
   }
 }
 
 function v_addThePeopleInStar(info){
-  $('#star').prepend(`
-      <li v-on:click='show_messageFrame($event,${info.uid},false)' style='height:60px;'>
-        <div class='info'>
-          <div class='name'>${info.name} 
-            <span class="badge"></span>
-          </div>
-          <div class='li_type'>
-            <span>people</span>
-          </div>
-          <span class='uid' >${info.uid}</span>
-          <div class='introduce'>${info.introduce}</div>
-        </div>
-        <div class='avator' style='width:60px;border-radius:50%;'>
-          <img src=${info.headImg}>
-        </div>
-      </li>
-    `);
+  $('#star').prepend(
+      "<li v-on:click='show_messageFrame($event,"+info.uid+",false)' style='height:60px;'>"+
+        "<div class='info'>"+
+          "<div class='name'>"+info.name+" "+
+            "<span class='badge'></span>"+
+          "</div>"+
+          "<div class='li_type'>"+
+            "<span>people</span>"+
+          "</div>"+
+          "<span class='uid' >"+info.uid+"</span>"+
+          "<div class='introduce'>"+info.introduce+"</div>"+
+        "</div>"+
+        "<div class='avator' style='width:60px;border-radius:50%;'>"+
+          "<img src="+info.headImg+">"+
+        "</div>"+
+      "</li>"
+    );
     $('#star li').first().click(function(){
       main.moreinfoSeen=false;
       main.messtype='star';
@@ -208,20 +199,20 @@ function v_addThePeopleInStar(info){
 
 function v_removeThePeopleInRecent(id){
   var lis = document.getElementById('recent').getElementsByTagName('li');
-  for(let li of lis){
-    if(li.querySelectorAll('.info .uid')[0].innerText===id&&
-      li.querySelectorAll('.info .li_type span')[0].innerText!=='team'){
-      li.parentNode.removeChild(li);
+  for(var i=0;i<lis.length;i++){
+    if(lis[i].querySelectorAll('.info .uid')[0].innerText===id&&
+      lis[i].querySelectorAll('.info .li_type span')[0].innerText!=='team'){
+      lis[i].parentNode.removeChild(lis[i]);
       break;
     }
   }
 }
 function v_removeTheTeamInList(tid,li_type){
   var lis = document.getElementById(li_type).getElementsByTagName('li');
-  for(let li of lis){
-    if(li.querySelectorAll('.info .li_type span')[0].innerText==='team'&&
-      li.querySelectorAll('.info .uid')[0].innerText===tid){
-      li.parentNode.removeChild(li);
+  for(var i=0;i<lis.length;i++){
+    if(lis[i].querySelectorAll('.info .li_type span')[0].innerText==='team'&&
+      lis[i].querySelectorAll('.info .uid')[0].innerText===tid){
+      lis[i].parentNode.removeChild(lis[i]);
       break;
     }
   }

@@ -11,5 +11,7 @@ var login = new Vue({
 	}
 });
 setTimeout(function(){
-	document.getElementById('tipinfo').innerText = '';
+	if(document.getElementById('tipinfo')){
+		document.getElementById('tipinfo').innerText = '';
+	}
 },3000);

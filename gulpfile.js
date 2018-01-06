@@ -1,12 +1,13 @@
 const
 	gulp = require('gulp'),
-	less = require('gulp-less'),  // for less > css
+	less = require('gulp-less'),
     autoprefixer = require('gulp-autoprefixer'),
-	minifyCSS = require('gulp-minify-css'), //for css minify
+	minifyCSS = require('gulp-minify-css'), 
 	jshint = require('gulp-jshint'),
   	map = require("map-stream"),
-	uglify = require('gulp-uglify'),  //for js minify
-	imagemin = require('gulp-imagemin') //for images minify
+	uglify = require('gulp-uglify'), 
+	pump = require('pump'),
+	imagemin = require('gulp-imagemin')
 	clean = require('gulp-clean'),
     concat = require('gulp-concat');
 
@@ -30,47 +31,35 @@ gulp.task('pro-less',function(){
 	.pipe(less())
 	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
 	.pipe(minifyCSS())
-	.concat('main.less')
+	.pipe(concat('main.css'))
 	.pipe(gulp.dest('./dist/public/css'));
 });
 
 
-gulp.task('pro.js',function(){
-	gulp.src('./dev/js/**/*.js')
-	    .pipe(jshint())
-	    .pipe(uglify())
-	    .concat('bundle.js')
-	    .pipe(gulp.dest('./dist/public/js'))
+gulp.task('pro-js',function(){
+	function createErrorHandler(name){
+		return function (err) {
+		  console.error('Error from ' + name + ' in compress task', err.toString());
+		};
+	}
+		gulp.src(['./dev/js/**/*.js','!./dev/js/main-*'])
+		    .pipe(uglify())
+		    .on('error', createErrorHandler('PRO-JS'))
+		    .pipe(gulp.dest('./dist/public/js'))
+	pump([
+		gulp.src(['./dev/js/main-*','./dev/js/lib.js'])
+		    .pipe(uglify())
+		    .on('error', createErrorHandler('PRO-MAINJS'))
+		    .pipe(concat('main.js'))
+		    .pipe(gulp.dest('./dist/public/js'))
+	]);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 
 gulp.task('dev',function(){
-	gulp.start('dev-less','dev-js');
+	gulp.start('clean','dev-less','dev-js');
 });
 
 gulp.task('dev-less', function() {
@@ -78,6 +67,7 @@ gulp.task('dev-less', function() {
 	.pipe(less())
 	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
 	.pipe(minifyCSS())
+	.pipe(concat('main.css'))
 	.pipe(gulp.dest('./dist/public/css'));
 });
 
@@ -95,10 +85,17 @@ gulp.task('dev-js', function() {
 		 });  
 		}  
 	});
-	gulp.src('./dev/js/**/*.js')
-	    .pipe(jshint())
-	    .pipe(gulp.dest('./dist/public/js'))
-	    .pipe(customerReporter)
+
+		gulp.src(['./dev/js/**/*.js','!./dev/js/main-*'])
+		    .pipe(jshint())
+		    .pipe(gulp.dest('./dist/public/js'))
+		    .pipe(customerReporter)
+
+		gulp.src(['./dev/js/main-*.js','./dev/js/lib.js'])
+		    .pipe(jshint())
+		    .pipe(concat('main.js'))
+		    .pipe(gulp.dest('./dist/public/js'))
+		    .pipe(customerReporter)
 });
 
 gulp.task('dev-watch', function() {

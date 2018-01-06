@@ -1,5 +1,4 @@
 function v_methods(){
-  console.log('v_methods');
   return {
     closeMoreinfo:function(){
       this.moreinfoSeen=false;
@@ -16,7 +15,6 @@ function v_methods(){
     },
     getMoreMessageOnFrame:function(){
       var skip = document.querySelectorAll('#messageframe_cont>.messli').length;
-      console.log(skip);
       var data = {
         receive_uid:uid,
         from_uid:main.messto,
@@ -94,11 +92,12 @@ function v_methods(){
       while(msgContent.match(/\#\(.{1,4}\)/)){
         var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/));
         var t = help_expressionSwitch(msgMatch.slice(2,-1));
-        msgContent = msgContent.replace(/#\(.{1,4}\)/,
-          `<div class='expression_chatting'
-            style='background-image:url(img/faces.png); 
-            background-position: left -${t*30}px; '>
-          </div>`
+        msgContent = msgContent.replace(
+          /#\(.{1,4}\)/,
+          "<div class='expression_chatting"+
+            "style='background-image:url(img/faces.png);"+ 
+            "background-position: left -"+t*30+"px; '>"+
+          "</div>"
           );
       }
       return msgContent;
@@ -136,7 +135,7 @@ function v_methods(){
         type:type
       };
       postChange('/getUnreadMess',data,function(d){
-        for(let i=0;i<d.length;i++){
+        for(i=0;i<d.length;i++){
           main.createMessDiv(d[i]);
         }
       });
@@ -161,16 +160,18 @@ function v_methods(){
       var exist = false;
       if(msg.type==='team'){
         //check whether the recent_team exist;
-        for(var i of loginlist.recent_team){
-          if(i===msg.uid||i===msg.to){
+        var lrt = loginlist.recent_team;
+        for(i=0;i<lrt.length;i++){
+          if(lrt[i]===msg.uid||lrt[i]===msg.to){
             exist = true;
             break;
           }
         }
       }else{
         //check whether the recent_people exist;
-        for(var j of loginlist.recent_people){
-          if(j===msg.uid||j===msg.to){
+        var lrp = loginlist.recent_people;
+        for(i=0;i<lrp.length;i++){
+          if(lrp[i]===msg.uid||lrp[i]===msg.to){
             exist = true;
             break;
           }
@@ -179,7 +180,10 @@ function v_methods(){
       if(!exist){
         if(msg.uid===uid){
           //who send msg and who receive msg is the same;  
-          var d = {  uid:msg.to, type:msg.type };
+          var d = {  
+            uid:msg.to, 
+            type:msg.type
+          };
           //link with router/unreadnumber.js g64,
           postChange('/justGetInfo',d,function(data){
             if(msg.type==='team'){
@@ -234,7 +238,7 @@ function v_methods(){
         socket.emit('chat',J_msg);
       }
     },
-    starOrUnstar(){
+    starOrUnstar:function(){
       var stars = loginlist.star;
       var data = {
         uid:uid,
@@ -242,8 +246,8 @@ function v_methods(){
         isStar:false,
       };
       if(main.messtype!=='team'&&stars.length){
-        for(let i of stars){
-          if(i===main.messto){
+        for(var i=0;i<stars.length;i++){
+          if(stars[i]===main.messto){
             data.isStar = true;
           }
         }
@@ -258,7 +262,7 @@ function v_methods(){
         }
       });
     },
-    deleteTheRecentChat(){
+    deleteTheRecentChat:function(){
       var data = {
         uid:uid,
         to:main.messto
@@ -283,24 +287,23 @@ function v_methods(){
     },
 
     showMembers:function(){
-      console.log('showMembers');
       var data = {
         tid:main.messto
       };
       main.teamMembersSeen = true;
       postChange('/showMembers',data,function(_infos){
         var teamMembers_ul = document.querySelector('.teamMembers>ul');
-        console.log(teamMembers_ul);
-        for(let li of _infos){
-          console.log(li);
-          $(teamMembers_ul).append(v_teamMembers_template(li));         
+        for(var i=0;i<_infos.length;i++){
+          $(teamMembers_ul).append(v_teamMembers_template(_infos[i]));         
         }
       });
     },
+
     closeTeamMembers:function(){
       document.querySelector('.teamMembers>ul').innerHTML = '';
       this.teamMembersSeen=false;
     },
+
     //when the < of the top of left of the massageframe be clicked, run this function,
     messageframe_close:function(){
       this.messageframeSeen=false;

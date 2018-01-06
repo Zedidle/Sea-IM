@@ -4,7 +4,6 @@
   "author": "ZFC<476409251@qq.com>",
   "private": true,
   "scripts": {
-
     "start": "node dist/app.js",
     "inidb": "node inidb.js",
     "clearlogin": "node clearlogin.js",
@@ -37,7 +36,6 @@
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
     "gulp-imagemin": "^3.3.0",
-    "jshint": "^2.9.5",
     "gulp-jshint": "^2.0.4",
     "gulp-less": "^3.3.2",
     "gulp-livereload": "^3.8.1",
@@ -45,6 +43,8 @@
     "gulp-notify": "^3.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.0",
+    "jshint": "^2.9.5",
+    "pump": "^2.0.0",
     "rename": "^1.0.4"
   },
   "engines": {

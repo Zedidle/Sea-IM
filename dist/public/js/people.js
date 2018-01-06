@@ -1,10 +1,8 @@
-var uid = document.getElementById('getuid').value;
-console.log('uid:'+uid);
-
-
 var people = new Vue({
      el:'.container',
-     data:{ uid:uid },
+     data:{ 
+          uid:uid?uid:null
+     },
      methods:{
           showPeopleHeadForm:function(){
 		   document.getElementById('peopleHeadForm').style.display = 'block';

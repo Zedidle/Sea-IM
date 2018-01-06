@@ -39,8 +39,6 @@ app.get('*', function(req, res){
     });
 });
 
-
-
 io.on('connection', function(socket){
   //receive the heartbeat package ,and keep the user on line;
 

@@ -1,9 +1,3 @@
-const uid = document.getElementById('getuid').value;
-const userEnsure = {uid:uid};
-var loginlist = JSON.parse(document.getElementById('getloginlist').value);
-var punRead = JSON.parse(document.getElementById('getpunRead').value);
-var tunRead = JSON.parse(document.getElementById('gettunRead').value);
-
 var main = new Vue({
 
   components:{
@@ -35,7 +29,7 @@ var main = new Vue({
       template:v_user_info_template(),
       data:function(){
         return {
-          info:JSON.parse(regKeepJSON(this.user_info)),
+          info:JSON.parse(jsonKeep(this.user_info)),
         };
       },
       methods:{
@@ -127,8 +121,8 @@ var main = new Vue({
               uid:uid
             };
             if(stars.length){
-              for(let i of stars){
-                if(i===data.sid){
+              for(var i=0;i<stars.length;i++){
+                if(stars[i]===data.sid){
                   isStar = true;
                   break;
                 }
@@ -161,13 +155,13 @@ var main = new Vue({
       template:v_mess_li_template(),
       computed:{
         punR:function(){
-          return JSON.parse(regKeepJSON(this.punread));
+          return JSON.parse(jsonKeep(this.punread));
         },
         tunR:function(){
-          return JSON.parse(regKeepJSON(this.tunread));
+          return JSON.parse(jsonKeep(this.tunread));
         },
         _info:function(){
-          return JSON.parse(regKeepJSON(this.info));
+          return JSON.parse(jsonKeep(this.info));
         }
       },
       methods:{
@@ -222,8 +216,10 @@ var main = new Vue({
           var unreadNumber = parseInt(unread_badge.innerText);
           this.subUnread(unread_badge,uid,li_uid,haslevel);
           main.messtype=this.type;
-          if(haslevel){ main.messtype='team'; }
-          main.isteam = (main.messtype==='team')?true:false;
+          if(haslevel){ 
+            main.messtype='team'; 
+          }
+          main.isteam = main.messtype==='team';
           main.messageframeSeen=true;
           document.getElementById('messageframe_cont').innerHTML = '';
           main.nameOfmessageframe = e.find('.name').text()||e.parent().find('.name').text()||e.parent().parent().find('.name').text();
@@ -236,8 +232,6 @@ var main = new Vue({
 
   el:'#main',
   data:{
-    punRead:punRead,
-    tunRead:tunRead,
     messInfo:{
       headImg:'???',
       uid: '???',
@@ -253,7 +247,6 @@ var main = new Vue({
     isteam:false,
     moreinfoSeen:false,
     teamMembersSeen:false,
-    loginlist:loginlist,
     messtype:'',
     messto:'',
     nameOfmessageframe:'',

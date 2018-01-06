@@ -30,7 +30,7 @@
 		<h4 style='color:#333;'>成功建立团队!<br>把口令告诉你的朋友,方便他们加入哦!</h4>
 		<button id='back' class='btn btn-success'>返回主页</button>
 	</div>
-	<script src='js/lib.js'></script>
+    <script src='js/lib.js'></script>
 
 	<script>
 		var uid = '<%=uid%>';
@@ -38,7 +38,7 @@
 			var data = { 
 				uid:uid
 			};
-			formPost('/main',data);
+			zPost('/main',data);
 		}
 	</script>
 </body>

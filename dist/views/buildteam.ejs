@@ -5,59 +5,57 @@
 	<title>Seanet-Buildteam</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
-    body{
-        background-size:100%;
-    }
-    .container{
-        margin-top:10%;
-    }
-    #teamForm{
-        display: block;
-        margin:0 auto;
-        padding:10px;
-        max-width: 320px;
-        border:2px solid #0A74D0;
-    }
-    #sub,#back{
-        width:100px;
-        height: 30px;
-        display: inline-block;
-    }
+        body{
+            background-size:100%;
+        }
+        .container{
+            margin-top:10%;
+        }
+        #teamForm{
+            display: block;
+            margin:0 auto;
+            padding:10px;
+            max-width: 320px;
+            border:2px solid #0A74D0;
+        }
+        #sub,#back{
+            width:100px;
+            height: 30px;
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
-
-<div class='container' id='buildTeam'>
-  <form class="bs-example bs-example-form" id="teamForm"  action="/successB" role='form' method='post' >
-    <h2>创建团队:</h2>
-    <div class="input-group">
-      <span class="input-group-addon" style='width:80px;'>名称</span>
-      <input  name='teamname' id='teamname' v-on:focus='tipname' type="text"  class="form-control">
+    <div class='container' id='buildTeam'>
+        <form class="bs-example bs-example-form" id="teamForm"  action="/successB" role='form' method='post' >
+            <h2>创建团队:</h2>
+            <div class="input-group">
+                <span class="input-group-addon" style='width:80px;'>名称</span>
+                <input  name='teamname' id='teamname' v-on:focus='tipname' type="text"  class="form-control">
+            </div>
+        	<div id='tipname'></div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon" style='width:80px;'>口令</span>
+                <input id='pw' name='password' v-on:focus='tipPassword' type="password"  class="form-control">
+            </div>
+        	<div id='tippw'></div>
+            <br>
+              <div class="input-group">
+                <span class="input-group-addon" style='width:80px;'>重复口令</span>
+                <input  id='pww' v-on:focus='tipPasswordA' type="password"   class="form-control">
+              </div>
+        		<div id='tippww'></div>
+            <br>
+            <submit-button uid='<%=uid%>' class="btn btn-primary"></submit-button>
+            <back-button uid='<%=uid%>' class="btn btn-warning"></back-button>
+        </form>
     </div>
-		<div id='tipname'></div>
-    <br>
-    <div class="input-group">
-      <span class="input-group-addon" style='width:80px;'>口令</span>
-      <input id='pw' name='password' v-on:focus='tipPassword' type="password"  class="form-control">
-    </div>
-		<div id='tippw'></div>
-    <br>
-      <div class="input-group">
-        <span class="input-group-addon" style='width:80px;'>重复口令</span>
-        <input  id='pww' v-on:focus='tipPasswordA' type="password"   class="form-control">
-      </div>
-		<div id='tippww'></div>
-    <br>
-    <submit-button uid='<%=uid%>' class="btn btn-primary"></submit-button>
-    <back-button uid='<%=uid%>' class="btn btn-warning"></back-button>
-</form>
-</div>
 <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src='js/lib.js'></script>
-<script src='js/buildteam.js'></script>
+<script src='js/buildTeam.js'></script>
 </body>
 </html>

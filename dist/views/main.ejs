@@ -6,15 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 	<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/main-search.css">
-	<link rel="stylesheet" href="css/main-messageframe.css">
 	<audio id='tipvoice' src="voice/successLogin.wav" autoplay="autoplay"></audio>
 </head>
 <body >
-<input style='display: none;' id='getuid' value='<%=uid%>'>
-<input style='display: none;' id='getloginlist' value='<%=loginlist%>'>
-<input style='display: none;' id='getpunRead' value='<%=punRead%>'>
-<input style='display: none;' id='gettunRead' value='<%=tunRead%>'>
+
 
 <div class='container' id='main' >
 	<div id="content" >
@@ -52,7 +47,6 @@
 <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src='js/lib.js'></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>var socket = io();</script>
 
@@ -116,9 +110,21 @@
 		`);
 
 </script>
-<script src='js/main-help.js'></script>
-<script src='js/main-methods.js'></script>
+
+
+<script>
+function jsonKeep(data){
+  return data.replace(/&#34;/g, '\"');
+}
+var uid = '<%=uid%>';
+var loginlist = JSON.parse(jsonKeep('<%=loginlist%>'));
+var punRead = JSON.parse(jsonKeep('<%=punRead%>'));
+var tunRead = JSON.parse(jsonKeep('<%=tunRead%>'));
+var userEnsure = {
+  uid:uid
+};
+</script>
 <script src='js/main.js'></script>
-<!-- <script src='bundle.js'></script> -->
+
 </body>
 </html>

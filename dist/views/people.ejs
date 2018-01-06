@@ -145,7 +145,6 @@
 		<div class="col-md-12">
 
 		<form action="/peopleI" id='peopleHeadForm' method='post' enctype='multipart/form-data'>
-			<input style='display: none;' name='uid' id='getuid' value='<%=uid%>'>
 			<p>更新头像:</p>
 			<input type="file" class="btn btn-default" id='avator' name="avator" v-on:change='showImg'>
 			<img style='width:200px;height:200px;' />
@@ -190,7 +189,12 @@
 <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src='js/lib.js'></script>
-<script src='js/people.js'></script>
+<input style='display: none;' name='uid' id='getuid' value=>
+
+	<script>
+	var uid = '<%=uid%>';
+	</script>
+	<script src='js/lib.js'></script>
+    <script src='js/people.js'></script>
 </body>
 </html>

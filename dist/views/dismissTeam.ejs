@@ -59,44 +59,11 @@
 <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src='js/lib.js'></script> 
 <script>
-new Vue({
-	el:'#dismissTeam',
-	data:{
-		uid:'<%=uid%>',
-		pw:'<%=pw%>',
-		dataforback:{
-			uid:'<%=uid%>',
-		}
-	},
-	methods:{
-		subOnclick:function(){
-		var ID = document.getElementById('ID').value.trim();
-		var PW = document.getElementById('PW').value.trim();
-		console.log(this.uid,this.pw)
-		var issameID = issame(ID,this.uid),
-			issamePW = issame(PW,this.pw);
-		if(issameID&&issamePW){
-			document.getElementById('dismissForm').submit();
-		}else{
-			if(!issameID){
-				document.querySelector('.tipID').innerText = 'ID False';
-			}else{
-				document.querySelector('.tipID').innerText = '';
-			}
-			if(!issamePW){
-				document.querySelector('.tipPW').innerText = 'Password False';
-			}else{
-				document.querySelector('.tipPW').innerText = '';
-			}
-		}
-		},
-		backtomainpage:function(){
-			zPost('/main',this.dataforback);
-		}
-	}
-})
+var uid = '<%=uid%>';
+var pw = '<%=pw%>';
 </script>
+<script src='js/lib.js'></script> 
+<script src='js/dismissTeam.js'></script>
 </body>
 </html>
