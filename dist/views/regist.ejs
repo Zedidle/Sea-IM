@@ -5,34 +5,39 @@
     <meta charset="utf-8">
 	<title>Seanet-Register</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<style>
-    @media (max-width: 450px) {
-        .container{
-            padding:0;
-        }
+    .container{
+        margin-top:10%;
+        max-width:400px;
     }
     h1{
         color:#1E515E;
         text-align: center;
     }
     #registForm{
-        border:solid 2px #00A2AF;
+        border-top:25px solid #00A2AF;
+        border-bottom:10px solid #00A2AF;
+        border-left:2px solid #00A2AF;
+        border-right:2px solid #00A2AF;
         box-shadow: 0 0 2px #55FFD6
         width:300px;
-        border-radius: 0.5em;
-        background: rgba(255,255,255,0.3);
-        padding:10px;
+        padding:20px;
+    }
+    @media (max-width: 500px){
+        .container{
+            padding:5px;
+        }
+        #registForm{
+            padding:10px;
+        }
     }
     #registForm input{
         height:40px;
     }
-    .container{
-        padding-top:10%;
-        max-width:400px;
-    }
     .redBorder{
-        border:solid 1px red;
+        border:1px solid red;
     }
     .btn{
         margin:0 2%;
@@ -41,50 +46,44 @@
     .mw100{
         min-width:100px;
     }
+    #uid_tip,#pw_tip,#pww_tip{
+        height:30px;
+    }
     </style>
 </head>
 <body>
 
 <div class="container" id='regist'>
-
     <form v-on:keyup.13="formSubmit" class="bs-example bs-example-form" role="form" id='registForm' action="/registInfo" method="post">
     <h1>SeaNet Register</h1>
-    <div id='tip'></div>
     <div class="input-group">
         <span class="mw100 input-group-addon">
             <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-        用户名</span>
-        <input  v-on:focus='uid' type="text" class="form-control" name="uid" id="uid" placeholder="用户名">
+        ID</span>
+        <input  v-on:focus='focusUidResponse' v-on:blur='uidBlurCheckIsUsed' type="text" class="form-control" name="uid" id="uid" v-model.trim='uid' placeholder="用户名">
     </div>
-    <div><%= tipuid%></div>
-    <br>
+    <div id='uid_tip'>{{uid_tip}}</div>
     <div class="input-group">
     <span class="mw100 input-group-addon">
     <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
     密码</span>
-         <input v-on:focus="Pw" type="password" class="form-control" name="password" id="password" placeholder="密码">
+         <input v-on:focus="focusPwResponse" v-on:blur='blurPwResponse' type="password" class="form-control" name="password" id="password" v-model.trim='pw' placeholder="密码">
     </div>   
-	<br>
+    <div id='pw_tip'>{{pw_tip}}</div>
 	<div class="input-group">
     <span class="mw100 input-group-addon">
     <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
         确认密码</span>
-        <input v-on:focus="Pww" type="password" class="form-control" name="passwordCheck" id="passwordCheck" >
+        <input v-on:focus="focusPwwResponse" v-on:blur='blurPwwResponse' type="password" class="form-control" name="passwordCheck" id="passwordCheck" v-model.trim='pww' placeholder="确认密码">
     </div>
-    <br>
-
-	<input v-on:click="formSubmit" type="button" id="sub" class="btn btn-success" value="提交">
+    <div id='pww_tip'>{{pww_tip}}</div>
+	<input v-on:click="formSubmit" type="button" id="sub" class="btn btn-success" v-model="submit_text">
 	<input v-on:click='backtologin' type="button" id="backtologin" class="btn btn-default" value="返回">
     </form>
-
-
-    
 </div>
 
-<script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
-<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src='js/lib.js'></script>
+
+<%include frameuse.ejs%>
 <script src='js/regist.js'></script>
 
 </body>

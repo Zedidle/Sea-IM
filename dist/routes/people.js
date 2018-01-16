@@ -42,11 +42,32 @@ router.post('/peopleI',upload.any(),(req,res)=>{
 	var data = req.body;
 	var image = req.files[0];
 	var readpath = 'img/uploads/'+image.filename;
-	People.update({uid:data.uid},{$set:{headImg:readpath}},err=>{
-		People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-			res.render('people.ejs',detail[0]);
-		})
-	});
+	People.update(
+		{
+			uid:data.uid
+		},
+		{
+			$set:{
+				headImg:readpath
+			}
+		},
+		function(err){
+			People.find(
+				{
+					uid:data.uid
+				},
+				null,
+				{
+					limit:1
+
+				},
+				function(err,detail){
+					if(err) throw err;
+					res.render('people.ejs',detail[0]);
+				}
+			)
+		}
+	);
 })
 
 //used by public/js/people.js  g61

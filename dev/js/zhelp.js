@@ -91,7 +91,6 @@ function postChangeImg(url,data,callback){
   };
 }
 
-
 function postChangeText(url,data,callback){
   var J_data = JSON.stringify(data);
   var xmlhttp = new XMLHttpRequest();
@@ -105,9 +104,6 @@ function postChangeText(url,data,callback){
     }
   };
 }
-
-
-
 
 function jsonKeep(data){
   return data.replace(/&#34;/g, '\"');

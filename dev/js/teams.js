@@ -54,7 +54,9 @@ var teams = new Vue({
       if(!avator.length){
         $('#avator').css('border','solid 1px #449933'); 
       }else{
-        $('#teamHeadForm').submit();
+        var thf = $('#teamHeadForm')[0];
+        addInput(thf,'uid',this.uid) 
+        thf.submit();
       }
     },
     showImg:function(e){

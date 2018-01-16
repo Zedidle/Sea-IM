@@ -42,10 +42,14 @@ gulp.task('pro-js',function(){
 		  console.error('Error from ' + name + ' in compress task', err.toString());
 		};
 	}
+	pump([
 		gulp.src(['./dev/js/**/*.js','!./dev/js/main-*'])
 		    .pipe(uglify())
-		    .on('error', createErrorHandler('PRO-JS'))
+		    .on('error', createErrorHandler('PRO-NOT-MAIN'))
 		    .pipe(gulp.dest('./dist/public/js'))
+	]);
+
+
 	pump([
 		gulp.src(['./dev/js/main-*','./dev/js/lib.js'])
 		    .pipe(uglify())
@@ -54,6 +58,8 @@ gulp.task('pro-js',function(){
 		    .pipe(gulp.dest('./dist/public/js'))
 	]);
 });
+
+
 
 
 
@@ -86,16 +92,17 @@ gulp.task('dev-js', function() {
 		}  
 	});
 
-		gulp.src(['./dev/js/**/*.js','!./dev/js/main-*'])
-		    .pipe(jshint())
-		    .pipe(gulp.dest('./dist/public/js'))
-		    .pipe(customerReporter)
+	gulp.src(['./dev/js/**/*.js','!./dev/js/main-*'])
+	    .pipe(jshint())
+	    .pipe(gulp.dest('./dist/public/js'))
+	    .pipe(customerReporter)
 
-		gulp.src(['./dev/js/main-*.js','./dev/js/lib.js'])
-		    .pipe(jshint())
-		    .pipe(concat('main.js'))
-		    .pipe(gulp.dest('./dist/public/js'))
-		    .pipe(customerReporter)
+	// gulp.src(['./dev/js/main-*.js','./dev/js/lib.js'])
+	gulp.src(['./dev/js/main-*.js'])
+	    .pipe(jshint())
+	    // .pipe(concat('main.js'))
+	    .pipe(gulp.dest('./dist/public/js'))
+	    .pipe(customerReporter)
 });
 
 gulp.task('dev-watch', function() {

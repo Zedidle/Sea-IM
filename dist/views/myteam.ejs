@@ -4,7 +4,8 @@
 	<meta charset="UTF-8">
 	<title>Seanet-Team</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <style>
     #update{
         margin-left: 10px;
@@ -81,10 +82,7 @@
         <team-info uid='<%=uid%>' teaminfo='<%=teaminfo%>'></team-info>
     </div>
     
-    <script src='https://cdn.bootcss.com/vue/2.5.7/vue.min.js'></script>
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src='js/lib.js'></script>
+    <%include frameuse.ejs%>
     <script src='js/myteam.js'></script>
 
 </body>

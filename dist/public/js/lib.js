@@ -106,9 +106,6 @@ function postChangeText(url,data,callback){
   };
 }
 
-
-
-
 function jsonKeep(data){
   return data.replace(/&#34;/g, '\"');
 }

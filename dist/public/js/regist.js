@@ -1,48 +1,86 @@
 var regist = new Vue({
 	el:'#regist',
 	data:{
-		uidReg:new RegExp(/^[a-zA-Z].{5,15}$/),
-		pwReg:new RegExp(/^[a-zA-Z0-9]{8,16}$/)
+		uid_reg:/^\w{6,16}$/,
+		pw_reg:/^.{6,14}$/,
+		uid:'',
+		pw:'',
+		pww:'',
+		uid_tip:'',
+		pw_tip:'',
+		pww_tip:'',
+		uid_flag:false,
+		pw_flag:false,
+		pww_flag:false,
+		submit_text:'提交'
 	},
 	methods:{
 		backtologin:function(){
 			window.location.href='/';
 		},
-		uid:function(){
-			$('#tip').text('字母开头，长度为6-16，数字、大小写字母和特殊字符混合');
+		uidBlurCheckIsUsed:function(){
+			this.uid_flag = this.uid_reg.test(this.uid);
+			if(!this.uid_flag){
+				$('#uid_tip')[0].style.color = 'red';
+				regist.uid_tip = '账号有误';
+				return false;
+			}
+			$.get('/checkUidIsUsed',{uid: this.uid},function(bool){
+				if(bool){
+					regist.uid_tip = '账号已被使用';
+					$('#uid_tip')[0].style.color = 'red';
+				}else{
+					regist.uid_tip = '账号可用';
+					$('#uid_tip')[0].style.color = 'green';
+				}
+			});
 		},
-		Pw:function(){
-			$('#tip').text('长度为8-16，数字和大小写字母混合');
+		focusUidResponse:function(){
+			this.uid_tip = '字母和数字皆可,长度为6-16';
+			$('#uid_tip')[0].style.color = 'green';
 		},
-		Pww:function(){
-			$('#tip').text('请重复你的密码');
+		focusPwResponse:function(){
+			this.pw_tip = '	请输入密码';
+			$('#pw_tip')[0].style.color = 'green';
+		},
+		blurPwResponse:function(){
+			this.pw_flag = this.pw_reg.test(this.pw);
+			$('#pw_tip')[0].style.color = 'red';
+			if(this.pw === ''){
+				return false;
+			}
+			if(!this.pw_flag){
+				this.pw_tip = '密码长度不对';
+			}else{
+				this.pw_tip = '密码可行';
+				$('#pw_tip')[0].style.color = 'green';
+			}
+		},
+		focusPwwResponse:function(){
+			this.pww_tip = '重复确认密码';
+			$('#pww_tip')[0].style.color = 'green';	
+		},
+		blurPwwResponse:function(){
+			this.pww_flag = issame(this.pw,this.pww);
+			$('#pww_tip')[0].style.color = 'red';				
+			if(!this.pww_flag){
+				this.pww_tip = '两次密码不一样';
+			}else if(this.pww === ''){
+				this.pww_tip = '密码不能为空';
+			}else{
+				this.pww_tip = '确认完成';
+				$('#pww_tip')[0].style.color = 'green';				
+			}
 		},
 		formSubmit:function(){
-			var 
-				flaguser = this.uidReg.test($("#uid").val()),
-				flagpw = this.pwReg.test($("#password").val()),		
-				flagpww = issame($("#password").val(),$("#passwordCheck").val());
-
-			if(flaguser&&flagpw&&flagpww){
+			if(this.uid_flag && this.pw_flag && this.pww_flag){
 				$('#registForm').submit();
-			}
-			var tipText = '';
-			if(!flaguser){
-				tipText += '<p>用户名不正确</p>';
-				$("#uid").addClass('redBorder');
 			}else{
-				$("#uid").removeClass('redBorder');
+				this.submit_text = '请检查每个输入项';
+				setTimeout(function(){
+					regist.submit_text = '提交';
+				},2000);
 			}
-			if(!flagpw){
-				tipText += '<p>密码不正确</p>';
-				$("#password").addClass('redBorder');
-			}else{
-				$("#password").removeClass('redBorder');
-			}
-			if(!flagpww){
-				tipText += '<p>两次密码不一样</p>';
-			} 
-			$('#tip').html(tipText);
 		},
 	}
 });

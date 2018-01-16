@@ -1,7 +1,6 @@
 var people = new Vue({
      el:'.container',
      data:{ 
-          uid:uid?uid:null
      },
      methods:{
           showPeopleHeadForm:function(){
@@ -15,7 +14,9 @@ var people = new Vue({
           headUpdate:function(){
                var avator = $('#avator').val();
                if(avator.length){
-                    $('#peopleHeadForm').submit();
+                    var phf = $('#peopleHeadForm')[0];
+                    addInput(phf,'uid',uid);
+                    phf.submit();
                }else{
                     $('#avator').css('border','solid 1px #449933');
                }

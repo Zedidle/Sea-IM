@@ -60,7 +60,9 @@ var buildTeam = new Vue({
       			'<button v-on:click="backtomain" type="button" id="back">Cancel</button>',
 			data:function(){
 				return{
-					userEnsure:{ uid:this.uid },
+					userEnsure:{ 
+						uid:this.uid
+					},
 				};
 			},
 			methods:{
