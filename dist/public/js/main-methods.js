@@ -8,75 +8,73 @@ function v_methods(){
         type:this.messtype,
         check_uid:this.messto
       };
-      postChange("/getMoreinfo",data,function(d){
+      $.get("/getMoreinfo",data,function(d){
         main.messInfo = d;
       });
       this.moreinfoSeen=true;
     },
-    getMoreMessageOnFrame:function(){
+    getMoreMessage:function(){
       var skip = document.querySelectorAll('#messageframe_cont>.messli').length;
       var data = {
         receive_uid:uid,
         from_uid:main.messto,
         type:main.messtype
       };
-      $.post('/getmess', data, function(messages){
+      $.get('/getMoreMessage', data, function(messages){
         if(messages){
           var l = messages.length;
           for(var i=0;i<5;i++){
             main.gotMessCreateMessDiv(messages[l-1-skip-i]);
           }
         }else{
-          main.changeGetMoreContent();
+          main.noMoreMessage();
         }
       });
     },
-    addUnReadInDB:function(msg_type,msg_uid,msg_to){
+
+    messageContentOnScroll:function(event){
+      // console.log(event);
+      
+    },
+
+    unReadAdd1InDB:function(msg_type,msg_uid,msg_to){
       var data = {
         type:msg_type,
         uid:msg_uid,
         to:msg_to,
         checked:false
       };
-      postChange('/dealwithunread',data,function(d){});
+      $.post('/unReadAdd1',data);
     },
-    addUnReadNumber:function(msg){
-      var msg_type = msg.type==='team'?'team':'people';
-      var recent_lis = $('ul#recent').find('li');
-      for(var i=0;i<recent_lis.length;i++){
-        //get every li in recent's type,uid and unreadnumber;
-        var li_type = recent_lis.eq(i).find('.info .li_type span').text();
-        var li_uid = recent_lis.eq(i).find('.info span.uid').text();
-        var unread = recent_lis.eq(i).find('.name span.badge')[0];
-        if(msg_type===li_type && msg.uid===li_uid){
-          if(!unread.innerText){
-            unread.innerText = 0;
-            unread.style.display = 'inline-block';
-          }
-          unread.innerText = parseInt(unread.innerText)+1; 
-          break;
-        }
-      }
-      this.addUnReadInDB(msg_type,msg.uid,msg.to);
+
+    addUnRead:function(msg){
+      var msg_uid = msg.uid;
+      var isTeam = msg.type==='team';
+
+      this.dealUnread(msg_uid, isTeam, true);
+      this.unReadAdd1InDB(msg_type,msg.uid,msg.to);
     },  
+
     gotMessCreateMessDiv:function(msg){
       if(!msg){
-        this.changeGetMoreContent();
+        this.noMoreMessage();
         return false;
       }
       var f = judgeTypeforFloatDirection(msg,uid);
       var msgContent = main.expressionsParse(msg.content);
       $('#messageframe_cont').prepend(v_createMessDiv(msg,f,msgContent));
-      var cont = document.getElementById('messageframe_cont');
+      var cont = $('#messageframe_cont')[0];
       cont.scrollTop = 0;
     },
-    changeGetMoreContent:function(){
+
+    noMoreMessage:function(){
         var getMessBtn = $('.getMoreMessageOnFrame_btn')[0];
         getMessBtn.innerText = 'No More';
         setTimeout(function(){
           getMessBtn.innerText = 'Get More Message';
         },1500);
     },
+
     //when the mess come, if messageFrame is opning, check the messtype and messto, 
     //if satisfy the condition, it will run this function to show the message.
     createMessDiv:function(msg){
@@ -87,6 +85,7 @@ function v_methods(){
       var cont = document.getElementById('messageframe_cont');
       cont.scrollTop = cont.scrollHeight;
     },
+
     expressionsParse:function(msgContent){
       while(msgContent.match(/\#\(.{1,4}\)/)){
         var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/));
@@ -101,14 +100,15 @@ function v_methods(){
       }
       return msgContent;
     },
+
     addRecentLi:function(info){
-      
       var havelevel = info.level;
       var con = new Object({});
       con.h = havelevel?'80px':'55px';
       con.borderR = havelevel?'0%':'50%';
       con.avator_w = havelevel?'70px':'50px';
       con.type = havelevel?'team':'people';
+
       $('#recent').prepend(v_addRecentLi_recent(con,info));
       $('#recent li').first().click(function(){
         var unread_badge = $(this).find('.badge')[0]||$(this).parent('li').find('span.badge')[0];
@@ -122,7 +122,7 @@ function v_methods(){
         main.nameOfmessageframe = this.getElementsByClassName('name')[0].innerText;
         main.messto = this.getElementsByClassName('uid')[0].innerText;
         main.getUnreadMess(main.messto,unreadNumber,'recent');
-        document.getElementById('messageframe_cont').innerHTML = '';
+        $('messageframe_cont')[0].innerHTML = '';
       });
     },
 
@@ -133,7 +133,7 @@ function v_methods(){
         unreadNumber:unreadNumber,
         type:type
       };
-      postChange('/getUnreadMess',data,function(d){
+      $.get('/getUnreadMess', data, function(d){
         for(i=0;i<d.length;i++){
           main.createMessDiv(d[i]);
         }
@@ -147,12 +147,15 @@ function v_methods(){
         msg.uid===uid&&msg.type!=='team'){
         this.createMessDiv(msg);
         if(msg.uid===uid&&msg.type==='team'&&main.messto!==msg.uid){
-          this.addUnReadNumber(msg);
+          this.addUnRead(msg);
         }
       }else{
-        var voiceSrc = msg.type!=='team'?'tmessageCome.wav':'pmessageCome.wav';
-        document.getElementById('tipvoice').src='voice/'+ voiceSrc;
-        this.addUnReadNumber(msg);
+        if(msg.type!=='team'){
+          TeamMessageCome.play();
+        }else{
+          PersonMessageCome.play();
+        }
+        this.addUnRead(msg);
       }
 
       //judge the type of message,
@@ -176,6 +179,7 @@ function v_methods(){
           }
         }
       }
+
       if(!exist){
         if(msg.uid===uid){
           //who send msg and who receive msg is the same;  
@@ -183,15 +187,14 @@ function v_methods(){
             uid:msg.to, 
             type:msg.type
           };
-          //link with router/unreadnumber.js g64,
-          postChange('/justGetInfo',d,function(data){
+          $.get('/getInfo',d,function(data){
             if(msg.type==='team'){
               loginlist.recent_team.push(msg.uid);
             }else{
               loginlist.recent_people.push(msg.to);
             }
             main.addRecentLi(data);
-            var recentFirstLiUnreadnumber = $('ul#recent').find('li').eq(0).find('.name span.badge')[0];
+            var recentFirstLiUnreadnumber = $('#recent li .name span.badge')[0];
             recentFirstLiUnreadnumber.innerText = '';
             recentFirstLiUnreadnumber.style.display = 'none';
           });
@@ -237,6 +240,7 @@ function v_methods(){
         socket.emit('chat',J_msg);
       }
     },
+
     starOrUnstar:function(){
       var stars = loginlist.star;
       var data = {
@@ -251,7 +255,7 @@ function v_methods(){
           }
         }
       }
-      postChange('/starOrUnstar',data,function(data_back){
+      $.post('/starOrUnstar', data, function(data_back) {
         if(data.isStar){
           v_removeThePeopleInStar(data.to);
           loginlist.star.pull(data.to);
@@ -261,36 +265,34 @@ function v_methods(){
         }
       });
     },
+
     deleteTheRecentChat:function(){
       var data = {
         uid:uid,
         to:main.messto
       };
-      postChange('/deleteRecentChat',data,function(data_back){
+      $.post('/deleteRecentChat',data,function(data_back){
         v_removeThePeopleInRecent(data.to);
       });
       main.messageframeClose();
     },
     exitTeam:function(){
-      if(confirm('Ensure to Exit?')){
+      if(confirm('确认退出该团队？')){
         var data = {
           uid:uid,
           tid:main.messto
         };
-        postChange('/exitTeam',data,function(){
-            v_removeTheTeamInList(data.tid,'recent');
-            v_removeTheTeamInList(data.tid,'team');
-            main.messageframeClose();
+        $.post('/exitTeam', data, function(){
+          v_removeTheTeamInList(data.tid,'recent');
+          v_removeTheTeamInList(data.tid,'team');
+          main.messageframeClose();
         });
       }
     },
 
     showMembers:function(){
-      var data = {
-        tid:main.messto
-      };
       main.teamMembersSeen = true;
-      postChange('/showMembers',data,function(_infos){
+      $.get('/showMembers',{ tid:main.messto }, function(_infos) {
         var teamMembers_ul = document.querySelector('.teamMembers>ul');
         for(var i=0;i<_infos.length;i++){
           $(teamMembers_ul).append(v_teamMembers_template(_infos[i]));         
@@ -300,7 +302,7 @@ function v_methods(){
 
     closeTeamMembers:function(){
       document.querySelector('.teamMembers>ul').innerHTML = '';
-      this.teamMembersSeen=false;
+      this.teamMembersSeen = false;
     },
 
     //when the < of the top of left of the massageframe be clicked, run this function,
@@ -309,24 +311,60 @@ function v_methods(){
       this.teamMembersSeen=false;
       this.messtype='';
       this.messto='';
-      document.getElementById('messageframe_cont').innerHTML = '';
-      document.getElementById('messageframe_input').value = '';
+
+      $('.messageframe')[0].style.height = '0%';
+      $('#messageframe_cont')[0].innerHTML = '';
+      $('#messageframe_input')[0].value = '';
     },
 
     //hide the domore model,
     hideDomore:function(){
-      document.getElementById('domore').style.width = '0px';
+      $('#domore')[0].style.width = '0px';
       $('#domore').j = false;
     },
 
     listSeen:function(event,type){
       $('.sOption>span').css('color','#fff');
-      this.isMessageListSeen.recent=false;
-      this.isMessageListSeen.star=false;
-      this.isMessageListSeen.team=false;
       var target = event.target.querySelector('span')||event.target;
       $(target).css('color','#60DDFF');
-      this.isMessageListSeen[type]=true;
+      this.messShowType = type;
+    },
+
+    dealUnread:function(uid,isTeam,bool=false){
+      if(isTeam){
+        for(let i of this.teamInfo){
+          if(i.uid === uid){
+            if(bool){
+              i.unread++;
+            }else{
+              i.unread = 0;
+            }
+            break;
+          }
+        }
+      }else{
+        for(let i of this.recentInfo){
+          if(i.uid === uid && i.type !=='team'){
+            if(bool){
+              i.unread++;
+            }else{
+              i.unread = 0;
+            }
+            break;
+          }
+        }
+
+        for(let i of this.starInfo){
+          if(i.uid === uid){
+            if(bool){
+              i.unread++;
+            }else{
+              i.unread = 0;
+            }
+            break;
+          }
+        }
+      }
     },
   };
 }

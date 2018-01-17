@@ -19,41 +19,45 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 
-//used by public/js/main.js g118,
-router.post('/search',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-  	LIB.check(data,'search:');
-	var info = {};
-  	//get the information of the user and the team for search,
-	Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		info.team = detail.length?detail[0]:'';
-		People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-			info.person = detail.length?detail[0]:'';
-			res.send(info);
+//used by public/js/main-content.js,
+router.get('/search', (req,res) => {
+	var uid = req.query.uid;
+	var result = {};
+
+	//获取该ID的团队和人物信息
+	Team.find({uid},null,{limit:1},(err,team) => {
+		if(err) throw err;
+		result.team = team.length?team[0]:'';
+
+		People.find({ uid }, null, {limit:1}, (err,person) => {
+			if(err) throw err;
+			result.person = person.length?person[0]:'';
+			res.send(result);
 		});
 	});
 });
 
-//used by public/js/main.js g175,
+//used by public/js/main-content.js,
 //if a person choice to join a team, must pass this part,
-router.post('/join_judge',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-	LIB.userRelogin(User,data.uid);
-	LIB.check(data,'to judge whether the person could join the team:')
+router.get('/joinJudge', (req,res)=>{
+	var uid = req.query.uid;
+	var tid = req.query.uid;
 
-	Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{
+	Loginlist.find({ uid }, null, {limit:1}, (err,loginlist) => {
+		if(err) throw err;
 		var judge='ok';
-		LIB.check(detail[0].team,'the teams that the user has joined in:');
-		if(detail[0].team.length<4){
-			for(var teamid of detail[0].team){
-				if(teamid===data.tid){ 
-					judge = 'You had joined this team.'; 
+
+		if(loginlist[0].team.length<4){
+			for(var teamid of loginlist[0].team){
+				if(teamid === tid){ 
+					judge = '你已经加入了这个团队!'; 
 					break; 
 				}
 			}
 		}else{
-			judge = '4 teams mostly.';
+			judge = '最多可以加入４个团队!';
 		}
+
 		res.send(judge);
 	});
 });

@@ -1,72 +1,114 @@
 var people = new Vue({
      el:'.container',
-     data:{ 
+     data:{
+          name:name,
+          introduce:introduce,
+          sex:sex,
+          hobby:hobby,
+          birthday:birthday,
+          subBtnText:'更新',
+          // headImageData:''
      },
      methods:{
           showPeopleHeadForm:function(){
-		   document.getElementById('peopleHeadForm').style.display = 'block';
+		   $('#peopleHeadForm')[0].style.display = 'block';
           },
+
           backToMainPage:function(){
                zPost('/main',{
-                    uid:uid
+                    uid:Uid
                });
           },
-          headUpdate:function(){
-               var avator = $('#avator').val();
-               if(avator.length){
-                    var phf = $('#peopleHeadForm')[0];
-                    addInput(phf,'uid',uid);
-                    phf.submit();
-               }else{
-                    $('#avator').css('border','solid 1px #449933');
-               }
-          },
-          textUpdate:function(){
-               var 
-                    name = $('#name').val().trim(),
-                    introduce = $('#introduce').val().trim(),
-                    sex = $('#sex').val().trim(),
-                    hobby = $('#hobby').val().trim(),
-                    birthday = $('#birthday').val().trim();
 
-               if(name.length>10){
-                    $('#name').css('border','solid 1px red');
-                    $('button#textUpdate').text('昵称字数过长');
-                    setTimeout(function(){
-                         $('button#textUpdate').text('更新');
-                    },2000);
-               }else if(introduce.length>60){
-                    $('textarea#introduce').css('border','solid 1px red');
-                    $('button#textUpdate').text('简介字数不能超过6０');
-                    setTimeout(function(){ $('button#textUpdate').text('更新'); },2000);
+          showCheckImg:function(){
+               $('#checkImg')[0].style.height = '200px';
+          },
+          hideCheckImg:function(){
+               $('#checkImg')[0].style.height = '0px';
+          },
+
+          hideHeadForm:function(){
+               this.hideCheckImg();
+               $('#peopleHeadForm')[0].style.display = 'none';
+          },
+
+          headImageUpdate:function(event){
+               var formData = new FormData();
+               formData.append('avator', $('#avatorInput')[0].files[0]);
+               formData.append('uid',Uid);
+
+               var t = this;               
+               $.ajax({
+                    type: 'post',
+                    url: '/peopleImageUpdate',
+                    data: formData,
+                    // mimeType: "multipart/form-data",
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    success:function (headImagePath) {
+                         t.hideHeadForm();               
+                         $('#headImg')[0].src = headImagePath;
+                    }
+               });
+          },
+
+
+          warnItem:function(item){
+               item.css('border-color','red');
+               setTimeout(function(){
+                    item.css('border-color','transparent');
+               },3000);
+          },
+
+          subBtnTextActive:function(text){
+               this.subBtnText = text;
+               var t = this;
+               setTimeout(function(){
+                    t.subBtnText = '更新';
+               },3000);
+          },
+
+          textUpdate:function(){
+               if(this.name.length>10){
+                    this.warnItem($('#name'));
+                    this.subBtnTextActive('昵称字数过长');
+               }else if(this.introduce.length>60){
+                    this.warnItem($('#introdushoe'));
+                    this.subBtnTextActive('简介字数不能超过6０');
                }else{
+
                     var data = {
-                         uid:uid,
-                         name:name,
-                         introduce:introduce,
-                         sex:sex,
-                         hobby:hobby,
-                         birthday:birthday
+                         uid:Uid,
+                         name:this.name,
+                         introduce:this.introduce,
+                         sex:this.sex,
+                         hobby:this.hobby,
+                         birthday:this.birthday
                     };
-                    text_filter(data);
-                    postChangeText('/peopleT',data,function(data_back){
-                         $('#name').val(data_back.name);
-                         $('#introduce').val(data_back.introduce);
-                         $('#sex').val(data_back.sex);
-                         $('#hobby').val(data_back.hobby);
-                         $('#birthday').val(data_back.birthday);
-                         $('button#textUpdate').text('更新成功');
-                         setTimeout(function(){ $('button#textUpdate').text('更新'); },2000);
+
+                    textDataFilter(data);
+                    var t = this;
+                    $.post('/peopleTextUpdate',data,function(info){
+                         t.name = info.name;
+                         t.introduce = info.introduce;
+                         t.sex = info.sex;
+                         t.hobby = info.hobby;
+                         t.birthday = info.birthday;
+                         t.subBtnTextActive('更新成功');
                     });
                } 
           },
-          showImg:function(e){
-               var that = e.target;
-               var img = that.nextElementSibling;
+
+          checkImg:function(e){
                var r = new FileReader();
-               r.readAsDataURL(that.files[0]);
+               // this.headImageData = e.target.files[0];
+               // console.log(this.headImageData);
+               r.readAsDataURL(e.target.files[0]);
+               var t = this;
                r.onload = function(e){
-                    img.src=this.result;
+                    t.showCheckImg();
+                    $('#checkImg')[0].src=this.result;
                };
           }
      }

@@ -157,9 +157,11 @@ router.post('/exitTeam',urlencodedParser,(req,res)=>{
 })
 
 
-router.post('/showMembers',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-	Team.find({uid:data.tid},'member',{limit:1},(err,detail)=>{
+router.get('/showMembers', (req,res) => {
+
+	var tid = req.query.tid;
+	
+	Team.find({uid:tid},'member',{limit:1},(err,detail)=>{
 		var members = detail[0].member;
 		var member_infos = [];
 		members.forEach(member=>{

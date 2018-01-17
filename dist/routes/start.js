@@ -22,7 +22,7 @@ const router = express.Router();
 //start: login page,
 router.get('/',(req,res)=>{ 
 	res.render('login.ejs', { 
-		login_tip:''
+		loginTip:''
 	}); 
 });
 
@@ -107,6 +107,30 @@ router.post('/registInfo', urlencodedParser, (req,res)=>{
 
 
 
+router.get('/loginJudge', (req,res) => {
+	var uid = req.query.uid;
+	var password = req.query.password;
+
+	var hash = crypto.createHash('sha1');
+	hash.update(password)
+	var pwd = hash.digest('hex');
+
+	User.find(
+		{
+			uid,
+			password:pwd
+		},
+		null,
+		{
+			limit:1
+		},
+		function(err,user){
+			if(err) throw err;
+			res.send(Boolean(user.length));
+		}
+	);
+
+});
 
 
 
@@ -117,12 +141,7 @@ router.post('/', urlencodedParser,(req,res)=>{
 		uid = req.body.uid,
 		password = req.body.password;
 
-	if(!uid.length||!password.length){
-		res.render('login.ejs',{  
-			login_tip:"用户名或密码不能为空！"
-		});
-		return false;
-	}
+
 	hash.update(password);
 	var pwd = hash.digest('hex');
 
@@ -130,7 +149,7 @@ router.post('/', urlencodedParser,(req,res)=>{
 		if(detail[0]&&detail[0].login){
 			res.render('login.ejs',{
 				//实际上数据库中该用户的登录标记为真
-				login_tip:"系统忙，请稍后登录！"
+				loginTip:"系统忙，请稍后登录！"
 			});
 			return false;
 		}
@@ -138,7 +157,7 @@ router.post('/', urlencodedParser,(req,res)=>{
 			if(!detail[0]){
 				//没有符合条件的用户
 				res.render('login.ejs',{ 
-					login_tip:"用户名不存在或密码错误！"
+					loginTip:"用户名不存在或密码错误！"
 				});
 				return false;
 			}
@@ -260,7 +279,7 @@ router.post('/logOff',urlencodedParser,(req,res)=>{
 		console.log('(user)'+uid+" logoff ↓");
 	});
 	res.render('login.ejs',{ 
-		login_tip:''
+		loginTip:''
 	});
 });
 

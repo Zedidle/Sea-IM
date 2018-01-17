@@ -37,7 +37,7 @@ function hTime(){
 function issame(v1,v2){
   return v1===v2;
 }
-function text_filter(data){
+function textDataFilter(data){
   if(typeof data === 'object'){
     var reg = /[\n"\\]/g;
     for(var para in data){
@@ -62,6 +62,15 @@ function zPost(url,object){
   document.querySelector('body').appendChild(form);
   form.submit();
 }
+
+function formAddInput(form,key,value){
+  var input = document.createElement('input');
+  input.value = value;
+  input.name = key;
+  input.style.visibility = 'hidden';
+  form.appendChild(input);
+}
+
 
 function postChange(url,data,callback){
   var J_data = JSON.stringify(data);

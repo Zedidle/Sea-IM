@@ -55,7 +55,7 @@ var teams = new Vue({
         $('#avator').css('border','solid 1px #449933'); 
       }else{
         var thf = $('#teamHeadForm')[0];
-        addInput(thf,'uid',this.uid) 
+        addInput(thf,'uid',this.uid);
         thf.submit();
       }
     },

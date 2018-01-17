@@ -18,8 +18,10 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
 const router = express.Router();
 
-router.post('/getmess',urlencodedParser,(req,res)=>{
-	var data = req.body;
+router.get('/getMoreMessage', (req,res)=>{
+	var data = req.query;
+	console.log(data,'getMoreMess');
+
 	new Promise((resolve,reject)=>{
 		if(data.type!=='team'){
 			Message.find({uid:data.receive_uid}, null, {limit:1}, (err,mess) => {
@@ -45,6 +47,7 @@ router.post('/getmess',urlencodedParser,(req,res)=>{
 	});
 });
 
+
 router.post('/starOrUnstar', urlencodedParser, (req,res) => {
 	var data = JSON.parse(req.body.J_data);
 	if(data.isStar){
@@ -60,12 +63,14 @@ router.post('/starOrUnstar', urlencodedParser, (req,res) => {
 	}
 })
 
+
 router.post('/deleteRecentChat', urlencodedParser, (req,res) => {
 	var data = JSON.parse(req.body.J_data);
 	Loginlist.update({uid:data.uid}, {$pull:{recent_people:data.to}},(err) => {
 		console.log(666);
 	})
 	res.send(true);
-})
+});
+
 
 module.exports = router;

@@ -1,17 +1,12 @@
 @import "config.less";
 
 #search-content{
-	div{ 
-		display: inline-block; 
-	}
-	margin-bottom: 5px;
+	width:100%;
 	#search{
 		width:100%;
-		display: inline-block;
-		float: right;
 		height:44px;
 		overflow: hidden;
-		.search_close{
+		#search-close{
 			display: inline-block;
 			text-align: center;
 			overflow: hidden;
@@ -21,15 +16,16 @@
 			cursor: pointer;
 			font-size: 1.8em;
 			padding-bottom: 2px;
+			transform:translateX(-100%);
 		}
-		#search_uid{
+		#search-uid{
 			border:2px solid @lightBlue;
 			padding-left: 0.5em;
 			float: right;
 			margin:0 2px;
 			font-size: 16px;
 			height:38px;
-			width:78%;
+			width:80%;
 		}
 		#sub{
 			float: right;
@@ -44,15 +40,8 @@
 		}
 	}
 	#search-info{
-		position:relative;
 		background: rgba(250,250,250,0.7);
-		#search-team{
-			float: left;
-			border-bottom: solid 2px #222;
-			li{
-				margin:1px 0;
-				padding:1px 5px;
-			}
+		#search-team-info{
 			#teamImg{
 				display: block;
 				width: 170px;
@@ -90,11 +79,17 @@
 				margin:2px;
 				cursor: pointer;
 			}
+			&:after{
+			    content:'';
+			    display:block;
+			    clear:both;
+			    height:0;
+			    overflow:hidden;
+			    visibility:hidden;
+			}
 		}
-		#search-person{
-			padding-top:5px;
-			float: left;
-			border-bottom:2px solid #444;
+		#search-person-info{
+			border-bottom:2px solid #666;
 			#personImg{
 				float: left;
 				display: block;
@@ -106,7 +101,7 @@
 				}
 			}
 			#pinfo{
-				float:left;
+				float: left;
 				display: block;
 				width:90%;
 				.inf{
@@ -122,9 +117,6 @@
 				#personIntro{.inf;}
 			}
 			.p_do{
-				// width:100px;
-				// height:40px;
-				// font-size: 22px;
 				width: 12rem;
 				height: 4rem;
 				font-size: 2.2rem;
@@ -137,6 +129,14 @@
 			}
 			#send{ .p_do; }
 			#search-star{ .p_do; }
+			&:after{
+			    content:'';
+			    display:block;
+			    clear:both;
+			    height:0;
+			    overflow:hidden;
+			    visibility:hidden;
+			}
 		}
 	}
 }

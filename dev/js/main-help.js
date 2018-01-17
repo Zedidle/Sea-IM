@@ -1,42 +1,44 @@
 
 function v_createSearchTeamInfo_template(t){
-	return "<div id='search-team'>"+
-          "<div id='teamImg'>"+
-          "<img src="+t.headImg+">"+
-        "</div>"+
-        "<div id='tinfo'>"+
-          "<div id='teamname'>团队名: "+t.name+"</div>"+
-          "<div id='builder'>ID: "+t.uid+"</div>"+
-          "<div id='level'>级别: "+t.level+"</div>"+
-          "<div id='membernumber'>人数: "+t.membernumber+"</div>"+
-          "<div id='teamintro'>简介: "+t.introduce+"</div>"+
-        "</div>"+
-        "<div id='join'> "+
-          "<span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span>JOIN"+
-        "</div>"+
-      "</div>"
-      ;
+  if(t){
+    return "<div id='teamImg'>"+
+        "<img src="+t.headImg+">"+
+      "</div>"+
+      "<div id='tinfo'>"+
+        "<div id='teamname'>团队名: "+t.name+"</div>"+
+        "<div id='builder'>ID: "+t.uid+"</div>"+
+        "<div id='level'>级别: "+t.level+"</div>"+
+        "<div id='membernumber'>人数: "+t.membernumber+"</div>"+
+        "<div id='teamintro'>简介: "+t.introduce+"</div>"+
+      "</div>"+
+      "<div id='join'> "+
+        "<span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span>JOIN"+
+      "</div>";
+  }else{
+    return "<div class='alert alert-danger' role='alert'>没有团队</div>";
+  }
 }
 
 function v_createSearchPersonInfo_template(p){
-	return "<div id='search-person'>"+
-        "<div id='personImg'>"+
-          "<img src="+p.headImg+">"+
-        "</div>"+
-        "<div id='pinfo'>"+
-          "昵称: <div id='name'>"+p.name+"</div>"+
-          "<div id='sex'>性别: "+p.sex+"</div>"+
-          "<div id='hobby'>爱好: "+p.hobby+"</div>"+
-          "<div id='personIntro'>简介: "+p.introduce+"</div>"+
-        "</div>"+
-        "<div id='send'> "+
-         " <span class='glyphicon glyphicon-envelope' aria-hidden='true'></span>Mess"+
-        "</div>"+
-        "<div id='search-star'>"+
-        "  <span class='glyphicon glyphicon-star-empty' aria-hidden='true'></span>Star"+
-        "</div>"+
-      "</div>"
-      ;
+  if(p){
+    return "<div id='personImg'>"+
+        "<img src="+p.headImg+">"+
+      "</div>"+
+      "<div id='pinfo'>"+
+        "昵称: <div id='name'>"+p.name+"</div>"+
+        "<div id='sex'>性别: "+p.sex+"</div>"+
+        "<div id='hobby'>爱好: "+p.hobby+"</div>"+
+        "<div id='personIntro'>简介: "+p.introduce+"</div>"+
+      "</div>"+
+      "<button id='send'> "+
+       " <span class='glyphicon glyphicon-envelope' aria-hidden='true'></span>Mess"+
+      "</button>"+
+      "<button id='search-star'>"+
+      "  <span class='glyphicon glyphicon-star-empty' aria-hidden='true'></span>Star"+
+      "</button>";
+  }else{
+    return "<div class='alert alert-warning' role='alert'>找不到用户</div>";
+  }
 }
 
 

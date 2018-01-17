@@ -79,7 +79,7 @@ var regist = new Vue({
 				this.submit_text = '请检查每个输入项';
 				setTimeout(function(){
 					regist.submit_text = '提交';
-				},2000);
+				}, 2000);
 			}
 		},
 	}

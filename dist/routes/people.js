@@ -18,12 +18,15 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
 const router = express.Router()
 
+
 //used by public/js/main.js g77
 router.post('/people',urlencodedParser,(req,res)=>{
 	var data = req.body;
 	LIB.userFakeLogout(User,data.uid);
-	People.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		var info = detail[0];
+	People.find({uid:data.uid}, null, {limit:1}, (err,person) => {
+		if(err) throw err;
+
+		var info = person[0];
 		res.render('people.ejs',{
 			uid:info.uid,
 			headImg:info.headImg,
@@ -36,48 +39,28 @@ router.post('/people',urlencodedParser,(req,res)=>{
 	});
 });
 
-//used by views/people.ejd g158
-//peoples images uploads
-router.post('/peopleI',upload.any(),(req,res)=>{
-	var data = req.body;
+
+//used by views/people.ejs
+router.post('/peopleImageUpdate', upload.any(), (req,res) => {
+	var uid = req.body.uid;
 	var image = req.files[0];
 	var readpath = 'img/uploads/'+image.filename;
-	People.update(
-		{
-			uid:data.uid
-		},
-		{
-			$set:{
-				headImg:readpath
-			}
-		},
-		function(err){
-			People.find(
-				{
-					uid:data.uid
-				},
-				null,
-				{
-					limit:1
 
-				},
-				function(err,detail){
-					if(err) throw err;
-					res.render('people.ejs',detail[0]);
-				}
-			)
-		}
-	);
-})
+	People.update({ uid }, { $set:{ headImg:readpath }}, (err) => {
+		if(err) throw err;
+		res.send(readpath);
+	});
+});
+
 
 //used by public/js/people.js  g61
 //peoples text uploads
-router.post('/peopleT',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
+router.post('/peopleTextUpdate',urlencodedParser,(req,res)=>{
+	var data = req.body;
 	LIB.check(data,'text information of people to change:');
-	res.send(req.body.J_data);
 	People.update({uid:data.uid},{$set:data},(err)=>{
-
+		if(err) throw err;
+		res.send(data);
 	});
 })
 

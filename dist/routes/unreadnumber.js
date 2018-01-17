@@ -30,78 +30,113 @@ router.post('/test',urlencodedParser,(req,res)=>{
 })
 
 
-//used by public/js/main.js g387
-router.post('/dealwithunread',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-	LIB.check(data,'deal with unread:');
+//used by public/js/main-method.js
+router.post('/unReadTo0', urlencodedParser, (req, res) => {
+	var uid = req.body.uid;
+	var to = req.body.to;
+	var type = req.body.type;
 
-	//data.uid is the host of this message who send the msg.
-	Unread.find({uid:data.to},null,{limit:1},(err,detail)=>{
-		//judge if typeof the data is team, 
-		if(data.type!=='team'){
-			var _unread = detail[0].punRead;
-			if(!_unread[data.uid]){ _unread[data.uid]=0; };
-			_unread[data.uid] = data.checked?'':_unread[data.uid]+1;
-			Unread.update({uid:data.to},{$set:{punRead:_unread}},(err)=>{});
+	//处理用户的未读消息数
+	Unread.find({ uid }, null, {limit:1}, (err, u) => {
+		var unread;
+		//根据不同的类型做出不同的处理
+		if(type!=='team'){
+			unread = u[0].punRead;
+			unread[to] = 0;
+			Unread.update({ uid }, {$set:{punRead:unread}}, (err)=>{});
 		}else{
-			var _unread = detail[0].tunRead;
-			if(!_unread[data.uid]){ _unread[data.uid]=0; };
-			_unread[data.uid] = data.checked?'':_unread[data.uid]+1;
-			Unread.update({uid:data.to},{$set:{tunRead:_unread}},(err)=>{});
+			unread = u[0].tunRead;
+			unread[to] = 0;
+			Unread.update({ uid }, {$set:{tunRead:unread}}, (err)=>{});
 		}
-	})
+	});
+});
+
+router.post('/unReadAdd1', urlencodedParser, (req, res) => {
+	
+
 });
 
 
 
-//used by public/js/main.js g629,
-router.post('/justGetInfo',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-	LIB.check(data,'the information of the user:');
+
+router.get('/getInfo', (req,res) => {
+
+	var type = req.query.type;
+
 	if(data.type==='team'){
-		Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
+		Team.find({uid:data.uid}, null, {limit:1},(err,team)=>{
+			res.send(team[0]);
+		});
 	}else{
-		People.find({uid:data.uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
+		People.find({uid:data.uid},null,{limit:1},(err,person)=>{
+			res.send(person[0]);
+		});
 	}
 })
 
 
-//used by public/js/main.js g451,
+//used by public/js/main.js ,
 router.post('/getMoreinfo',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
 	LIB.check(data,'getMoreinfo');
 	var check_uid = data.check_uid;
 	if(data.type==='team'){
-		Team.find({uid:check_uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
+		Team.find({uid:check_uid},null,{limit:1},(err,detail)=>{
+			es.send(detail[0]);
+		});
 	}else{
-		People.find({uid:check_uid},null,{limit:1},(err,detail)=>{ res.send(detail[0]); });
+		People.find({uid:check_uid},null,{limit:1},(err,detail)=>{
+			res.send(detail[0]);
+		});
 	}
 })
 
 
-//used by public/js/main.js g584,
-router.post('/getUnreadMess',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
+//used by public/js/main.js,
+router.get('/getUnreadMess', (req,res) => {
+	var data = req.query;
 	var unrN = data.unreadNumber;
 	var mess = [];
+
 	if(data.type==='team'){
-		Tmessage.find({uid:data.get_uid},null,{limit:1},(err,detail)=>{
-			var m = detail[0].mess;
-			while(unrN&&m){
-				mess.unshift(m.pop());
-				unrN -= 1;
+		Tmessage.find(
+			{
+				uid:data.get_uid
+			},
+			null,
+			{	
+				limit:1
+			},
+			function(err,detail){
+				if(err) throw err;
+				var m = detail[0].mess;
+				while(unrN&&m){
+					mess.unshift(m.pop());
+					unrN -= 1;
+				}
+				res.send(mess);
 			}
-			res.send(mess);
-		})
+		);
 	}else{
-		Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-			var mf = detail[0].mess[data.get_uid];
-			while(unrN&&mf){
-				mess.unshift(mf.pop());
-				unrN -= 1;
+		Message.find(
+			{
+				uid:data.uid
+			},
+			null,
+			{
+				limit:1
+			},
+			function(err,detail){
+				if(err) throw err;
+				var mf = detail[0].mess[data.get_uid];
+				while(unrN&&mf){
+					mess.unshift(mf.pop());
+					unrN -= 1;
+				}
+				res.send(mess);
 			}
-			res.send(mess);
-		})
+		);
 	}
 })
 
