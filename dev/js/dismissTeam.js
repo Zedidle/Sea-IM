@@ -1,35 +1,77 @@
 var dismissTeam = new Vue({
 	el:'#dismissTeam',
 	data:{
-		uid:uid,
-		pw:pw,
-		dataforback:{
-			uid:uid
+		teamId:'',
+		teamPassword:'',
+
+		tipTeamId:'',
+		tipTeamPassword:'',
+
+		styleTipTeamId:{
+			height:'15px',
+			color:'green'
+		},
+		styleTipTeamPassword:{
+			height:'15px',
+			color:'green'
 		}
 	},
-	methods:{
-		subOnclick:function(){
-		var ID = document.getElementById('ID').value.trim();
-		var PW = document.getElementById('PW').value.trim();
-		var issameID = issame(ID,this.uid),
-			issamePW = issame(PW,this.pw);
-		if(issameID&&issamePW){
-			document.getElementById('dismissForm').submit();
-		}else{
-			if(!issameID){
-				document.querySelector('.tipID').innerText = 'ID False';
-			}else{
-				document.querySelector('.tipID').innerText = '';
-			}
-			if(!issamePW){
-				document.querySelector('.tipPW').innerText = 'Password False';
-			}else{
-				document.querySelector('.tipPW').innerText = '';
-			}
-		}
+
+	computed:{
+		flagTeamId:function(){
+			return isSame(this.teamId,UID);
 		},
-		backtomainpage:function(){
-			zPost('/main',this.dataforback);
+		flagTeamPassword:function(){
+			return isSame(this.teamPassword,TeamPassword);
+		}
+	},
+
+	methods:{
+
+		focusTeamId:function(){
+			this.tipTeamId = '请输入团队ID';
+		},
+		blurTeamId:function(){
+			if(this.flagTeamId){
+				this.tipTeamId = 'ID正确';
+				this.styleTipTeamId.color = 'green';
+			}else{
+				this.tipTeamId = 'ID不正确';
+				this.styleTipTeamId.color = 'red';
+			}
+		},
+
+		focusTeamPassword:function(){
+			this.teamPassword = '请输入团队口令'; 
+		},
+		blurTeamPassword:function(){
+			if(this.flagTeamPassword){
+				this.tipTeamPassword = '口令正确';
+				this.styleTipTeamPassword.color = 'green';
+			}else{
+				this.tipTeamPassword = '口令不正确';
+				this.styleTipTeamPassword.color = 'red';
+			}
+		},
+
+
+		formSubmit:function(){
+
+			if(this.flagTeamId && this.flagTeamPassword){
+				document.getElementById('dismissForm').submit();
+				return true;
+			}
+
+			if(!this.flagTeamId){
+				this.tipTeamId = 'ID不正确';
+			}
+
+			if(!this.flagTeamPassword){
+				this.tipTeamPassword = '口令不正确';
+			}
+		},
+		backToMainPage:function(){
+			zPost('/main',UserEnsure);
 		}
 	}
 });

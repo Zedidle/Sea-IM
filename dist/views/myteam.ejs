@@ -4,85 +4,97 @@
 	<meta charset="UTF-8">
 	<title>Seanet-Team</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <!-- <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-    #update{
-        margin-left: 10px;
-        width:80px;
-        height:32px;
-    }
-    #back{
-        margin-top:6px;
-        float:  right;
-    }
-    .container{
-        margin:5% auto;
-        width:95%;
-        max-width:1300px;
-    }
-
-    .team{
-        display: block;
-        width:100%;
-        height:auto;
-    }
-    .avator{
-        display: inline-block;
-        float: left;
-        width:220px;
-        height:220px;
-        margin-right: 2em;
-    }
-    .avator img{
-        width:100%;
-        height:100%;
-    }
-    .info{
-        display: inline-block;
-        float: left;
-        width:60%;
-        min-width:200px;
-        padding-left: 1em;
-    }
-    .id{
-        font-size:1.3em;
-        display: block;
-    }
-    .teamname{
-        display: block;
-        font-size:1.3em;
-        margin:0.1em 0;
-    }
-    .level{
-        display: block;
-        font-size:1.3em;
-    }
-    .membernumber{
-        display: block;
-        font-size:1.3em;
-    }
-    .major{
-        display: block;
-        font-size:1.3em;
-        margin:0.1em 0;
-    }
-    .introduce{
-        display: block;
-        width:98%;
-        min-height:120px;
-        font-size:1.3em;
-        margin:0.2em 0;
-    }
-</style>
+    <link rel="stylesheet" type="text/css" href="css/myteam.css">
 </head>
 
 <body>
     <div class="container" id='myteam'>
-        <team-info uid='<%=uid%>' teaminfo='<%=teaminfo%>'></team-info>
+
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <div>
+                    <button
+                        id='backToMainPage-btn'
+                        v-on:click = 'backToMainPage'
+                        class='btn btn-default'
+                    >返回主页
+                    </button>
+
+                    <button
+                        v-if='buildTeam'
+                        id='updateMyteam-btn'
+                        v-on:click='updateMyteam'
+                        class='btn btn-primary'
+                    >进入我的团队界面
+                    </button>
+
+                </div>
+                <h3>你所创建的团队</h3>
+            </div>
+
+            <div class='panel-body'>
+                <h4 v-if='!buildTeam'>你还没有建立自己的团队</h4>
+                <div v-else>
+                    <img 
+                        class='avator' 
+                        v-bind:src='buildTeam.headImg'
+                    />
+                    <div class='info'>
+                        <div class='teamname'>
+                            Teamname: {{buildTeam.name}}
+                        </div>
+                        <div class='level'>
+                            Level: {{buildTeam.level}}
+                        </div>
+                        <div class='membernumber'>
+                            Member number: {{buildTeam.membernumber}}
+                        </div>
+                        <div class='introduce'>
+                            Introduce: {{buildTeam.introduce}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='panel panel-default'>
+            <div class='panel-heading'>
+                <h3>你所加入的团队</h3>
+            </div>
+
+            <div class='panel-body'>
+                <h4 v-if='!joinTeams.length'>没有团队记录</h4>
+                <div v-else >
+                    <div v-for='i in joinTeams'>
+                        <div class='avator'>
+                            <img v-bind:src='i.headImg' />
+                        </div>
+                    
+                        <div class='info'>
+                            <div class='id'>ID: {{i.uid}}</div>
+                            <div class='teamname'>Teamname: {{i.name}}</div>
+                            <div class='level'>Level: {{i.level}}</div>
+                            <div class='membernumber'>Member number: {{i.membernumber}}</div>
+                            <div class='introduce'>Introduce: {{i.introduce}}</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
     
     <%include frameuse.ejs%>
+
+    <script type="text/javascript">
+
+        var teaminfos = JSON.parse(jsonKeep('<%=teaminfos%>'));
+
+    </script>
+
     <script src='js/myteam.js'></script>
 
 </body>

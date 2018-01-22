@@ -62,6 +62,6 @@ router.post('/peopleTextUpdate',urlencodedParser,(req,res)=>{
 		if(err) throw err;
 		res.send(data);
 	});
-})
+});
 
 module.exports = router;  

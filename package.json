@@ -23,6 +23,7 @@
     "ejs": "^2.3.4",
     "express": "^4.15.3",
     "express-session": "^1.14.2",
+    "gulp": "^3.9.1",
     "jquery": "^3.2.1",
     "lokijs": "^1.5.0",
     "mongoose": "^4.11.0",
@@ -44,6 +45,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.0",
     "jshint": "^2.9.5",
+    "map-stream": "0.0.7",
     "pump": "^2.0.0",
     "rename": "^1.0.4"
   },

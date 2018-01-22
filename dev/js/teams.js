@@ -1,77 +1,128 @@
 var teams = new Vue({
-  components:{
-    'text-info':{
-      props:['uid','name','level','membernumber','introduce'],
-      template:
-        '<div id="brief">'+
-          '<div id="uid">ID:{{uid}}</div>'+
-          '<div>团队名称: <textarea id="name">{{name}}</textarea></div>'+
-          '<div id="level">等级:{{level}}</div>'+
-          '<div id="membernumber">人数:{{membernumber}}</div>'+
-          '<h3>简介:</h3>'+
-          '<textarea id="introduce">{{introduce}}</textarea>'+
-          '<button id="textUpdate" style="float:right;width:80px;height:30px;margin:10px 0;" v-on:click="textUpdate" class="btn btn-primary">'+
-            '更新'+
-          '</button>'+
-        '</div>',
-      methods:{
+    el:'#teams',
+    data:{
+        teamUid:TeamUid,
+        teamname:Teamname,
+        teamPassword:TeamPassword,
+        teamLevel:TeamLevel,
+        teamIntroduce:TeamIntroduce,
+        teamMembers:TeamMembers,
+        teamHeadImage:TeamHeadImage,
+
+
+        subBtnText:'更新',
+
+
+
+        styleTeamIntroduce:{
+            border:'1px solid #AAA',
+
+        },
+
+    },
+    computed:{
+        teamMemberNumber:function(){
+            return this.teamMembers.length;
+        },
+        isMyTeam:function(){
+            return this.teamUid === UID;
+        }
+    },
+    methods:{
+        backToMainPage:function(){
+            zPost('/main',UserEnsure);
+        },
+        showTeamHeadForm:function(){
+            if(this.isMyTeam){
+                $('#teamHeadForm').css('display','block');
+            }
+        },
+        showCheckImg:function(){
+            $('#checkImg')[0].style.height = '200px';
+        },
+        hideCheckImg:function(){
+            $('#checkImg')[0].style.height = '0px';
+        },
+        checkImg:function(e){
+            var r = new FileReader();
+            // this.headImageData = e.target.files[0];
+            // console.log(this.headImageData);
+            r.readAsDataURL(e.target.files[0]);
+            var t = this;
+            r.onload = function(e){
+                t.showCheckImg();
+                $('#checkImg')[0].src=this.result;
+            };
+        },
+        showTeamHeadform:function(){
+          $('#teamHeadForm').css('display','block');
+        },
+
+        hideHeadForm:function(){
+           this.hideCheckImg();
+           $('#teamHeadForm')[0].style.display = 'none';
+        },
+
+        headImageUpdate:function(event){
+            var formData = new FormData();
+            formData.append('avator', $('#avatorInput')[0].files[0]);
+            formData.append('uid',UID);
+
+            var vm = this;               
+            $.ajax({
+                type: 'post',
+                url: '/teamsImageUpdate',
+                data: formData,
+                // mimeType: "multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData: false,
+                success:function (headImagePath) {
+                    vm.hideHeadForm();               
+                    $('#headImg')[0].src = headImagePath;
+                }
+            });
+        },
+
+        showImg:function(e){
+          var that = e.target;
+          var img = that.nextElementSibling;
+          var r = new FileReader();
+          r.readAsDataURL(that.files[0]);
+          r.onload = function(){
+            img.src=this.result;
+          };
+        },
+
+        subBtnActive:function(text){
+            this.subBtnText = text;
+            setTimeout(function(){
+                this.subBtnText = '更新';
+            },3000);
+        },
+
         textUpdate:function(){
-          var
-            name = $('#name').val().trim(),
-            introduce = $('#introduce').val().trim();
-          if(introduce.length>80){
-            $('#introduce').css('border','solid 1px red');
-            $('#textUpdate').text('简介字数不能超过８０');
-            setTimeout(function(){ $('button#textUpdate').text('更新'); },2000);
+          if(this.teamIntroduce.length>80){
+
+            this.subBtnActive('简介字数不能超过８０');
+
             return false;
           }else{
             var data = {
-              uid:this.uid, 
-              name:name, 
-              introduce:introduce
+              uid:UID,
+              name:this.teamname,
+              introduce:this.teamIntroduce
             };
-            text_filter(data);
-            postChangeText('/teamsT',data,function(data){
-              $('#name').val(data.name);
-              $('#introduce').val(data.introduce);
-              $('#textUpdate').text('修改成功');
-              setTimeout(function(){ $('#textUpdate').text('更新'); },2000);
+            textDataFilter(data);
+            var vm = this;
+            $.post('/teamsTextUpdate',data,function(d){
+
+                this.teamname = data.name;
+                this.teamIntroduce = data.introduce;
+                vm.subBtnActive('修改成功');
+
             });
           }
-        },
-      }
+        }
     }
-  },
-  el:'#teams',
-  data:{
-  },
-  methods:{
-    showTeamHeadform:function(){
-      $('#teamHeadForm').css('display','block');
-    },
-    headUpdate:function(){
-      var avator = $('#avator').val();
-      if(!avator.length){
-        $('#avator').css('border','solid 1px #449933'); 
-      }else{
-        var thf = $('#teamHeadForm')[0];
-        addInput(thf,'uid',this.uid);
-        thf.submit();
-      }
-    },
-    showImg:function(e){
-      var that = e.target;
-      var img = that.nextElementSibling;
-      var r = new FileReader();
-      r.readAsDataURL(that.files[0]);
-      r.onload = function(){
-        img.src=this.result;
-      };
-    },
-    backToMainPage:function(){
-      zPost('/main',{
-        uid:uid
-      });
-    }
-  }
 });

@@ -59,40 +59,6 @@ router.post('/unReadAdd1', urlencodedParser, (req, res) => {
 
 
 
-
-router.get('/getInfo', (req,res) => {
-
-	var type = req.query.type;
-
-	if(data.type==='team'){
-		Team.find({uid:data.uid}, null, {limit:1},(err,team)=>{
-			res.send(team[0]);
-		});
-	}else{
-		People.find({uid:data.uid},null,{limit:1},(err,person)=>{
-			res.send(person[0]);
-		});
-	}
-})
-
-
-//used by public/js/main.js ,
-router.post('/getMoreinfo',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-	LIB.check(data,'getMoreinfo');
-	var check_uid = data.check_uid;
-	if(data.type==='team'){
-		Team.find({uid:check_uid},null,{limit:1},(err,detail)=>{
-			es.send(detail[0]);
-		});
-	}else{
-		People.find({uid:check_uid},null,{limit:1},(err,detail)=>{
-			res.send(detail[0]);
-		});
-	}
-})
-
-
 //used by public/js/main.js,
 router.get('/getUnreadMess', (req,res) => {
 	var data = req.query;

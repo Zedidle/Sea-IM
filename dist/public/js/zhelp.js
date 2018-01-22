@@ -34,7 +34,7 @@ function hTime(){
   var time = new Date();
   return time.getHours()+':'+time.getMinutes();
 }
-function issame(v1,v2){
+function isSame(v1,v2){
   return v1===v2;
 }
 function textDataFilter(data){

@@ -5,25 +5,33 @@
     <meta charset="utf-8">
 	<title>Seanet-Register</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <!-- <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<style>
-    .container{
+
+
+    #regist{
+        border:1px solid #00A2AF;
+        border-bottom-width:10px;
+        box-shadow: 0 0 5px #999;
         margin-top:10%;
-        max-width:400px;
+        width:320px;
+        padding:0;
+        border-radius: 2px;
     }
-    h1{
-        color:#1E515E;
+    .title{
+        background-color:#00A2AF;
+        color:#FFF;
+        height:40px;
+        line-height: 40px;
+        font-weight:600;
+        font-size:16px;
         text-align: center;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
     }
     #registForm{
-        border-top:25px solid #00A2AF;
-        border-bottom:10px solid #00A2AF;
-        border-left:2px solid #00A2AF;
-        border-right:2px solid #00A2AF;
-        box-shadow: 0 0 2px #55FFD6
+        margin:20px auto;
         width:300px;
-        padding:20px;
     }
     @media (max-width: 500px){
         .container{
@@ -43,42 +51,103 @@
         margin:0 2%;
         width:45%;
     }
-    .mw100{
+    .min-widch-100{
         min-width:100px;
-    }
-    #uid_tip,#pw_tip,#pww_tip{
-        height:30px;
     }
     </style>
 </head>
 <body>
 
 <div class="container" id='regist'>
-    <form v-on:keyup.13="formSubmit" class="bs-example bs-example-form" role="form" id='registForm' action="/registInfo" method="post">
-    <h1>SeaNet Register</h1>
-    <div class="input-group">
-        <span class="mw100 input-group-addon">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-        ID</span>
-        <input  v-on:focus='focusUidResponse' v-on:blur='uidBlurCheckIsUsed' type="text" class="form-control" name="uid" id="uid" v-model.trim='uid' placeholder="用户名">
+
+
+    <div class="title">
+        注册
     </div>
-    <div id='uid_tip'>{{uid_tip}}</div>
-    <div class="input-group">
-    <span class="mw100 input-group-addon">
-    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-    密码</span>
-         <input v-on:focus="focusPwResponse" v-on:blur='blurPwResponse' type="password" class="form-control" name="password" id="password" v-model.trim='pw' placeholder="密码">
-    </div>   
-    <div id='pw_tip'>{{pw_tip}}</div>
-	<div class="input-group">
-    <span class="mw100 input-group-addon">
-    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-        确认密码</span>
-        <input v-on:focus="focusPwwResponse" v-on:blur='blurPwwResponse' type="password" class="form-control" name="passwordCheck" id="passwordCheck" v-model.trim='pww' placeholder="确认密码">
-    </div>
-    <div id='pww_tip'>{{pww_tip}}</div>
-	<input v-on:click="formSubmit" type="button" id="sub" class="btn btn-success" v-model="submit_text">
-	<input v-on:click='backtologin' type="button" id="backtologin" class="btn btn-default" value="返回">
+
+    <form
+        v-on:keyup.enter="formSubmit"
+        class="bs-example bs-example-form"
+        role="form"
+        id='registForm'
+        action="/successRegist"
+        method="post"
+    >
+        <div class="input-group">
+            <span class="min-widch-100 input-group-addon">
+                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                ID
+            </span>
+            <input
+                v-on:focus='focusUid'
+                v-on:blur='blurUid'
+                type="text"
+                class="form-control"
+                name="uid"
+                v-model.trim='uid'
+                placeholder="输入ID"
+            >
+        </div>
+        <div
+            v-bind:style='styleTipUid'
+        >{{tipUid}}
+        </div>
+
+        <div class="input-group">
+            <span class="min-widch-100 input-group-addon">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                密码
+            </span>
+             <input
+                v-on:focus="focusPw"
+                v-on:blur='blurPw'
+                type="password"
+                class="form-control"
+                name="password"
+                id="password"
+                v-model.trim='pw'
+                placeholder="输入密码"
+            >
+        </div>
+        <div
+            v-bind:style='styleTipPw'
+        >{{tipPw}}
+        </div>
+
+    	<div class="input-group">
+            <span class="min-widch-100 input-group-addon">
+                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                确认密码
+            </span>
+            <input
+                v-on:focus="focusPww"
+                v-on:blur='blurPww'
+                type="password"
+                class="form-control"
+                name="passwordCheck"
+                id="passwordCheck"
+                v-model.trim='pww'
+                placeholder="确认密码"
+            >
+        </div>
+        <div
+            v-bind:style='styleTipPww'
+        >{{tipPww}}
+        </div>
+
+    	<button
+            v-on:click="formSubmit"
+            type="button"
+            class="btn btn-success"
+        >{{submitText}}
+        </button>
+    	
+        <button 
+            v-on:click='backToLogin'
+            type="button"
+            class="btn btn-default"
+        >返回
+        </button>
     </form>
 </div>
 

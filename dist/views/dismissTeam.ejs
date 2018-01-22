@@ -4,63 +4,109 @@
 	<meta charset="UTF-8">
 	<title>Seanet-Dismissteam</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 
 	<style>
-	body{
-        background-size:100%;
-    }
-    @media (max-width: 970px) {
-        body{
-      		background-color:#669999;
-        }
-    }
-	.container{
-		width:320px;
-		display: block;
-		padding:10px;
-		margin:15% auto;
-		border:solid 2px #B71210;
+	#dismissTeam{
+		margin-top:10%;
+		width:300px;
+        border:1px solid #B71210;
+        box-shadow: 0 0 2px #55FFD6;
+        padding:0;
+
 	}
-	.tipID,.tipPW{
-		color:red;
-	}
-	#sub,#back{
-		margin-left: 20px;
-		width:100px;
-		height:33px;
-		display: inline-block;
+	.title{
+	    background-color:#BB1111;
+		color:#FFF;
+	    margin-bottom:20px;
+	    height:30px;
+	    line-height: 30px;
+	    font-weight:600;
+	    font-size:16px;
+	    text-align: center;
 	}
 	#dismissForm{
-		height:130px;
+		margin:20px;
 	}
-	#dismissForm h5{
-		display: inline-block;
-		padding-right: 10px;
-		width:70px;
-		text-align: right;
+
+	#formSubmit-btn{
+		width:60%;
+		float:left;
+	}
+	#backToMainPage-btn{
+		width:30%;
+		float:right;
 	}
 	</style>
 </head>
 <body>
 	<div class="container" id='dismissTeam'>
-		<form id='dismissForm' action="/success_dismissTeam" method="post">
-		<h4 style='text-align: center;'>请确认团队ID和口令：</h4>
-		<div><h5>UID:</h5><input type="text" id='ID' name="ID"></div>
-		<h4 class='tipID'></h4>
-		<div><h5>团队口令:</h5><input type="text" id='PW' name="PW"></div>
-		<h4 class='tipPW'></h4>
-		<br>
-		<br>
+		<div class="title">
+			解散团队
+		</div>
+		<form
+			id='dismissForm'
+			action="/successDismissTeam"
+			method="post"
+		>
+			<div class="form-group">
+			    <input
+			    	class="form-control"
+					v-model.trim='teamId'
+					v-on:focus='focusTeamId'
+					v-on:blur='blurTeamId'
+					name="teamId"
+					placeholder='输入团队ID'
+				>
+	    		<label
+	    			for="teamId"
+					v-bind:style='styleTipTeamId'
+	    		>{{tipTeamId}}
+	    		</label>
+			 </div>
+
+			<div class="form-group">
+				<input 
+					type="password" 
+					class="form-control"
+					v-on:focus='focusTeamPassword'
+					v-on:blur='blurTeamPassword'
+					v-model.trim='teamPassword'
+					name="teamPassword"
+					placeholder='输入团队口令'
+				>
+				<label
+					for="teamPassword"
+					v-bind:style='styleTipTeamPassword'
+				>{{tipTeamPassword}}
+				</label>
+			</div>
+	  	
+		  	<button
+		  		id='formSubmit-btn'
+				v-on:click='formSubmit'
+				class="btn btn-danger"
+				type="button"
+			>确认解散
+			</button>
+			
+			<button
+				id='backToMainPage-btn'
+				type='button'
+				class="btn btn-default"
+				v-on:click='backToMainPage'
+			>返回主页
+			</button>
+			<br clear='both'>
 		</form>
-		<input id='sub' v-on:click='subOnclick' type="button" class="btn btn-danger" value='确认'>
-		<button id='back' v-on:click='backtomainpage'>返回主页</button>
 	</div>
-	
+
 <%include frameuse.ejs%>
-<script>
-var uid = '<%=uid%>';
-var pw = '<%=pw%>';
+<script type="text/javascript">
+	var TeamPassword = '<%=team_password%>';
+	console.log(TeamPassword);
 </script>
+
 <script src='js/dismissTeam.js'></script>
 </body>
 </html>

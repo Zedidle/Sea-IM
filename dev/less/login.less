@@ -1,13 +1,13 @@
 @import './config.less';
 
-.mw90{
+.min-width-90{
     min-width: 90px;
 }
 
 .container{
     overflow: hidden;
     width:100%;
-    height:800px;
+    height:700px;
     background-color: @easyGray;
     align-items: center;
     display: flex;
@@ -29,11 +29,13 @@
     }
 
     #loginForm{
+
         width:360px;
         display:inline-block;
-        border:2px solid @hashBlue;
-        background: rgba(250,250,250,0.5);
-        padding:15px;
+        border:1px solid @hashBlue;
+        border-radius:2px;
+        background-color:#FFF;
+        box-shadow: 0 0 10px #999;
 
         @media(max-width:768px){
             width:100%;
@@ -41,15 +43,25 @@
             left:50%;
             transform: translateX(-50%);
         }
-        
-        #tip{
-            height:20px;
-            color:red;
+
+        #login-content{
+            margin:15px;
+            &:after{
+                content:'';
+                display:block;
+                clear:both;
+                overflow:hidden;
+                visibility:hidden;
+            }
         }
 
         #uid,#password{
             height:40px;
             font-size:18px;
+        }
+        #tip{
+            height:20px;
+            color:red;
         }
         #chooseRL{
             margin-top:10px;

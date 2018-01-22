@@ -1,10 +1,11 @@
-var DomorePart = {
+var DomorePartComponent = {
   template:
     `<div id='domore'>
       <div
         id='logOff'
         v-on:click='logOff'
       >注销</div>
+
       <div 
         id='person'
         v-on:click='getPersonInfo'
@@ -37,23 +38,22 @@ var DomorePart = {
       </div>
     </div>`,
   data:function(){
-    return {};
+    return {
+    };
   },
   methods:{
     logOff:function(){
-      if(confirm('确认注销？')){ 
-        localStorage.removeItem('SeaNetUid');
-        zPost('/logOff',userEnsure);
-      }
+      main.isWantToLogOff = true; 
     },
+
     getPersonInfo:function(){
-      zPost('/people',userEnsure);
+      zPost('/people',UserEnsure);
     },
     getTeamsInfo:function(){
-      zPost('/myteam',userEnsure);
+      zPost('/myteam',UserEnsure);
     },
     toBuildATeam:function(){
-      zPost('/DealWithTeam',userEnsure);
+      zPost('/DealWithTeam',UserEnsure);
     },
   }
 };

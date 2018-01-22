@@ -1,84 +1,113 @@
 var regist = new Vue({
 	el:'#regist',
 	data:{
-		uid_reg:/^\w{6,16}$/,
-		pw_reg:/^.{6,14}$/,
+		regUid:/^\w{6,16}$/,
+		regPw:/^.{6,14}$/,
+
 		uid:'',
 		pw:'',
 		pww:'',
-		uid_tip:'',
-		pw_tip:'',
-		pww_tip:'',
-		uid_flag:false,
-		pw_flag:false,
-		pww_flag:false,
-		submit_text:'提交'
+		
+		tipUid:'',
+		tipPw:'',
+		tipPww:'',
+	
+		styleTipUid:{
+			height:'30px',
+			color:'green'
+		},
+		styleTipPw:{
+			height:'30px',
+			color:'green'
+		},
+		styleTipPww:{
+			height:'30px',
+			color:'green'
+		},
+
+		submitText:'提交'
+	},
+	computed:{
+		flagUid:function(){
+			return this.regUid.test(this.uid);
+		},
+		flagPw:function(){
+			return this.regPw.test(this.pw);
+		},
+		flagPww:function(){
+			return isSame(this.pw,this.pww);
+		}
 	},
 	methods:{
-		backtologin:function(){
+		backToLogin:function(){
 			window.location.href='/';
 		},
-		uidBlurCheckIsUsed:function(){
-			this.uid_flag = this.uid_reg.test(this.uid);
-			if(!this.uid_flag){
-				$('#uid_tip')[0].style.color = 'red';
-				regist.uid_tip = '账号有误';
+
+		focusUid:function(){
+			this.tipUid = '字母和数字皆可,长度为6-16';
+		},
+		blurUid:function(){
+			if(!this.flagUid){
+				this.styleTipUid.color = 'red';
+				this.tipUid = '账号有误';
 				return false;
 			}
+
+			var t = this;
 			$.get('/checkUidIsUsed',{uid: this.uid},function(bool){
 				if(bool){
-					regist.uid_tip = '账号已被使用';
-					$('#uid_tip')[0].style.color = 'red';
+					t.tipUid = '账号已被使用';
+					t.styleTipUid.color = 'red';
 				}else{
-					regist.uid_tip = '账号可用';
-					$('#uid_tip')[0].style.color = 'green';
+					t.tipUid = '账号可用';
+					t.styleTipUid.color = 'green';
 				}
 			});
 		},
-		focusUidResponse:function(){
-			this.uid_tip = '字母和数字皆可,长度为6-16';
-			$('#uid_tip')[0].style.color = 'green';
+	
+
+		focusPw:function(){
+			this.tipPw = '请输入密码';
 		},
-		focusPwResponse:function(){
-			this.pw_tip = '	请输入密码';
-			$('#pw_tip')[0].style.color = 'green';
-		},
-		blurPwResponse:function(){
-			this.pw_flag = this.pw_reg.test(this.pw);
-			$('#pw_tip')[0].style.color = 'red';
+		blurPw:function(){
+			this.styleTipPw.color = 'green';
+			
 			if(this.pw === ''){
+				this.tipPw = '密码不能为空';
+				this.styleTipPw.color = 'red';
 				return false;
-			}
-			if(!this.pw_flag){
-				this.pw_tip = '密码长度不对';
+			}else if(!this.flagPw){
+				this.tipPw = '密码长度不对';
+				this.styleTipPw.color = 'red';
 			}else{
-				this.pw_tip = '密码可行';
-				$('#pw_tip')[0].style.color = 'green';
+				this.tipPw = '密码可行';
+				this.styleTipPw.color = 'green';
 			}
 		},
-		focusPwwResponse:function(){
-			this.pww_tip = '重复确认密码';
-			$('#pww_tip')[0].style.color = 'green';	
+
+		focusPww:function(){
+			this.tipPww = '重复确认密码';
 		},
-		blurPwwResponse:function(){
-			this.pww_flag = issame(this.pw,this.pww);
-			$('#pww_tip')[0].style.color = 'red';				
-			if(!this.pww_flag){
-				this.pww_tip = '两次密码不一样';
-			}else if(this.pww === ''){
-				this.pww_tip = '密码不能为空';
+		blurPww:function(){
+			if(this.pww === ''){
+				this.tipPww = '密码不能为空';
+				this.styleTipPww.color = 'red';
+			}else if(!this.flagPww){
+				this.tipPww = '两次密码不一样';
+				this.styleTipPww.color = 'red';
 			}else{
-				this.pww_tip = '确认完成';
-				$('#pww_tip')[0].style.color = 'green';				
+				this.tipPww = '确认完成';
+				this.styleTipPww.color = 'green';
 			}
 		},
+
 		formSubmit:function(){
-			if(this.uid_flag && this.pw_flag && this.pww_flag){
+			if(this.flagUid && this.flagPw && this.flagPww){
 				$('#registForm').submit();
 			}else{
-				this.submit_text = '请检查每个输入项';
+				this.submitText = '请检查每个输入项';
 				setTimeout(function(){
-					regist.submit_text = '提交';
+					regist.submitText = '提交';
 				}, 2000);
 			}
 		},

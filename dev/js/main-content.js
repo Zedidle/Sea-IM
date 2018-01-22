@@ -1,25 +1,28 @@
 var main = new Vue({
   components:{
-    'domore-part':DomorePart,
-    'user-info':UserInfo,
-    'search-content':SearchContent,
-    'mess-lis':MessLis
+    'domore-part':DomorePartComponent,
+    'user-info':UserInfoComponent,
+    'search-content':SearchContentComponent,
+    'mess-lis':MessLisComponent
   },
   el:'#main',
   data:{
-    messInfo:{
-      headImg:'???',
-      uid: '???',
-      name: '???',
-      level: '???',
-      membernumber:'???',  
-      sex: '???',
-      hobby: '???',
-      birthday: '???',
-      introduce: '???',
+
+    isWantToLogOff:false,
+
+    moreInfo:{
+      headImg:'',
+      uid:'',
+      name:'',
+      level:'',
+      memeber:'',
+      sex:'',
+      hobby:'',
+      birthday:'',
+      introduce:''
     },
+
     isDomore:false,
-    isteam:false,
     moreinfoSeen:false,
     teamMembersSeen:false,
     messtype:'',
@@ -28,19 +31,35 @@ var main = new Vue({
     messageframeSeen:false,
     expressionSeen:false,
     messShowType:'recent',
-    recentInfo:recentInfo,
-    starInfo:starInfo,
-    teamInfo:teamInfo
+    
+    userInfo:UserInfo,
+    recentInfo:RecentInfo,
+    starInfo:StarInfo,
+    teamInfo:TeamInfo
   },
-  methods:v_methods()
+
+
+  computed:{
+    isTeam:function(){
+      return this.messtype === 'team';
+    },
+    moreInfoTeamMemberNumber:function(){
+      // return this.moreInfo.members.length;
+      return 50;
+    }
+  },
+
+  methods:vMethods()
 });
 
 //listen the port of the user,
-socket.on(uid,function(J_msg){
+socket.on(UID,function(J_msg){
   main.messageCome(JSON.parse(J_msg)); 
 });
 
+console.log(UID);
+
 //every 10 seconds to send a heartbeat package , keep on line;
 setInterval(function(){
-  socket.emit('heartbeat',uid); 
+  socket.emit('heartbeat',UID); 
 },10000);

@@ -4,24 +4,26 @@
 	<meta charset="UTF-8">
 	<title>Seanet-Personal information</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<!-- <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
 	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
  	<link rel="stylesheet" href="css/people.css">
 </head>
 <body>
 
-<div class='container'>
+<div class='container' id='people'>
+
+	<div class="title">
+		个人信息
+	</div>
 
 	<button
-		id='back'
+		id='backToMainPage-btn'
 		v-on:click='backToMainPage'
 		class="btn btn-default"
 	>返回主页
 	</button>
 	
-	<form
+	<div
 		id='peopleHeadForm'
-		v-on:submit='headImageUpdate'
 	>
 		<h4>更新头像:</h4>
 		<div>
@@ -33,13 +35,11 @@
 				v-on:change='checkImg'
 			>
 			<button
-				type='button'
 				class="btn btn-success"
 				v-on:click='headImageUpdate'
 			>保存
 			</button>
 			<button
-				type='button'
 				class="btn btn-danger"
 				v-on:click='hideHeadForm'
 			>取消
@@ -49,16 +49,16 @@
 		<img
 			id='checkImg'
 		/>
-	</form>
+	</div>
 		
 	<div class="row">
 
 		<div class="col-md-4">
 			<img
 				id='headImg'
-				v-on:click='showPeopleHeadForm'
+				v-on:click='showPersonHeadForm'
 				title="点击更新头像"
-				src= <%= headImg%> 
+				v-bind:src= 'personHeadImage' 
 			>
 		</div>
 
@@ -68,38 +68,32 @@
 					<b>ID:</b>
 					<span><%= uid %></span>
 				</div>
-		
 				<div>
 					<b>昵称:</b>
 					<input
-						id='name'
 						v-model.trim='name'
 					>
 				</div>
 				<div>
 					<b>性别:</b>
 					<input
-						id='sex'
 						v-model.trim='sex'
 					>
 				</div>
 				<div>
 					<b>爱好:</b>
 					<input
-						id='hobby'
 						v-model.trim='hobby'
 					>
 				</div>
 				<div>
 					<b>生日:</b>
 					<input
-						id='birthday'
 						v-model.trim='birthday'
 					>
 				</div>
 				<h4>叨叨:</h4>
 				<textarea
-					id='introduce'
 					v-model.trim='introduce'
 				><%= introduce %>
 				</textarea>
@@ -112,6 +106,7 @@
 					>{{subBtnText}}
 					</button>
 				</div>
+
 			</div>
 		</div>
 	</div>
@@ -120,13 +115,9 @@
 	<%include frameuse.ejs%>
 
 	<script>
-		var Uid = '<%=uid%>';
-		console.log(Uid);
-		var userEnsure = {
-			uid: Uid
-		};
 		var name = '<%=name%>';
 		var sex = '<%=sex%>';
+		var PersonHeadImage = '<%=headImg%>';
 		var introduce = '<%=introduce%>';
 		var hobby = '<%=hobby%>';
 		var birthday = '<%=birthday%>';

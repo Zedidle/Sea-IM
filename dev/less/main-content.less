@@ -2,44 +2,113 @@
 
 .container{
     border:3px solid @deepBlue;
-	background-color:@easyGray;
+	background-color:@lightGray;
 	padding:0;
 	width: auto;
 	@media (max-width:450px){
 		width:100%;
 	}
+
+	.logOffJudgeHide{
+			position: absolute;
+			height:0px;
+			width:0px;
+			left:350px;
+			top:80px;
+			overflow: hidden;
+		}
+		.logOffJudgeShow{
+			position:absolute;
+			z-index: 1000000;
+			width:300px;
+			height:120px;
+			box-shadow: 0px 0px 50px #666;
+			background-color: rgba(255,255,255,0.8);
+			border:2px solid #222;
+			left:50%;
+			top:50%;
+			transform:translateX(-50%) translateY(-50%);
+
+			#ensureLogOff-btn{
+				float: left;
+				text-align: center;
+				height:60px;
+				line-height: 54px;
+				width:55%;
+				font-size: 32px;
+				border:1px solid #456; 
+				margin:5px;
+				color:#FFF;
+				background-color:@commonBlue;
+				cursor:pointer;
+				&:hover{
+					border-radius: 10px;
+					box-shadow: 5px 5px 10px #999;
+					border-width: 2px;
+				}
+			}
+			#cancelLogOff-btn{
+				float: right;
+				text-align: center;
+				height:60px;
+				line-height: 54px;
+				width:35%;
+				font-size:32px;
+				border-right:2px solid #999;
+				border:1px solid #456; 
+				margin:5px;
+				color:#FFF;
+				background-color:@brown;
+				cursor:pointer;
+				&:hover{
+					border-radius: 10px;
+					box-shadow: 5px 5px 10px #999;
+					border-width: 2px;
+				}
+			}
+		}
+
 	#content{
 		display: inline-block;
-		width:auto;
 		height:600px;
-		@media (max-width:450px){
-			width:100%;
-		}
+
 		#domore{
-			height:100%;
 			width:0px;
 			overflow: hidden;
-			float: right;
-			@media (max-width:450px){
-				position:absolute;
-				z-index: 20;
+			position:absolute;
+			left:330px;
+			top:10px;
+			z-index: 10000000;
+			padding-top:20px;
+			padding-bottom:20px;
+			box-shadow: 0 0 10px #999;
+			@media(max-width:480px){
+				top:60px;
+				left:auto;
 				right:0;
-				top:80px;
+				background-color:rgba(160,160,160,0.9);
 			}
+
+
 			#logOff{
 				width:100%;
-				margin-top:5px;
 				font-weight: 600;
-				height:40px;
-				line-height: 40px;
+				border-top:3px solid transparent;
+				border-bottom:3px solid transparent;
+				height:34px;
+				line-height: 28px;
 				font-size: 20px;
 				text-align:center;
-				float: right;
 				cursor:pointer;
-				border-radius: 0.2em;
 				color:#fff;
 				background-color: @seaBlue;
+				&:hover{
+					border-color:@modernBlue;
+				}
 			}
+
+			
+
 			.ele{
 				width:50px;
 				height:50px;
@@ -52,8 +121,19 @@
 				cursor:pointer;
 				color:#7EBCB7;
 				background:rgba(255,255,255,0.8);
+				&:hover{
+					box-shadow: 0 0 5px #999;
+				}
+				@media(max-width:480px){
+					&:hover{
+						box-shadow: 0 0 5px #FFF;
+					}
+				}
+
 			}
 		}
+
+
 		#checkMess{
 			overflow-x: hidden;
 			overflow-y: scroll;
@@ -65,9 +145,9 @@
 				height:100%;
 				width:100%;
 			}
-			.userinfo_wrap{
+			.user-wrap{
 				height:80px;
-				.userinfo_avator{
+				#user-avator{
 				    float: left;
 				    display: inline-block;
 				    height:100%;
@@ -75,30 +155,28 @@
 				    border: solid 1px #999;
 				    border-radius: 50%;
 				    overflow: hidden;
-					.userinfo_avator_img{
-					  width:100%;
-					  height:100%;
-					}
+				    &:hover{
+				    	border-width:2px;
+				    	border-radius: 0%;
+				    }
 				}
-				.userinfo_intro{
-					width: 140px;
+				#user-intro{
+					width: 160px;
+					height:100%;
 					float: left;
-					display: inline-block;
-					#nick_name{
-						display: inline-block;
+					overflow: hidden;
+					@media(max-width:768px){
+						width:140px;
+					}
+					#user-nickname{
 						font-size:1.2em;
 					}
-					#user_name{
-						display: inline-block;
-						font-size:1em;
-					}
-					.userinfo_introduce{
+					#user-introduce{
 						height:60px;
-						overflow: hidden;
 						font-size:1em;
 					}
 				}
-				.userinfo_set{
+				#user-set{
 					float: right;
 					color:#44BBAA;
 					margin-right: 5px;
@@ -109,8 +187,11 @@
 					font-size: 3rem;
 					line-height: 7rem;
 					cursor: pointer;
+					&:hover{
+						color:@happyBlue;
+					}
 					&:active{
-						color:#22DDCC;
+						color:#FFE;
 					}
 				}
 			}
@@ -133,6 +214,9 @@
 				cursor:pointer;
 				background-color:@deepSeaBlue;
 				color:#fff;
+				&:hover{
+					background-color:@deepBlue;
+				}
 				&:first-child{
 					color:@seaBlue;
 				}
@@ -161,6 +245,9 @@
 						list-style: none;
 						cursor: pointer;
 						padding-left: 0.3em;
+						&:hover{
+							box-shadow: 0 0 5px #999;
+						}
 						.info{
 							display: inline-block;
 							float: left;

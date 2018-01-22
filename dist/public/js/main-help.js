@@ -1,5 +1,5 @@
 
-function v_createSearchTeamInfo_template(t){
+function vCreateSearchTeamInfoTemplate(t){
   if(t){
     return "<div id='teamImg'>"+
         "<img src="+t.headImg+">"+
@@ -19,11 +19,9 @@ function v_createSearchTeamInfo_template(t){
   }
 }
 
-function v_createSearchPersonInfo_template(p){
+function vCreateSearchPersonInfoTemplate(p){
   if(p){
-    return "<div id='personImg'>"+
-        "<img src="+p.headImg+">"+
-      "</div>"+
+    return "<img id='personImg' src="+p.headImg+">"+
       "<div id='pinfo'>"+
         "昵称: <div id='name'>"+p.name+"</div>"+
         "<div id='sex'>性别: "+p.sex+"</div>"+
@@ -43,7 +41,7 @@ function v_createSearchPersonInfo_template(p){
 
 
 
-function v_teamMembers_template(li){
+function vTeamMembersTemplate(li){
   return "<li> "+
             "<div class='avator'>"+
               "<img src="+li.headImg+"alt='UID:"+li.uid+"' title='UID:"+li.uid+"'>"+
@@ -62,7 +60,7 @@ function judgeTypeforFloatDirection(msg,uid){
   return f;
 }
 
-function v_createMessDiv(msg,f,msgContent){
+function vCreateMessDiv(msg,f,msgContent){
   return "<div class='messli' "+f+">"+
             "<div class='avator' "+f+">"+
               "<img src='"+msg.headImg+"'/>"+
@@ -75,7 +73,7 @@ function v_createMessDiv(msg,f,msgContent){
           ;
 }
 
-function v_addRecentLi_recent(con,info){
+function vAddRecentLi(con,info){
   return "<li style='height:"+con.h+";'>"+
           "<div class='info'>"+
             "<div class='name'>"+info.name+""+
@@ -93,7 +91,7 @@ function v_addRecentLi_recent(con,info){
 }
 
 
-function v_removeThePeopleInStar(id){
+function vRemovePersonInStar(id){
   var lis = document.getElementById('star').getElementsByTagName('li');
   for(i=0;i<lis.length;i++){
     if(lis[i].querySelectorAll('.info .uid')[0].innerText===id){
@@ -103,7 +101,7 @@ function v_removeThePeopleInStar(id){
   }
 }
 
-function v_addThePeopleInStar(info){
+function vAddPersonInStar(info){
   $('#star').prepend(
       "<li v-on:click='show_messageFrame($event,"+info.uid+",false)' style='height:60px;'>"+
         "<div class='info'>"+
@@ -125,14 +123,13 @@ function v_addThePeopleInStar(info){
       main.moreinfoSeen=false;
       main.messtype='star';
       main.messageframeSeen=true;
-      main.isteam = false;
       main.nameOfmessageframe = this.getElementsByClassName('name')[0].innerText;
       main.messto = this.getElementsByClassName('uid')[0].innerText;
       document.getElementById('messageframe_cont').innerHTML = '';
     });
 }
 
-function v_removeThePeopleInRecent(id){
+function vRemoveThePeopleInRecent(id){
   var lis = document.getElementById('recent').getElementsByTagName('li');
   for(i=0;i<lis.length;i++){
     if(lis[i].querySelectorAll('.info .uid')[0].innerText===id&&
@@ -142,7 +139,7 @@ function v_removeThePeopleInRecent(id){
     }
   }
 }
-function v_removeTheTeamInList(tid,li_type){
+function vRemoveTheTeamInList(tid,li_type){
   var lis = document.getElementById(li_type).getElementsByTagName('li');
   for(i=0;i<lis.length;i++){
     if(lis[i].querySelectorAll('.info .li_type span')[0].innerText==='team'&&
@@ -153,7 +150,7 @@ function v_removeTheTeamInList(tid,li_type){
   }
 }
 
-function help_addFaceMark(){
+function expressionImageToText(){
   var t;
   switch(this.value){
     case 0:t = '呵呵'; break;
@@ -208,14 +205,14 @@ function help_addFaceMark(){
     case 49:t = 'ok'; break;
   }
   main.expressionSeen = false;
-  var input = document.getElementById('messageframe_input');
+  var input = document.getElementById('messageframe-input');
   var end = input.selectionEnd;
   var v = input.value;
   input.value = v.substr(0,end) + "#("+t+")" + v.substr(end,v.length);
 } 
 
 
-function help_expressionSwitch(expressionMark){
+function expressionTextToImage(expressionMark){
   var t;
   switch(expressionMark){
     case '呵呵':t = 0; break;

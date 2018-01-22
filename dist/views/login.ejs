@@ -19,56 +19,64 @@
         action="/"
         method="post"
     >
-        <div class="input-group">
-            <span class="mw90 input-group-addon">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                用户名
-            </span>
-            <input
-                class="form-control"
-                name="uid"
-                id="uid"
-                v-model.trim='uid'
-                placeholder="输入ID"
-            >
-        </div>
-        <br>
-        <div class="input-group">
-            <span class="mw90 input-group-addon">
-                <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
-                密码
-            </span>
-            <input
-                type="password"
-                class="form-control"
-                name="password"
-                id="password"
-                v-model.trim='password'
-                placeholder="输入密码"
-            >
+
+        <div class="title">
+            登录
         </div>
 
-        <div id='tip'><b>{{tip}}</b></div>
+        <div id="login-content">
+            <div class="input-group">
+                <span class="min-width-90 input-group-addon">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    用户名
+                </span>
+                <input
+                    class="form-control"
+                    name="uid"
+                    id="uid"
+                    v-model.trim='uid'
+                    placeholder="输入ID"
+                >
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="min-width-90 input-group-addon">
+                    <span class="glyphicon glyphicon-lock" aria-hidden="true"></span>
+                    密码
+                </span>
+                <input
+                    type="password"
+                    class="form-control"
+                    name="password"
+                    id="password"
+                    v-model.trim='password'
+                    placeholder="输入密码"
+                >
+            </div>
 
-        <div id='chooseRL'>
-            <input
-                id='loginSubmitBtn'
-                type="button"
-                class="btn btn-success"
-                v-on:click='loginJudge'
-                value="登录"
-            >
-            <input
-                id="toRegistBtn"
-                v-on:click='toRegist'
-                type="button"
-                class="btn btn-primary"
-                value="注册"
-            >
+            <div id='tip'><b>{{tip}}</b></div>
+
+            <div id='chooseRL'>
+                <input
+                    id='loginSubmitBtn'
+                    type="button"
+                    class="btn btn-success"
+                    v-on:click='loginJudge'
+                    value="登录"
+                >
+                <input
+                    id="toRegistBtn"
+                    v-on:click='toRegist'
+                    type="button"
+                    class="btn btn-primary"
+                    value="注册"
+                >
+            </div>
         </div>
     </form>
-
 </div>
+
+
 
 <%include frameuse.ejs%>
 

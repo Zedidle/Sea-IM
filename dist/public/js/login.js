@@ -35,6 +35,11 @@ var login = new Vue({
 					this.uid = data.uid;
 					this.password = data.password;
 					$('#loginForm')[0].submit();
+
+					//将帐号记录在本地
+					// localStorage.setItem('UID',this.uid);
+					sessionStorage.setItem('UID',this.uid);
+
 				}else{
 					this.warnTip('账号或密码有误');
 				}

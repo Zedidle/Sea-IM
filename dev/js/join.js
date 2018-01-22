@@ -1,18 +1,15 @@
 var join = new Vue({
 	el:'#join',
-	data:{ 
-		uidEnsure:{ 
-			uid:uid
-		}
+	data:{
 	},
 	methods:{
 		back:function(){ 
-			zPost('/main',this.uidEnsure);
+			zPost('/main',UserEnsure);
 		},
 		ok:function(){
 			var okEnsure = {
 				password:document.getElementById('pw').value.trim(),
-				uid:uid,
+				uid:UID,
 				tid:tid
 			};
 			$.post('/join_ok',okEnsure,function(judge){

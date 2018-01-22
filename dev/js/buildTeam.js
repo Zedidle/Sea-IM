@@ -1,93 +1,86 @@
 var buildTeam = new Vue({
-	components:{
-		'submit-button':{
-			props:['uid'],
-      		template:
-      			'<input v-on:click="tipSubmit" type="button" id="sub" value="Bulid">',
-			data:function(){
-				return {		
-					flag:{},
-					reg:{
-						tn:/^.{2,20}$/,
-						pw:/^\w{3,8}$/
-					}
-				};
-			},
-			methods:{
-				tipSubmit:function(){
-					var name_v = $('#teamname').val().trim();
-					var pw_v = $('#pw').val().trim();
-					var pww_v = $('#pww').val().trim();
+	el:'#buildTeam',
+	data:{
+		regTeamname:/^.{2,10}$/,
+		regPassword:/^.{3,8}$/,
 
-					if(this.reg.tn.test(name_v)){
-						this.flag.tn = true;
-						$('#tipname').html('');
-					}else{
-						this.flag.tn = false;
-						$('#tipname').css('color','red');
-						$('#tipname').html('<p>name error</p>');
-					}
+		teamname:'',
+		password:'',
+		password1:'',
 
-					var issamepw = issame(pw_v,pww_v);
-					if(this.reg.pw.test(pw_v)&&issamepw){
-						$('#tippw').html(''); $('#tippww').html('');
-						this.flag.pw = true;
-					}else{
-						this.flag.pw = false;
-						if(!issamepw){
-							$('#tippww').css('color','red');
-							$('#tippww').html('<p>twice password not same</p>');
-						}
-						if(!this.reg.pw.test(pw_v)){
-							$('#tippw').css('color','red');
-							$('#tippw').html('<p>password error</p>');
-						}
-					}
-					if(this.flag.tn&&this.flag.pw){
-						var input = document.createElement('input');
-						input.name = 'uid';
-						input.value = this.uid;
-						$('#teamForm').append(input);
-						$('#teamForm').submit();
-					}
-				}	
+		tipTeamname:'',
+		tipPassword:'',
+		tipPassword1:'',
+
+		flagTeamname:false,
+		flagPassword:false,
+		flagPassword1:false
+
+	},
+	methods:{
+
+		tipOk:function(obj){
+			obj.style.color = 'green';
+		},
+		tipAlert:function(obj){
+			obj.style.color = 'red';
+		},
+
+		focusTeamname:function(){
+			this.tipOk($('#tipTeamname')[0]);
+			this.tipTeamname = '团队名称长度限制在2-10之间';
+		},
+		focusPassword:function(){
+			this.tipOk($('#tipPassword')[0]);
+			this.tipPassword = '口令长度限制在3-8之间';
+		},
+		focusPassword1:function(){
+			this.tipOk($('#tipPassword1')[0]);
+			this.tipPassword1 = '确认团队口令';
+		},
+
+		blurTeamname:function(){
+			if(this.regTeamname.test(this.teamname)){
+				this.tipTeamname = '团队名称可行';
+				this.flagTeamname = true;
+			}else{
+				this.tipAlert($('#tipTeamname')[0]);
+				this.tipTeamname = '团队名称有误';
+				this.flagTeamname = false;
+			}
+		},
+		blurPassword:function(){
+			if(this.regPassword.test(this.password)){
+				this.tipPassword = '密码可行';
+				this.flagPassword = true;
+			}else{
+				this.tipAlert($('#tipPassword')[0]);
+				this.tipPassword = '密码有误';
+				this.flagPassword = false;
+			}
+		},
+		blurPassword1:function(){
+			if(isSame(this.password,this.password1)){
+				this.tipPassword1 = '密码确认完成';
+				this.flagPassword1 = true;
+			}else{
+				this.tipAlert($('#tipPassword1')[0]);
+				this.tipPassword1 = '两次密码不一样';
+				this.flagPassword1 = false;
 			}
 		},
 
-		'back-button':{
-			props:['uid'],
-      		template:
-      			'<button v-on:click="backtomain" type="button" id="back">Cancel</button>',
-			data:function(){
-				return{
-					userEnsure:{ 
-						uid:this.uid
-					},
-				};
-			},
-			methods:{
-				backtomain:function(){ 
-					zPost('/main',this.userEnsure);
-				}
-			},
-		}
-	},
+		backToMainPage:function(){ 
+			zPost('/main',UserEnsure);
+		},
 
-	el:'#buildTeam',
-	data:{},
-	computed:{},
-	methods:{
-		tipname:function(){
-			$('#tipname').css('color','green');
-			$('#tipname').html('<p>Team\'s name:(length between 4 and 20)</p>');
-		},
-		tipPassword:function(){
-			$('#tippw').css('color','green');
-			$('#tippw').html('<p>Your team\'s password:(length between 3 and 8)</p>');
-		},
-		tipPasswordA:function(){
-			$('#tippww').css('color','green');
-			$('#tippww').html('<p>Ensure you password</p>');
-		},
+		formSubmit:function(){
+
+			if(!(this.flagTeamname && this.flagPassword && this.flagPassword1)){
+				return false;
+			}
+			formAddInput($('#teamForm')[0],'uid',UID);
+			$('#teamForm')[0].submit();
+		}	
 	},
 });

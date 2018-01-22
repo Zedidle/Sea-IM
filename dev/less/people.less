@@ -1,21 +1,23 @@
 @import './config.less';
 
-.container{
+#people{
 	width:100%;
 	max-width:650px;
 	margin:5% auto;
 	background:transparent;
-	border:2px solid @seaBlue;
-	border-top-width:10px;
+	border:1px solid @seaBlue;
+	border-radius:2px;
+	padding:0;
+	box-shadow: 5px 5px 10px #999;
 
 	@media(max-width: 768px){
 		margin:0 auto;
 		padding:0;
 		border:none;
-		border-top:10px solid @seaBlue;
+		border-top:5px solid @seaBlue;
 	}
 
-	#back{
+	#backToMainPage-btn{
 		display: block;
 		margin:10px;
 	}
@@ -32,7 +34,6 @@
 			margin-top:10px;
 			width:200px;
 		}
-
 	}
 	#headImg{
 		margin:0 10px;
@@ -62,26 +63,24 @@
 		&>div{
 			margin-bottom:2px;
 			font-size:1.5rem;
+			&>input{
+				margin-left:10px;
+				padding-left:5px;
+				width:150px;
+				border:none;
+				border-bottom:1px solid transparent;
+				transition:all 0s;
+				&:hover{
+					border-bottom-color:@seaBlue;
+				}	
+			}
 		}
 
-		#name,#sex,#hobby,#birthday{
-			margin-left:10px;
-			padding-left:5px;
-			width:150px;
-			border:none;
-			border-bottom:1px solid transparent;
-			transition:all 0s;
-			&:hover{
-				border-bottom-color:@seaBlue;
-			}	
-		}
-
-		#introduce{
+		&>textarea{
 			background: transparent;
 			padding:5px;
 			width:98%;
 			height:100px;
 		}
-
 	}
 }

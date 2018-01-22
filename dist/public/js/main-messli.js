@@ -1,4 +1,4 @@
-var MessLis = {
+var MessLisComponent = {
   props:{
     type:{
       type:String,
@@ -19,7 +19,7 @@ var MessLis = {
       <li
         v-for='i in info'
         :key='i.uid'
-        v-on:click='showMessageFrame($event,i.uid,i.level,i.name)'
+        v-on:click='showMessageFrame($event,i.uid,i.level,i.name,i.unread)'
         v-bind:style='liHeight(i.level)'
       >
         <div class='info'>
@@ -91,40 +91,42 @@ var MessLis = {
       };
     },
 
-    subUnreadDB:function(li_uid,haslevel){
+    subUnreadInDB:function(li_uid,haslevel){
       var data = {
-        type:haslevel?'team':'people',
-        uid:Uid,
-        to:li_uid,
-        checked:true
+        type: haslevel?'team':'people',
+        uid: UID,
+        to: li_uid,
+        checked: true
       };
       $.post('/unReadTo0',data);
     },
 
-    // 当某个messli被点击时，触发该方法
-    showMessageFrame:function(event, li_uid, haslevel, receiver_name){
+
+    //  当某个messli被点击时，触发该方法
+    //  event:触发的事件
+    //  liUid:触发事件的对象所需要的对应聊天ID
+    //  hasLevel:只有团队才有等级,判断是否是一个团队对象
+    //  receiverName:对应接收者的名称，用于聊天框顶部标明在和谁聊天
+    //  unread:未读数量,根据未读数量截取聊天记录中的对应消息
+    showMessageFrame:function(event, liUid, hasLevel, receiverName, unread){
       main.moreinfoSeen = false;
+      // this.$emit('dealU', liUid, hasLevel);
 
-      //有没有等级说明是不是团队
-      // this.$emit('dealU', li_uid, haslevel);
+      main.dealUnread(liUid,hasLevel);
+      this.subUnreadInDB(liUid, hasLevel);
 
-      var unreadNumber = main.dealUnread(li_uid,haslevel);
-      this.subUnreadDB(li_uid, haslevel);
-
-      main.messtype = haslevel?'team':this.type;
-
-      main.isteam = main.messtype==='team';
+      main.messtype = hasLevel?'team':this.type;
 
       main.messageframeSeen = true;
 
       $('.messageframe')[0].style.height = '100%';
-      $('#messageframe_cont')[0].innerHTML = '';
+      $('#messageframe-cont')[0].innerHTML = '';
 
-      main.nameOfmessageframe = receiver_name;
+      main.nameOfmessageframe = receiverName;
 
-      main.messto = li_uid;
+      main.messto = liUid;
 
-      main.getUnreadMess(main.messto, unreadNumber, main.messtype);
+      main.getUnreadMess(main.messto, unread, main.messtype);
     },
   },
 };

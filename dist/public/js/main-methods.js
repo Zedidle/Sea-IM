@@ -1,30 +1,64 @@
-function v_methods(){
+function vMethods(){
   return {
+
+    //确认注销的话，就会销毁localStorage的用户登录记录
+    ensureLogOff:function(){
+      localStorage.removeItem('UID');
+      sessionStorage.removeItem('UID');
+      zPost('/logOff',UserEnsure);
+    },
+    cancelLogOff:function(){
+      this.isWantToLogOff = false;
+    },
+
+
     closeMoreinfo:function(){
       this.moreinfoSeen=false;
     },
-    checkMoreinfo:function(){
+
+    getMoreInfo:function(){
+      console.log('2333');
+
       var data = {
         type:this.messtype,
-        check_uid:this.messto
+        uid:this.messto
       };
-      $.get("/getMoreinfo",data,function(d){
-        main.messInfo = d;
+
+      console.log(data);
+
+
+      //无法查询团队信息,会引起系统崩溃!
+      $.get("/getInfo",data,function(info){
+        console.log(info);
+        //这里的数据格式同后台数据库一致，可以直接绑定到Vue对应的data对象上
+        main.moreInfo = info;
+        console.log(main.moreInfo);
       });
-      this.moreinfoSeen=true;
+      this.moreinfoSeen = true;
     },
+
     getMoreMessage:function(){
-      var skip = document.querySelectorAll('#messageframe_cont>.messli').length;
+      //读取现有信息长度
+      var skip = document.querySelectorAll('#messageframe-cont>.messli').length;
+      console.log(skip);
+
       var data = {
-        receive_uid:uid,
-        from_uid:main.messto,
+        receiveUid:UID,
+        fromUid:main.messto,
         type:main.messtype
       };
+
+      //获取更多聊天记录
       $.get('/getMoreMessage', data, function(messages){
+        
+        console.log(messages);
+
         if(messages){
           var l = messages.length;
           for(var i=0;i<5;i++){
-            main.gotMessCreateMessDiv(messages[l-1-skip-i]);
+            //这里的做法是把与对方的聊天消息一次全部拿出来
+            //再慢慢读取
+            main.createMessDiv(messages[l-1-skip-i], true);
           }
         }else{
           main.noMoreMessage();
@@ -32,43 +66,9 @@ function v_methods(){
       });
     },
 
-    messageContentOnScroll:function(event){
-      // console.log(event);
-      
-    },
-
-    unReadAdd1InDB:function(msg_type,msg_uid,msg_to){
-      var data = {
-        type:msg_type,
-        uid:msg_uid,
-        to:msg_to,
-        checked:false
-      };
-      $.post('/unReadAdd1',data);
-    },
-
-    addUnRead:function(msg){
-      var msg_uid = msg.uid;
-      var isTeam = msg.type==='team';
-
-      this.dealUnread(msg_uid, isTeam, true);
-      this.unReadAdd1InDB(msg_type,msg.uid,msg.to);
-    },  
-
-    gotMessCreateMessDiv:function(msg){
-      if(!msg){
-        this.noMoreMessage();
-        return false;
-      }
-      var f = judgeTypeforFloatDirection(msg,uid);
-      var msgContent = main.expressionsParse(msg.content);
-      $('#messageframe_cont').prepend(v_createMessDiv(msg,f,msgContent));
-      var cont = $('#messageframe_cont')[0];
-      cont.scrollTop = 0;
-    },
-
+    //没有更多聊天记录的提示
     noMoreMessage:function(){
-        var getMessBtn = $('.getMoreMessageOnFrame_btn')[0];
+        var getMessBtn = $('.getMoreMessageOnFrame-btn')[0];
         getMessBtn.innerText = 'No More';
         setTimeout(function(){
           getMessBtn.innerText = 'Get More Message';
@@ -77,65 +77,98 @@ function v_methods(){
 
     //when the mess come, if messageFrame is opning, check the messtype and messto, 
     //if satisfy the condition, it will run this function to show the message.
-    createMessDiv:function(msg){
-      var f = judgeTypeforFloatDirection(msg,uid);
+    //插入新消息到消息内容框
+    //isTop判断是否要上插并滚动到最顶
+    createMessDiv:function(msg, isTop){
+
+      if(!msg){
+        this.noMoreMessage();
+        return false;
+      }
+
+      //根据类型和消息来源判断消息框浮动方向
+      var f = judgeTypeforFloatDirection(msg, UID);
+      console.log(msg);
+      
+      //获取消息内容框对象
+      var cont = $('#messageframe-cont')[0];
+        
+      //转翻译表情信息
       var msgContent = main.expressionsParse(msg.content);
-      $('#messageframe_cont').append(v_createMessDiv(msg,f,msgContent));
-      document.getElementById('messageframe_input').value = '';
-      var cont = document.getElementById('messageframe_cont');
-      cont.scrollTop = cont.scrollHeight;
+
+      if(isTop){
+        $(cont).prepend(vCreateMessDiv(msg, f, msgContent));
+        cont.scrollTop = 0; 
+      }else{
+        
+        //添加消息到内容框
+        $(cont).append(vCreateMessDiv(msg, f, msgContent));
+        
+        //清空输入框
+        $('#messageframe-input')[0].value = '';
+        
+        //置顶
+        cont.scrollTop = cont.scrollHeight;
+      }
+
     },
 
     expressionsParse:function(msgContent){
       while(msgContent.match(/\#\(.{1,4}\)/)){
         var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/));
-        var t = help_expressionSwitch(msgMatch.slice(2,-1));
+        
+        console.log(msgMatch.slice(2,-1));
+        var t = expressionTextToImage(msgMatch.slice(2,-1));
+
         msgContent = msgContent.replace(
           /#\(.{1,4}\)/,
-          "<div class='expression_chatting"+
-            "style='background-image:url(img/faces.png);"+ 
-            "background-position: left -"+t*30+"px; '>"+
-          "</div>"
+          `<div
+            class='expression-chatting'
+            style='background-image:url(img/faces.png); 
+              background-position:0px -${t*30}px;'
+          >
+          </div>`
           );
       }
       return msgContent;
     },
 
-    addRecentLi:function(info){
-      var havelevel = info.level;
-      var con = new Object({});
-      con.h = havelevel?'80px':'55px';
-      con.borderR = havelevel?'0%':'50%';
-      con.avator_w = havelevel?'70px':'50px';
-      con.type = havelevel?'team':'people';
 
-      $('#recent').prepend(v_addRecentLi_recent(con,info));
-      $('#recent li').first().click(function(){
-        var unread_badge = $(this).find('.badge')[0]||$(this).parent('li').find('span.badge')[0];
-        var unreadNumber = unread_badge.innerText;
-        unread_badge.innerText = '';
-        unread_badge.style.display = 'none';
-        main.moreinfoSeen=false;
-        main.messtype='recent';
-        main.messageframeSeen=true;
-        main.isteam = false;
-        main.nameOfmessageframe = this.getElementsByClassName('name')[0].innerText;
-        main.messto = this.getElementsByClassName('uid')[0].innerText;
-        main.getUnreadMess(main.messto,unreadNumber,'recent');
-        $('messageframe_cont')[0].innerHTML = '';
-      });
+
+    messageContentOnScroll:function(event){
+      // console.log(event);
+      
     },
 
-    getUnreadMess:function(get_uid,unreadNumber,type){
+    unReadAdd1InDB:function(msgType,msgUid,msgTo){
+      var data = {
+        type:msgType,
+        uid:msgUid,
+        to:msgTo,
+        checked:false
+      };
+      $.post('/unReadAdd1',data);
+    },
+
+
+    addUnRead:function(msg){
+      var msgUid = msg.uid;
+
+      this.dealUnread(msgUid, true);
+      this.unReadAdd1InDB(msg.type, msg.uid, msg.to);
+    },  
+
+
+    getUnreadMess:function(getUid,unreadNumber,type){
       var data = {
         uid:uid,
-        get_uid:get_uid,
+        getUid:getUid,
         unreadNumber:unreadNumber,
         type:type
       };
       $.get('/getUnreadMess', data, function(d){
         for(i=0;i<d.length;i++){
-          main.createMessDiv(d[i]);
+          main.createMessDiv(d[i], false);
         }
       });
     },
@@ -143,125 +176,149 @@ function v_methods(){
     //when user receive any message, run this function;
     messageCome:function(msg){
 
-      if((msg.uid===main.messto)&&(msg.type===main.messtype||msg.type!=='team'&&main.messtype==='star')||
-        msg.uid===uid&&msg.type!=='team'){
-        this.createMessDiv(msg);
+      console.log(msg);
+      if((msg.uid===main.messto) && (msg.type===main.messtype||
+          msg.type!=='team' && main.messtype==='star')||
+          msg.uid===UID && msg.type!=='team'){
+          
+          this.createMessDiv(msg, false);
+          console.log(1);
+
         if(msg.uid===uid&&msg.type==='team'&&main.messto!==msg.uid){
           this.addUnRead(msg);
+          console.log(2);
         }
+
+
       }else{
-        if(msg.type!=='team'){
+
+        if(msg.type==='team'){
           TeamMessageCome.play();
         }else{
           PersonMessageCome.play();
         }
+
+          console.log(3);
         this.addUnRead(msg);
       }
 
-      //judge the type of message,
-      var exist = false;
+      //判断是否存在于最近联系
+      var existInRecent = false;
+
       if(msg.type==='team'){
         //check whether the recent_team exist;
-        var lrt = loginlist.recent_team;
+        var lrt = Loginlist.recent_team;
         for(i=0;i<lrt.length;i++){
           if(lrt[i]===msg.uid||lrt[i]===msg.to){
-            exist = true;
+            existInRecent = true;
             break;
           }
         }
+
       }else{
+
         //check whether the recent_people exist;
-        var lrp = loginlist.recent_people;
+        var lrp = Loginlist.recent_people;
         for(i=0;i<lrp.length;i++){
           if(lrp[i]===msg.uid||lrp[i]===msg.to){
-            exist = true;
+            existInRecent = true;
             break;
           }
         }
       }
 
-      if(!exist){
-        if(msg.uid===uid){
-          //who send msg and who receive msg is the same;  
-          var d = {  
+
+      if(!existInRecent){
+        console.log(4);
+        if(msg.uid===UID){
+          //who send msg and who receive msg is the same;
+
+          //无论如何都要读取对方消息
+          var data = {  
             uid:msg.to, 
             type:msg.type
           };
-          $.get('/getInfo',d,function(data){
+
+          $.get('/getInfo',data,function(info){
             if(msg.type==='team'){
-              loginlist.recent_team.push(msg.uid);
+              Loginlist.recent_team.push(msg.uid);
             }else{
-              loginlist.recent_people.push(msg.to);
+              Loginlist.recent_people.push(msg.to);
             }
-            main.addRecentLi(data);
-            var recentFirstLiUnreadnumber = $('#recent li .name span.badge')[0];
-            recentFirstLiUnreadnumber.innerText = '';
-            recentFirstLiUnreadnumber.style.display = 'none';
+
+            info.unread = 0;
+            main.addRecentLi(info);
+          
           });
+
         }else{
           if(msg.type==='team'){
-            loginlist.recent_team.push(msg.uid);
+            Loginlist.recent_team.push(msg.uid);
           }else{
-            loginlist.recent_people.push(msg.uid);
+            Loginlist.recent_people.push(msg.uid);
           }
+          msg.unread = 1;
           this.addRecentLi(msg);
         }
       }
     },
 
+    addRecentLi:function(info){
+      main.recentInfo.unshift(info);
+    },
+
     showExpressions:function(){
       this.expressionSeen = !this.expressionSeen;
 
-        var faces = document.getElementsByClassName('messageframe_expression')[0];
-        faces.innerHTML = '';
-       
-        for(var i=0;i<50;i++){
-          var d = document.createElement('div');
-          d.style.backgroundPosition = 'left -'+i*30+'px';    
-          d.style.backgroundImage = 'url(img/faces.png)'; 
-          d.value = i;
-          d.onclick = help_addFaceMark;
-          faces.appendChild(d);
-        }
+      var faces = document.querySelector('.messageframe-expression');
+      faces.innerHTML = '';
+     
+      for(var i=0;i<50;i++){
+        var d = document.createElement('div');
+        d.style.backgroundPosition = 'left -'+i*30+'px';    
+        d.style.backgroundImage = 'url(img/faces.png)'; 
+        d.value = i;
+        d.onclick = expressionImageToText;
+        faces.appendChild(d);
+      }
     },
 
-    //when user send any message, run this function,
+    //发送消息
     sendMessage:function(){
-      var v = document.getElementById('messageframe_input').value.trim();
+      var v = document.getElementById('messageframe-input').value.trim();
       if(v.length){
         var msg = {
           time:mTime(),
           type:this.messtype,
           content:v,
           to:this.messto,
-          from:uid
+          from:UID
         };
-        var J_msg = JSON.stringify(msg);
-        socket.emit('chat',J_msg);
+        socket.emit('chat', JSON.stringify(msg));
       }
     },
 
     starOrUnstar:function(){
-      var stars = loginlist.star;
+      var stars = Loginlist.star;
       var data = {
-        uid:uid,
+        uid:UID,
         to:main.messto,
         isStar:false,
       };
-      if(main.messtype!=='team'&&stars.length){
-        for(var i=0;i<stars.length;i++){
-          if(stars[i]===main.messto){
-            data.isStar = true;
-          }
+      for(var i=0;i<stars.length;i++){
+        if(stars[i]===main.messto){
+          data.isStar = true;
+          break;
         }
       }
+
       $.post('/starOrUnstar', data, function(data_back) {
         if(data.isStar){
-          v_removeThePeopleInStar(data.to);
-          loginlist.star.pull(data.to);
+          vRemovePersonInStar(data.to);
+          Loginlist.star.pull(data.to);
         }else{
-          v_addThePeopleInStar(data_back);
-          loginlist.star.push(data.to);
+          vAddPersonInStar(data_back);
+          Loginlist.star.push(data.to);
         }
       });
     },
@@ -272,7 +329,7 @@ function v_methods(){
         to:main.messto
       };
       $.post('/deleteRecentChat',data,function(data_back){
-        v_removeThePeopleInRecent(data.to);
+        vRemoveThePeopleInRecent(data.to);
       });
       main.messageframeClose();
     },
@@ -283,8 +340,8 @@ function v_methods(){
           tid:main.messto
         };
         $.post('/exitTeam', data, function(){
-          v_removeTheTeamInList(data.tid,'recent');
-          v_removeTheTeamInList(data.tid,'team');
+          vRemoveTheTeamInList(data.tid,'recent');
+          vRemoveTheTeamInList(data.tid,'team');
           main.messageframeClose();
         });
       }
@@ -295,7 +352,7 @@ function v_methods(){
       $.get('/showMembers',{ tid:main.messto }, function(_infos) {
         var teamMembers_ul = document.querySelector('.teamMembers>ul');
         for(var i=0;i<_infos.length;i++){
-          $(teamMembers_ul).append(v_teamMembers_template(_infos[i]));         
+          $(teamMembers_ul).append(vTeamMembersTemplate(_infos[i]));         
         }
       });
     },
@@ -313,8 +370,8 @@ function v_methods(){
       this.messto='';
 
       $('.messageframe')[0].style.height = '0%';
-      $('#messageframe_cont')[0].innerHTML = '';
-      $('#messageframe_input')[0].value = '';
+      $('#messageframe-cont')[0].innerHTML = '';
+      $('#messageframe-input')[0].value = '';
     },
 
     //hide the domore model,
@@ -330,8 +387,9 @@ function v_methods(){
       this.messShowType = type;
     },
 
-    dealUnread:function(uid,isTeam,bool=false){
-      if(isTeam){
+    //参数bool判断是否需要增加对应的未读数量
+    dealUnread:function(uid, bool=false){
+      if(this.isTeam){
         for(let i of this.teamInfo){
           if(i.uid === uid){
             if(bool){

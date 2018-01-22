@@ -2,6 +2,7 @@ var people = new Vue({
      el:'.container',
      data:{
           name:name,
+          personHeadImage:PersonHeadImage,
           introduce:introduce,
           sex:sex,
           hobby:hobby,
@@ -10,15 +11,13 @@ var people = new Vue({
           // headImageData:''
      },
      methods:{
-          showPeopleHeadForm:function(){
-		   $('#peopleHeadForm')[0].style.display = 'block';
+          backToMainPage:function(){
+               zPost('/main',UserEnsure);
+          },
+          showPersonHeadForm:function(){
+             $('#peopleHeadForm')[0].style.display = 'block';
           },
 
-          backToMainPage:function(){
-               zPost('/main',{
-                    uid:Uid
-               });
-          },
 
           showCheckImg:function(){
                $('#checkImg')[0].style.height = '200px';
@@ -26,7 +25,17 @@ var people = new Vue({
           hideCheckImg:function(){
                $('#checkImg')[0].style.height = '0px';
           },
-
+          checkImg:function(e){
+               var r = new FileReader();
+               // this.headImageData = e.target.files[0];
+               // console.log(this.headImageData);
+               r.readAsDataURL(e.target.files[0]);
+               var t = this;
+               r.onload = function(e){
+                    t.showCheckImg();
+                    $('#checkImg')[0].src=this.result;
+               };
+          },
           hideHeadForm:function(){
                this.hideCheckImg();
                $('#peopleHeadForm')[0].style.display = 'none';
@@ -35,7 +44,7 @@ var people = new Vue({
           headImageUpdate:function(event){
                var formData = new FormData();
                formData.append('avator', $('#avatorInput')[0].files[0]);
-               formData.append('uid',Uid);
+               formData.append('uid',UID);
 
                var t = this;               
                $.ajax({
@@ -79,7 +88,7 @@ var people = new Vue({
                }else{
 
                     var data = {
-                         uid:Uid,
+                         uid:UID,
                          name:this.name,
                          introduce:this.introduce,
                          sex:this.sex,
@@ -100,16 +109,6 @@ var people = new Vue({
                } 
           },
 
-          checkImg:function(e){
-               var r = new FileReader();
-               // this.headImageData = e.target.files[0];
-               // console.log(this.headImageData);
-               r.readAsDataURL(e.target.files[0]);
-               var t = this;
-               r.onload = function(e){
-                    t.showCheckImg();
-                    $('#checkImg')[0].src=this.result;
-               };
-          }
+
      }
 });

@@ -1,9 +1,9 @@
-var SearchContent = {
+var SearchContentComponent = {
   template:
     `<div id='search-content' >
       <div id='search' v-on:keyup.enter='getSearchResponse'>
       <button
-        id='sub'
+        id='search-sub'
         v-on:click='getSearchResponse'
       >
         <span class='glyphicon glyphicon-search' aria-hidden='true'></span>
@@ -44,7 +44,15 @@ var SearchContent = {
     getSearchResponse:function(){
       $('#search-team-info').html('');
       $('#search-person-info').html('');
+      
       if(this.searchId === ''){
+        return false;
+      }
+
+      if(this.searchId === UID){
+        $('#search-person-info').html(
+          "<div class='alert alert-info' role='alert'>无法查询你自己</div>"
+          );
         return false;
       }
 
@@ -53,7 +61,7 @@ var SearchContent = {
       $('#search-info')[0].style.display = 'block';
 
       var t = this;
-      $.get("/search",{ uid:this.searchId },function(d){
+      $.get("/search",{uid:this.searchId },function(d){
         var team = d.team;
         var person = d.person;
         t.createSearchTeamInfo(team);
@@ -61,22 +69,26 @@ var SearchContent = {
         t.createSearchPersonInfo(person);
         t.setSearchPersonStatus(person);
       });
+
     },
     
-    createSearchTeamInfo:function(team){
-      $('#search-team-info').html(v_createSearchTeamInfo_template(team));
+    createSearchPersonInfo:function(person){
+      $('#search-person-info').html(vCreateSearchPersonInfoTemplate(person));
     },
 
-    createSearchPersonInfo:function(person){
-      $('#search-person-info').html(v_createSearchPersonInfo_template(person));
+    createSearchTeamInfo:function(team){
+      $('#search-team-info').html(vCreateSearchTeamInfoTemplate(team));
     },
 
     setSearchTeamStatus:function(team){
-      if(!team){ return false; }
+      if(!team){
+        return false;
+      }
+
       var t = this;
       $('#join').click(function(){
         var data = {
-          uid:uid,
+          uid:UID,
           tid:t.searchId
         };
         $.get('/joinJudge',data,function(judge){
@@ -98,6 +110,7 @@ var SearchContent = {
       $('#send').click(function(){
 
         main.messageframeSeen = true;
+        document.querySelector('.messageframe').style.height='100%';
         main.messtype = 'recent';
         main.messto = t.searchId;
         main.nameOfmessageframe = $(this).siblings('#pinfo').find('#name').text();
@@ -108,9 +121,10 @@ var SearchContent = {
         var stars = loginlist.star;
         var isStar = false;
         var data = { 
-          sid:searchComponent.searchId,
+          sid:t.searchId,
           uid:uid
         };
+        
         if(stars.length){
           for(var i=0;i<stars.length;i++){
             if(stars[i]===data.sid){

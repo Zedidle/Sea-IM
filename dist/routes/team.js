@@ -26,137 +26,258 @@ router.post('/myteam',urlencodedParser,(req,res)=>{
 	// LIB.check(data,'myteam');
 
 	//set the variable to recored,
-	var teamids = [],teaminfo = [];
-	Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		teamids = detail[0].team
-		LIB.check(teamids,'my joined teams:')
-		teamids.forEach((teamid)=>{
-			Team.find({uid:teamid},null,{limit:1},(err,detail)=>{ teaminfo.push(detail[0]); }) 
-		});
-	});
-	//use the recursion to LIB.check whether teaminfo satisfy the conditions to render the page,
- 	(function render(){
- 		setTimeout(function(){
- 			if(teaminfo.length === teamids.length){
- 				res.render('myteam.ejs',{ uid:data.uid, teaminfo:JSON.stringify(teaminfo), })
- 			}else{ render(); }
- 		},50);
- 	})();
-})
+	var teamids = [],teaminfos = [];
+	Loginlist.find(
+		{
+			uid:data.uid
+		},
+		null,
+		{
+			limit:1
+		},
+		function(err,loginlist){
+			if(err) throw err;
+
+			teamids = loginlist[0].team
+			LIB.check(teamids,'my joined teams:');
+
+			teamids.forEach((teamid)=>{
+				Team.find(
+					{
+						uid:teamid
+					},
+					null,
+					{
+						limit:1
+					},
+					function(err,teaminfo){
+						if(err) throw err;
+
+						teaminfos.push(teaminfo[0]);
+
+					}
+				);
+			});
+
+			(function render(){
+				if(teaminfos.length === teamids.length){
+					res.render('myteam.ejs',{ 
+	 					uid:data.uid,
+	 					teaminfos:JSON.stringify(teaminfos)
+	 				});
+	 			}else{
+		 			setTimeout(function(){
+		 				render();
+		 			},50);
+	 			}
+			})();
+			
+		}
+	);
+});
 
 
 //used by public/js/myteam.js g73, 
-//the page of teams to finish the information of the team, 
-router.post('/teams',urlencodedParser,(req,res)=>{
-	var data = req.body;
-	Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{ 
-		res.render('teams.ejs',detail[0]);
+//the page of teams to finish the information of the team,
+//获取团队信息
+router.get('/teams', (req,res)=>{
+	var uid = req.query.uid;
+
+	Team.find({uid},null,{limit:1},(err,team)=>{ 
+		if(err) throw err;
+		LIB.check(team[0],'team:');
+		res.render('teams.ejs',team[0]);
 	});
-})
+});
+
 
 //used by public/js/teams.js g4,
 //upload the portrait of the team,
-router.post('/teamsI',upload.any(),(req,res)=>{
-	var data = req.body;
+
+//更新团队图片
+router.post('/teamsImageUpdate',upload.any(),(req,res)=>{
+	var uid = req.body.uid;
 	var image = req.files[0];
-	var datapath = image.path;
-	var savepath = 'dist/'+image.destination+image.filename;
+
 	var readpath = 'img/uploads/'+image.filename;
-	fs.readFile(datapath,(err,image_data)=>{
-		fs.writeFile(savepath,image_data,(err)=>{
-			Team.update({uid:data.uid},{$set:{headImg:readpath}},err=>{
-				Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-					res.render('teams.ejs',detail[0]);
-				})
-			});
-		})
-	})
+
+	Team.update( { uid }, { $set:{ headImg:readpath }},(err) => {
+		if(err) throw err;
+		res.send(readpath);
+	});
 });
 
 
 //used by public/js/teams.js g88,
 //upload the content of the team,
-router.post('/teamsT',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
+//更新团队内容
+router.post('/teamsTextUpdate',urlencodedParser,(req,res)=>{
+	var data = req.body;
 	LIB.check(data,'content of the team:');
-	res.send(req.body.J_data);
-	Team.update({uid:data.uid},{$set:data},(err)=>{})
-})
+	Team.update({uid:data.uid},{$set:data},(err)=>{
+		if(err) throw err;
+		res.send(true);
+	});
+});
 
 
-//used by public/js/main.js g79,
+//used by public/js/main.js,
 router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
 	// LIB.check(data,'deal with team:');
-	//get the teams the user has joined in,
-	Loginlist.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		var teamIds = detail[0].team; 
-		var j = false;
-		//judge if the team is set up by the user,
-		for(var teamid of teamIds){
-			if(teamid===data.uid){ j = true; break; }
-		}
-		var page_ejs = j?'tipDealWithTeam.ejs':'buildteam.ejs';
-		res.render(''+page_ejs,{ uid:data.uid });
-	})
+
+	Loginlist.find(
+		{
+			uid:data.uid
+		},
+		null,
+		{
+			limit:1
+		},
+		function(err,loginlist){
+			if(err) throw err;
+			LIB.check(loginlist,'loginlist');
+
+			var teamIds = loginlist[0].team; 
+			var j = false;
+
+			for(var teamid of teamIds){
+				if(teamid===data.uid){
+					j = true;
+					break;
+				}
+			}
+
+			var ejs = j?'tipDealWithTeam.ejs':'buildteam.ejs';
+			res.render( ejs, {
+				uid:data.uid
+			});
+		})
 })
 
 
-//used by views/ubildTeam.ejs g38,
-router.post('/successB',urlencodedParser,(req,res)=>{
+//used by views/ubildTeam.ejs,
+router.post('/successBuildTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
 
-	// LIB.check(data,'success to build a team:')
+	var uid = data.uid;
+	var teamname = data.teamname;
+	var password = data.password;
+
+	LIB.check(data,'success to build a team:');
 
 	var team = new Team({
-		headImg:'/img/defaultHead.jpg',
-		uid:data.uid,
-		name:data.teamname,
-		password:data.password,
+		headImg:'/img/teamDefaultHead.jpg',
+		uid : uid,
+		name: teamname,
+		password:password,
 		level:1,
 		member:[data.uid],
-		membernumber:1,
-		introduce:'This team does not have a introduce presently',
+		introduce:'队长没有什么要说。'
 	});
-	var tmessage = new Tmessage({ uid:data.uid, mess:[], });
-	Loginlist.update({uid:data.uid},{$push:{team:data.uid}},(err)=>{})
-	Unread.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		var tunRead = detail[0]['tunRead'];
-		LIB.check(tunRead,'tunRead of the user: ');
-		tunRead[data.uid]=0;
-		Unread.update({uid:data.uid},{$set:{tunRead}},(err)=>{});
-	})
+	
+	var tmessage = new Tmessage({
+		uid:uid,
+		mess:[]
+	});
+
+	Loginlist.update(
+		{
+			uid: uid
+		},
+		{
+			$push:{
+				team: uid
+			}
+		},
+		function(err){
+			if(err) throw err;
+		}
+	);
+	
+	Unread.find(
+		{
+			uid:uid
+		},
+		null,
+		{
+			limit:1
+		},
+		function(err,unread){
+			if(err) throw err;
+			console.log(unread);
+			var tunRead = unread[0]['tunRead'];
+			LIB.check(tunRead,'tunRead of the user:');
+
+			tunRead[uid] = 0;
+			Unread.update(
+				{
+					uid:data.uid
+				},
+				{
+					$set:{
+						tunRead
+					}
+				},
+				function(err){
+					if(err) throw err;
+					res.render('successBuildTeam.ejs',{
+					});
+				}
+			);
+
+		}
+	);
+
 	team.save();
 	tmessage.save();
-	res.render('successB.ejs',{ uid:data.uid, })
-})
 
 
-//used by views/tipDealWithTeam.js g55,
-//dismiss my own team
-router.post('/dismissTeam',urlencodedParser,(req,res)=>{
-	var data = req.body;
-	Team.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		res.render('dismissTeam.ejs',{
-			uid:data.uid,
-			pw:detail[0].password,
-		})
-	})
-})
+});
 
 
 
+
+
+//退出团队
 router.post('/exitTeam',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	Team.update({uid:data.tid},{
-		$pull:{member:data.uid}
-		,$inc:{membernumber:-1}
-	},err=>{});
-	Loginlist.update({uid:data.uid},{$pull:{recent_team:data.tid,team:data.tid}},err=>{});
+	Team.update(
+		{
+			uid:data.tid
+		},
+		{
+			$pull:{
+				member:data.uid
+			},
+			$inc:{
+				membernumber:-1
+			}
+		},
+		function(err){
+			if(err) throw err;
+		}
+	);
+	Loginlist.update(
+		{
+			uid:data.uid
+		},
+		{
+			$pull:{
+				recent_team:data.tid,
+				team:data.tid
+			}
+		},
+		function(err){
+			if(err) throw err;
+		}
+	);
 	res.send(true);
 })
 
 
+
+//查看团队成员
 router.get('/showMembers', (req,res) => {
 
 	var tid = req.query.tid;
@@ -178,25 +299,38 @@ router.get('/showMembers', (req,res) => {
 
 
 
+//used by views/tipDealWithTeam.js,
+//解散团队
+router.get('/dismissTeam', (req,res)=>{
+	var uid = req.query.uid;
+	console.log(req.query);
 
+	Team.find({uid},'password',{limit:1},(err,team)=>{
+		if(err) throw err;
 
+		res.render('dismissTeam.ejs',{
+			team_password:team[0].password,
+		});
+	})
+});
 
-
-//used by views/dismissTeam.ejs g51,
-router.post('/success_dismissTeam',urlencodedParser,(req,res)=>{
+//used by views/dismissTeam.ejs,
+router.post('/successDismissTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
 	console.log(data);
 
 	Team.find({uid:data.ID},null,{limit:1},(err,detail)=>{
 		var members = detail[0].member;
 		members.forEach(userid=>{
-			Loginlist.update({uid:userid},{$pull:{team:userid}},err=>{
+			Loginlist.update({uid:userid},{$pull:{team:userid}},(err)=>{
 				console.log(userid + ' quit whit the team '+data.ID);				
 			});
 		})
 		Team.remove({uid:data.ID},(err)=>{
 			console.log('success to delete the team in DB');
-			res.render('success_dismissTeam.ejs',{ uid:data.ID })
+			res.render('successDismissTeam.ejs',{
+				uid:data.ID
+			});
 		})
 	})
 })

@@ -29,7 +29,6 @@ router.get('/',(req,res)=>{
 //used by public/js/login.js g5,
 router.get('/regist',(req,res)=>{ 
 	res.render('regist.ejs',{  
-		uid_tip:'' 
 	}); 
 });
 
@@ -38,69 +37,59 @@ router.get('/checkUidIsUsed', urlencodedParser, (req,res)=>{
 	var uidEnsure = req.query;
 	User.find(uidEnsure, null, {limit:1} ,(err,uid) =>{
 		res.send(Boolean(uid.length));
-	})
-})
+	});
+});
 
 //used by views/regist.ejs g58,
-router.post('/registInfo', urlencodedParser, (req,res)=>{
+router.post('/successRegist', urlencodedParser, (req,res)=>{
 
 	var uid = req.body.uid;
 	var password = req.body.password;
 
-	new Promise((resolve)=>{
-		User.find({uid},null, { limit:1 },(err, id_status)=>{
-			if(err) throw err;
-			resolve(id_status[0]?true:false);
-		});
-  	}).then((isUserExist) => {
-		if(isUserExist){
-			res.render('regist.ejs',{ 
-				uid_tip:'用户名已被占用'
-			});
-		}else{
-			var hash = crypto.createHash('sha1');
-			hash.update(password)
-			var pwd = hash.digest('hex');
+	var hash = crypto.createHash('sha1');
+	hash.update(password)
+	var pwd = hash.digest('hex');
 
-			var user = new User({
-				uid,
-				password:pwd,
-				login:false,
-			});
-			var unread = new Unread({
-				uid,
-				punRead:{"0":"0",},
-				tunRead:{"0":"0",},
-			}); 
-			var people = new People({
-				uid,
-				sex : '保密',
-		    	name : 'User'+Math.random()*Math.random()*10000,
-		    	introduce:'这家伙很懒,什么也没有写．',
-		    	hobby : '保密',
-		    	birthday : '保密',
-			});
-			var loginlist = new Loginlist({ 
-				uid,
-				recent_people:[],
-				recent_team:[],
-				star:[], 
-				team:[]
-			});
-			var message = new Message({
-				uid,
-				mess:{'0':'0'}
-			});
-			user.save((err)=>{
-				res.render('registInfo.ejs', {
-				});
-			});
-			unread.save();
-			people.save();
-			loginlist.save();
-			message.save();
-		}
+	var user = new User({
+		uid,
+		password:pwd,
+		login:false,
 	});
+	var unread = new Unread({
+		uid,
+		punRead:{"0":"0",},
+		tunRead:{"0":"0",},
+	}); 
+	var people = new People({
+		uid,
+		sex : '保密',
+    	name : 'User'+Math.random()*Math.random()*10000,
+    	introduce:'这家伙很懒,什么也没有写．',
+    	hobby : '保密',
+    	birthday : '保密',
+	});
+	var loginlist = new Loginlist({ 
+		uid,
+		recent_people:[],
+		recent_team:[],
+		star:[], 
+		team:[]
+	});
+	var message = new Message({
+		uid,
+		mess:{'0':'0'}
+	});
+	user.save((err)=>{
+		res.render('successRegist.ejs', {
+			uid:uid,
+			password:password
+		});
+	});
+	unread.save();
+	people.save();
+	loginlist.save();
+	message.save();
+
 });
 
 

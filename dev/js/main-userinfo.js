@@ -1,23 +1,38 @@
-var UserInfo = {
-  props:['user_info'],
+var UserInfoComponent = {
+  props:{
+    info:Object
+  },
   template:
-    `<div v-bind:class='{userinfo_wrap:true}'>
-      <div v-bind:class='{userinfo_avator:true}'>
-        <img v-bind:class='{userinfo_avator_img:true}' v-bind:src='info.headImg'>
-      </div>
-      <div id='intro' v-bind:class='{userinfo_intro:true}'>
-        <div id='name'>
-          <div id='nick_name'>{{info.name}}</div>
+    `<div
+      class='user-wrap'
+    >
+      <img
+        id='user-avator'
+        v-bind:src='info.headImg'
+      >
+    
+      <div
+        id='user-intro'
+        v-bind:class='{userinfo_intro:true}'
+      >
+        <div id='user-nickname'>{{info.name}}</div>
+        
+        <div
+          id='user-introduce'
+        >{{info.introduce}}
         </div>
-        <div id='introduce' v-bind:class='{userinfo_introduce:true}'>{{info.introduce}}</div>
       </div>
-      <div id='set' v-bind:class='{userinfo_set:true}' v-on:click='toggleDomore' >
+
+      <div
+        id='user-set'
+        v-on:click='toggleDomore'
+      >
         <span class='glyphicon glyphicon-list' aria-hidden='true'></span>
       </div>
+    
     </div>`,
   data:function(){
     return {
-      info:JSON.parse(jsonKeep(this.user_info))
     };
   },
   methods:{

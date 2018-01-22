@@ -59,6 +59,8 @@ io.on('connection', function(socket){
     //1.服务器接收格式化了的消息，并解格式化；
     var msg = JSON.parse(J_msg);
     console.time(1);
+    console.log(msg);
+
     People.find({uid:msg.from}, null, {limit:1}, (err, pinfo) => {
       if(err) throw err;
       var p = pinfo[0];
@@ -72,7 +74,10 @@ io.on('connection', function(socket){
         time:msg.time,
         content:msg.content,
         introduce:p.introduce
-      },
+      };
+
+      LIB.check(m,'Consistent message');
+
       J_m = JSON.stringify(m);
       console.timeEnd(1);
       // 3.判断消息来自于团队还是个人，从而进入不同的处理分支；
@@ -80,16 +85,20 @@ io.on('connection', function(socket){
         // 1.如果来自于个人，则判断接收者是否在线，在线则直接把消息结构体发送给接收者，否则使得接收者对应未读消息+1；
         User.find({uid:msg.to}, null, {limit: 1}, (err,detail) => {
           if(err) throw err;
+
           if(detail[0].login){
             io.emit(msg.to,J_m);
           }else{
             Unread.find({uid:msg.to}, 'punRead', {limit:1}, (err,detail) => {
               if(err) throw err;
+
               var punRead = detail[0].punRead;
               if(!punRead[msg.from]){
                 punRead[msg.from] = 0;
               }
-              punRead[msg.from] = punRead[msg.from] + 1;
+              
+              punRead[msg.from]++;
+
               Unread.update(
                 {
                   uid:msg.to
@@ -113,6 +122,7 @@ io.on('connection', function(socket){
         // 3.更新通讯双方对应的消息记录；
         Message.find({uid:msg.to}, null, {limit:1}, (err, reveiver_mess) => {
           if(err) throw err;
+
           let mess = reveiver_mess[0].mess;
           if(!mess[msg.from]){ 
             mess[msg.from]=[];
@@ -121,9 +131,11 @@ io.on('connection', function(socket){
           Message.update({uid:msg.to}, {$set:{mess}}, (err) => {
             if(err) throw err;
           });
-        })
+        });
+
         Message.find({uid:msg.from}, null, {limit:1}, (err, sender_mess) => {
           if(err) throw err;
+        
           let mess = sender_mess[0].mess;
           if(!mess[msg.to]){
             mess[msg.to]=[];
@@ -176,6 +188,7 @@ io.on('connection', function(socket){
         //if this message is come from a team.
         // 1.如果来自于团队，则读取团队中的成员列表；
         console.time('Team');
+        
         Team.find({uid:msg.to}, 'member', (err,detail) => {
           var members = detail[0].member;
           var tm = m;

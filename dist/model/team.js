@@ -13,7 +13,6 @@ var teamSchema = new Schema({
     password:String,
     level:Number,
     member: Array,
-    membernumber:Number,
     introduce:String,
 });
 
