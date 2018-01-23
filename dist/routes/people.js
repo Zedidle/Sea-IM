@@ -45,7 +45,7 @@ router.post('/peopleImageUpdate', upload.any(), (req,res) => {
 	var uid = req.body.uid;
 	var image = req.files[0];
 	var readpath = 'img/uploads/'+image.filename;
-
+	console.log(image);
 	People.update({ uid }, { $set:{ headImg:readpath }}, (err) => {
 		if(err) throw err;
 		res.send(readpath);
