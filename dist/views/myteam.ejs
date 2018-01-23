@@ -42,16 +42,17 @@
                     />
                     <div class='info'>
                         <div class='teamname'>
-                            Teamname: {{buildTeam.name}}
+                            团队名称: {{buildTeam.name}}
                         </div>
                         <div class='level'>
-                            Level: {{buildTeam.level}}
+                            等级: {{buildTeam.level}}
                         </div>
                         <div class='membernumber'>
-                            Member number: {{buildTeam.membernumber}}
+                            成员数量: {{buildTeam.membernumber}}
                         </div>
                         <div class='introduce'>
-                            Introduce: {{buildTeam.introduce}}
+                            <h4>队长豪言：</h4>
+                            {{buildTeam.introduce}}
                         </div>
                     </div>
                 </div>
@@ -73,10 +74,13 @@
                     
                         <div class='info'>
                             <div class='id'>ID: {{i.uid}}</div>
-                            <div class='teamname'>Teamname: {{i.name}}</div>
-                            <div class='level'>Level: {{i.level}}</div>
-                            <div class='membernumber'>Member number: {{i.membernumber}}</div>
-                            <div class='introduce'>Introduce: {{i.introduce}}</div>
+                            <div class='teamname'>团队名称: {{i.name}}</div>
+                            <div class='level'>等级: {{i.level}}</div>
+                            <div class='membernumber'>成员数量: {{i.membernumber}}</div>
+                            <div class='introduce'>
+                                <h4>队长豪言：</h4>
+                                {{i.introduce}}
+                            </div>
                         </div>
                     </div>
                 </div>

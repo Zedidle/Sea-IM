@@ -120,12 +120,19 @@
 		text-align: center;
 		cursor:pointer;
 		padding:0 0.5em 0 0.5em;
-		box-shadow: 0 0 2px #60B199;
-		border-radius: 0.2em;
+		box-shadow: 0 0 2px #999;
 		border:1px solid #90C1C9;
+		border-radius: 0.2em;
 		position: absolute;
 		top:45px;
 		left:40%;
+		z-index:1000000;
+		&:hover{
+			padding:0 2em 0 2em;
+			box-shadow: 0 0 10px #999;
+			border-radius: 45%;
+			font-size:12px;
+		}
 		@media(max-width:420px){
 			left:27%;
 		}
@@ -192,6 +199,7 @@
 			padding:0.2em;
 			margin-bottom:0.4em;
 			width:100%;
+			transform:translateY(-20%);
 			.avator{
 				width:60px;
 				padding-top: 0.2em;

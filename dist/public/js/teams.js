@@ -96,8 +96,9 @@ var teams = new Vue({
 
         subBtnActive:function(text){
             this.subBtnText = text;
+            var vm = this;
             setTimeout(function(){
-                this.subBtnText = '更新';
+                vm.subBtnText = '更新';
             },3000);
         },
 

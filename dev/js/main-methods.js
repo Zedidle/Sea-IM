@@ -159,13 +159,16 @@ function vMethods(){
     },  
 
 
-    getUnreadMess:function(getUid,unreadNumber,type){
+    getUnreadMess:function(getUid,unread,type){
       var data = {
         uid:uid,
         getUid:getUid,
-        unreadNumber:unreadNumber,
+        unread:unread,
         type:type
       };
+
+      console.log(data);
+      
       $.get('/getUnreadMess', data, function(d){
         for(i=0;i<d.length;i++){
           main.createMessDiv(d[i], false);

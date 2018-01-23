@@ -19,32 +19,36 @@
         float: left;
         width:220px;
         height:220px;
-        margin-right: 2em;
-
+        margin: 0 2em 2em;
     }
     .info{
         display: inline-block;
         float: left;
         width:60%;
         min-width:200px;
-        padding-left: 1em;
+        border-left:2px solid #999;
+        padding:1rem;
+        @media(max-width:768px){
+            border-left:none;
+            border-top:2px solid #999;
+        }
 
         .teamname{
             display: block;
-            font-size:1.3em;
+            font-size:1.2em;
             margin:0.1em 0;
         }
         .level{
             display: block;
-            font-size:1.3em;
+            font-size:1.2em;
         }
         .membernumber{
             display: block;
-            font-size:1.3em;
+            font-size:1.2em;
         }
         .major{
             display: block;
-            font-size:1.3em;
+            font-size:1.2em;
             margin:0.1em 0;
         }
         .introduce{

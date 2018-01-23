@@ -62,13 +62,17 @@ router.post('/unReadAdd1', urlencodedParser, (req, res) => {
 //used by public/js/main.js,
 router.get('/getUnreadMess', (req,res) => {
 	var data = req.query;
-	var unrN = data.unreadNumber;
+	var unread = parseInt(data.unread);
 	var mess = [];
 
+	if(!unread){
+		res.send(mess)
+	}
+	
 	if(data.type==='team'){
 		Tmessage.find(
 			{
-				uid:data.get_uid
+				uid:data.getUid
 			},
 			null,
 			{	
@@ -77,9 +81,9 @@ router.get('/getUnreadMess', (req,res) => {
 			function(err,detail){
 				if(err) throw err;
 				var m = detail[0].mess;
-				while(unrN&&m){
+				while(unread&&m){
 					mess.unshift(m.pop());
-					unrN -= 1;
+					unread--;
 				}
 				res.send(mess);
 			}
@@ -95,10 +99,10 @@ router.get('/getUnreadMess', (req,res) => {
 			},
 			function(err,detail){
 				if(err) throw err;
-				var mf = detail[0].mess[data.get_uid];
-				while(unrN&&mf){
+				var mf = detail[0].mess[data.getUid];
+				while(unread&&mf){
 					mess.unshift(mf.pop());
-					unrN -= 1;
+					unread--;
 				}
 				res.send(mess);
 			}

@@ -19,7 +19,7 @@ var MessLisComponent = {
       <li
         v-for='i in info'
         :key='i.uid'
-        v-on:click='showMessageFrame($event,i.uid,i.level,i.name,i.unread)'
+        v-on:click='openMessage($event,i.uid,i.level,i.name,i.unread)'
         v-bind:style='liHeight(i.level)'
       >
         <div class='info'>
@@ -108,9 +108,11 @@ var MessLisComponent = {
     //  hasLevel:只有团队才有等级,判断是否是一个团队对象
     //  receiverName:对应接收者的名称，用于聊天框顶部标明在和谁聊天
     //  unread:未读数量,根据未读数量截取聊天记录中的对应消息
-    showMessageFrame:function(event, liUid, hasLevel, receiverName, unread){
+    openMessage:function(event, liUid, hasLevel, receiverName, unread){
       main.moreinfoSeen = false;
       // this.$emit('dealU', liUid, hasLevel);
+
+      console.log(arguments);
 
       main.dealUnread(liUid,hasLevel);
       this.subUnreadInDB(liUid, hasLevel);
@@ -126,7 +128,11 @@ var MessLisComponent = {
 
       main.messto = liUid;
 
-      main.getUnreadMess(main.messto, unread, main.messtype);
+      console.log(typeof unread);
+      console.log('unread:'+unread);
+      if(unread){
+        main.getUnreadMess(main.messto, unread, main.messtype);
+      }
     },
   },
 };
