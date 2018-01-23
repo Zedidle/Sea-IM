@@ -66,9 +66,10 @@ router.get('/getUnreadMess', (req,res) => {
 	var mess = [];
 
 	if(!unread){
-		res.send(mess)
+		res.send(mess);
 	}
-	
+	console.log(data);
+
 	if(data.type==='team'){
 		Tmessage.find(
 			{
@@ -99,6 +100,7 @@ router.get('/getUnreadMess', (req,res) => {
 			},
 			function(err,detail){
 				if(err) throw err;
+				console.log(detail);
 				var mf = detail[0].mess[data.getUid];
 				while(unread&&mf){
 					mess.unshift(mf.pop());

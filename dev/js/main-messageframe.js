@@ -39,12 +39,12 @@ $('#main').append(`
     </div> 
 
     <div class='messageframe-say'>
-      <div
+      <button
       	class='messageframe-face'
       	v-on:click='showExpressions'
       >
       	<span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> 
-      </div>
+      </button>
 
       <input
       	id='messageframe-input'

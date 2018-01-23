@@ -120,16 +120,22 @@ io.on('connection', function(socket){
 
         //add the message to the receiver and sender.
         // 3.更新通讯双方对应的消息记录；
+        // 4.如果之前都没建立过通讯的话，则双方登记对方
         Message.find({uid:msg.to}, null, {limit:1}, (err, reveiver_mess) => {
           if(err) throw err;
 
           let mess = reveiver_mess[0].mess;
+
+          console.log('reveiver:'+ mess);
+
+
           if(!mess[msg.from]){ 
             mess[msg.from]=[];
           }
           mess[msg.from].push(m);
           Message.update({uid:msg.to}, {$set:{mess}}, (err) => {
             if(err) throw err;
+            console.log('reveiver update message;')
           });
         });
 
@@ -137,12 +143,17 @@ io.on('connection', function(socket){
           if(err) throw err;
         
           let mess = sender_mess[0].mess;
+
+          console.log('sender:'+mess);
+
+
           if(!mess[msg.to]){
             mess[msg.to]=[];
           }
           mess[msg.to].push(m);
           Message.update({uid:msg.from}, {$set:{mess}}, (err) => {
             if(err) throw err;
+            console.log('sender update message;')
           });
         });
 

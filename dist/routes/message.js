@@ -20,8 +20,8 @@ const router = express.Router();
 
 
 
-router.get('/getMoreMessage', (req,res)=>{
-	var data = req.query;
+router.post('/getMoreMessage', urlencodedParser, (req,res)=>{
+	var data = req.body;
 	console.log(data);
 
 	var receiveUid = data.receiveUid;

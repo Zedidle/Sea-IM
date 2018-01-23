@@ -131,8 +131,26 @@ var MessLisComponent = {
       console.log(typeof unread);
       console.log('unread:'+unread);
       if(unread){
-        main.getUnreadMess(main.messto, unread, main.messtype);
+        this.getUnreadMess(main.messto, unread, main.messtype);
       }
+    },
+
+    getUnreadMess:function(getUid,unread,type){
+      var data = {
+        uid:UID,
+        getUid:getUid,
+        unread:unread,
+        type:type
+      };
+
+      console.log('Data of get unread Messages:');
+      console.log(data);
+
+      $.get('/getUnreadMess', data, function(d){
+        for(i=0;i<d.length;i++){
+          main.createMessDiv(d[i], false);
+        }
+      });
     },
   },
 };

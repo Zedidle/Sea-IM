@@ -49,7 +49,7 @@ function vMethods(){
       };
 
       //获取更多聊天记录
-      $.get('/getMoreMessage', data, function(messages){
+      $.post('/getMoreMessage', data, function(messages){
         
         console.log(messages);
 
@@ -159,22 +159,7 @@ function vMethods(){
     },  
 
 
-    getUnreadMess:function(getUid,unread,type){
-      var data = {
-        uid:uid,
-        getUid:getUid,
-        unread:unread,
-        type:type
-      };
 
-      console.log(data);
-      
-      $.get('/getUnreadMess', data, function(d){
-        for(i=0;i<d.length;i++){
-          main.createMessDiv(d[i], false);
-        }
-      });
-    },
 
     //when user receive any message, run this function;
     messageCome:function(msg){
