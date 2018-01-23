@@ -103,6 +103,7 @@
 				color:#fff;
 				background-color: @seaBlue;
 				&:hover{
+					background-color: @lightBlue;
 					border-color:@modernBlue;
 				}
 			}
@@ -146,6 +147,8 @@
 				width:100%;
 			}
 			.user-wrap{
+				box-shadow: 0 0 3px #999;
+				margin-bottom:6px;
 				height:80px;
 				#user-avator{
 				    float: left;
@@ -166,7 +169,7 @@
 					float: left;
 					overflow: hidden;
 					@media(max-width:768px){
-						width:140px;
+						width:130px;
 					}
 					#user-nickname{
 						font-size:1.2em;
@@ -187,11 +190,11 @@
 					font-size: 3rem;
 					line-height: 7rem;
 					cursor: pointer;
+					box-shadow: 0 0 2px #999;
 					&:hover{
+						background-color: #F6F6F6;
 						color:@happyBlue;
-					}
-					&:active{
-						color:#FFE;
+						box-shadow: 0 0 4px #999;
 					}
 				}
 			}
@@ -203,7 +206,9 @@
 			height: 4.4rem;
 			width: 100%;
 			border-top:2px solid @seaBlue;
+			box-shadow: 0 0 5px #999;
 			@messOptionWidth:33.3%;
+
 			.sOption{
 				text-align: center;
 				position: absolute;
@@ -212,10 +217,10 @@
 				font-size:18px;
 				padding:10px;
 				cursor:pointer;
-				background-color:@deepSeaBlue;
+				background-color:@lightSeaBlue;
 				color:#fff;
 				&:hover{
-					background-color:@deepBlue;
+					background-color:@lightBlue;
 				}
 				&:first-child{
 					color:@seaBlue;
