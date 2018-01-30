@@ -1,0 +1,297 @@
+@import "config.less";
+
+.container{
+    border:3px solid @deepBlue;
+	background-color:@lightGray;
+	padding:0;
+	width: auto;
+	@media (max-width:450px){
+		width:100%;
+	}
+
+	.logOffJudgeHide{
+		position: absolute;
+		height:0px;
+		width:0px;
+		left:350px;
+		top:80px;
+		overflow: hidden;
+	}
+	.logOffJudgeShow{
+		position:absolute;
+		z-index: 1000000;
+		width:240px;
+		height:100px;
+		box-shadow: 0px 0px 50px #666;
+		background-color: rgba(255,255,255,0.8);
+		border:2px solid #222;
+		left:50%;
+		top:50%;
+		transform:translateX(-50%) translateY(-50%);
+
+		#ensureLogOff-btn{
+			float: left;
+			text-align: center;
+			height:45px;
+			line-height: 45px;
+			width:55%;
+			font-size: 28px;
+			border:1px solid #456; 
+			margin:5px;
+			color:#FFF;
+			background-color:@commonBlue;
+			cursor:pointer;
+			&:hover{
+				border-radius: 10px;
+				box-shadow: 5px 5px 10px #999;
+				border-width: 2px;
+			}
+		}
+		#cancelLogOff-btn{
+			float: right;
+			text-align: center;
+			height:45px;
+			line-height: 45px;
+			width:35%;
+			font-size:28px;
+			border-right:2px solid #999;
+			border:1px solid #456; 
+			margin:5px;
+			color:#FFF;
+			background-color:@brown;
+			cursor:pointer;
+			&:hover{
+				border-radius: 10px;
+				box-shadow: 5px 5px 10px #999;
+				border-width: 2px;
+			}
+		}
+	}
+
+	#content{
+		display: inline-block;
+		height:600px;
+
+		#domore{
+			width:0px;
+			overflow: hidden;
+			position:absolute;
+			left:330px;
+			top:10px;
+			z-index: 10000000;
+			padding-top:20px;
+			padding-bottom:20px;
+			box-shadow: 0 0 10px #999;
+			@media(max-width:480px){
+				top:60px;
+				left:auto;
+				right:0;
+				background-color:rgba(160,160,160,0.9);
+			}
+
+
+			#logOff{
+				width:100%;
+				font-weight: 600;
+				border-top:3px solid transparent;
+				border-bottom:3px solid transparent;
+				height:34px;
+				line-height: 28px;
+				font-size: 20px;
+				text-align:center;
+				cursor:pointer;
+				color:#fff;
+				background-color: @seaBlue;
+				&:hover{
+					background-color: @lightBlue;
+					border-color:@modernBlue;
+				}
+			}
+
+			
+
+			.ele{
+				width:50px;
+				height:50px;
+				line-height: 50px;
+				border-radius: 10%;
+				margin:10px;
+				font-size: 1.8em;
+				text-align: center;
+				display: inline-block;
+				cursor:pointer;
+				color:#7EBCB7;
+				background:rgba(255,255,255,0.8);
+				&:hover{
+					box-shadow: 0 0 5px #999;
+				}
+				@media(max-width:480px){
+					&:hover{
+						box-shadow: 0 0 5px #FFF;
+					}
+				}
+
+			}
+		}
+
+
+		#checkMess{
+			overflow-x: hidden;
+			overflow-y: scroll;
+			height:100%;
+			width:320px;
+			display: inline-block;
+			float: left;
+			@media (max-width:450px){
+				height:100%;
+				width:100%;
+			}
+			.user-wrap{
+				box-shadow: 0 0 3px #999;
+				margin-bottom:6px;
+				height:80px;
+				#user-avator{
+				    float: left;
+				    display: inline-block;
+				    height:100%;
+				    width:80px;
+				    border: solid 1px #999;
+				    border-radius: 50%;
+				    overflow: hidden;
+				    &:hover{
+				    	border-width:2px;
+				    	border-radius: 0%;
+				    }
+				}
+				#user-intro{
+					width: 160px;
+					height:100%;
+					float: left;
+					overflow: hidden;
+					@media(max-width:768px){
+						width:130px;
+					}
+					#user-nickname{
+						font-size:1.2em;
+					}
+					#user-introduce{
+						height:60px;
+						font-size:1em;
+					}
+				}
+				#user-set{
+					float: right;
+					color:#44BBAA;
+					margin-right: 5px;
+					display: inline-block;
+					height: 100%;
+					text-align: center;
+					width: 4rem;
+					font-size: 3rem;
+					line-height: 7rem;
+					cursor: pointer;
+					box-shadow: 0 0 2px #999;
+					&:hover{
+						background-color: #F6F6F6;
+						color:@happyBlue;
+						box-shadow: 0 0 4px #999;
+					}
+				}
+			}
+		}
+		#messOption{
+			position: relative;
+			top: 0px;
+			left: 0px;
+			height: 4.4rem;
+			width: 100%;
+			border-top:2px solid @seaBlue;
+			box-shadow: 0 0 5px #999;
+			@messOptionWidth:33.3%;
+
+			.sOption{
+				text-align: center;
+				position: absolute;
+				width:@messOptionWidth;
+				height:99%;
+				font-size:18px;
+				padding:10px;
+				cursor:pointer;
+				background-color:@lightSeaBlue;
+				color:#fff;
+				&:hover{
+					background-color:@lightBlue;
+				}
+				&:first-child{
+					color:@seaBlue;
+				}
+			}
+			#recentOption{
+				left:@messOptionWidth*0;
+			}
+			#starOption{
+				left:@messOptionWidth*1;
+			}
+			#teamOption{
+				left:@messOptionWidth*2;
+			}
+		}
+		#messContent{
+			position: relative;
+			display: inline-block;
+			height:560px;
+			width:100%;
+			.sContent{
+				height:100%;
+				width:100%;
+				ul{
+					li{
+						text-decoration: none;
+						list-style: none;
+						cursor: pointer;
+						padding-left: 0.3em;
+						&:hover{
+							box-shadow: 0 0 5px #999;
+						}
+						.info{
+							display: inline-block;
+							float: left;
+							width:60%;
+							height:100%;
+							.name{
+								font-size: 1.1em;
+								width: 100%;
+								height:35%;
+								.badge{
+									background: red;
+								}
+							}
+							.li_type{
+								.none;
+							}
+							.uid{display: none;}
+							.introduce{
+								font-size:12px;
+								line-height: 14px;
+								display: block;
+								height:65%;
+								color:#777;
+							}	
+						}
+						.avator{
+							display: inline-block;
+							float: right;
+							overflow: hidden;
+							margin-top: 0.2em;
+							height:95%;
+							img{
+								width:100%;
+								height:100%;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

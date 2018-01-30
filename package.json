@@ -4,12 +4,9 @@
   "author": "ZFC<476409251@qq.com>",
   "private": true,
   "scripts": {
-    "start": "node dist/app.js",
-    "inidb": "node inidb.js",
-    "clearlogin": "node clearlogin.js",
-    "sup": "supervisor dist/app.js",
-    "pm2": "pm2 start dist/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node build/app.js",
+    "sup": "supervisor build/app.js",
+    "pm2": "pm2 start build/app.js"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
@@ -23,7 +20,6 @@
     "ejs": "^2.3.4",
     "express": "^4.15.3",
     "express-session": "^1.14.2",
-    "gulp": "^3.9.1",
     "jquery": "^3.2.1",
     "lokijs": "^1.5.0",
     "mongoose": "^4.11.0",
@@ -32,6 +28,8 @@
     "socket.io": "^2.0.3"
   },
   "devDependencies": {
+    "browser-sync": "^2.23.6",
+    "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-cache": "^0.4.6",
     "gulp-clean": "^0.3.2",
@@ -47,7 +45,8 @@
     "jshint": "^2.9.5",
     "map-stream": "0.0.7",
     "pump": "^2.0.0",
-    "rename": "^1.0.4"
+    "rename": "^1.0.4",
+    "stream-combiner2": "^1.1.1"
   },
   "engines": {
     "node": ">= 6.11.4",

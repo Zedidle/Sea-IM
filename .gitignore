@@ -5,3 +5,4 @@ npm-debug.log*
 test/
 clearlogin.js
 inidb.js
+package-lock.json

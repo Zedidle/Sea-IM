@@ -1,0 +1,86 @@
+@import './config.less';
+
+#people{
+	width:100%;
+	max-width:650px;
+	margin:5% auto;
+	background:transparent;
+	border:1px solid @seaBlue;
+	border-radius:2px;
+	padding:0;
+	box-shadow: 5px 5px 10px #999;
+
+	@media(max-width: 768px){
+		margin:0 auto;
+		padding:0;
+		border:none;
+		border-top:5px solid @seaBlue;
+	}
+
+	#backToMainPage-btn{
+		display: block;
+		margin:10px;
+	}
+	#peopleHeadForm{
+		margin:10px;
+		display: none;
+		background: transparent;
+		#avatorInput{
+			float: left;
+			margin-right:10px;
+			margin-bottom:10px;
+		}
+		#checkImg{
+			margin-top:10px;
+			width:200px;
+		}
+	}
+	#headImg{
+		margin:0 10px;
+		width:200px;
+		height:200px;
+		display: inline-block;
+		float: left;
+		cursor: pointer;
+		&:hover{
+			opacity: 0.7;
+		}
+	}
+	#personInfo{
+		float: left;
+		background: transparent;
+		width:90%;
+		padding:15px;
+		padding-top:0px;
+		margin:10px;
+		border-left:2px solid #999;
+		
+		@media (max-width: 768px){
+			border-left:none;
+			border-top:2px solid #999;
+		}
+
+		&>div{
+			margin-bottom:2px;
+			font-size:1.5rem;
+			&>input{
+				margin-left:10px;
+				padding-left:5px;
+				width:150px;
+				border:none;
+				border-bottom:1px solid transparent;
+				transition:all 0s;
+				&:hover{
+					border-bottom-color:@seaBlue;
+				}	
+			}
+		}
+
+		&>textarea{
+			background: transparent;
+			padding:5px;
+			width:98%;
+			height:100px;
+		}
+	}
+}

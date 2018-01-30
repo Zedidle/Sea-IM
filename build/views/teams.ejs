@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<title>Seanet-Team information</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/teams.css">
+</head>
+<body>
+
+<div class='container' id='teams'>
+
+	<div class="title">
+		团队信息
+	</div>
+
+	<button
+		id='backToMainPage-btn'
+		v-on:click='backToMainPage'
+		class="btn btn-default"
+	>返回主页
+	</button>
+
+	<div
+		id='teamHeadForm'
+	>
+		<h4>更新头像:</h4>
+		<div>
+			<input
+				id='avatorInput'
+				name="avator"
+				type="file"
+				class="btn btn-default"
+				v-on:change='checkImg'
+			>
+			<button
+				type='button'
+				class="btn btn-success"
+				v-on:click='headImageUpdate'
+			>保存
+			</button>
+			<button
+				type='button'
+				class="btn btn-danger"
+				v-on:click='hideHeadForm'
+			>取消
+			</button>
+			<br clear='both'>
+		</div>
+		<img
+			id='checkImg'
+		/>
+
+	</div>
+
+	<div class="row">
+
+		<div class="col-md-4">
+			<img
+				id='headImg'
+				v-on:click='showTeamHeadForm'
+				title="点击更新头像"
+				v-bind:src= 'teamHeadImage'
+			>
+		</div>
+
+		<div class="col-md-8">
+	        <div id="teamInfo">
+				<div>
+					<b>ID:</b>
+					<span>{{teamUid}}</span>
+				</div>
+				<div>
+					<b>团队名称:</b>
+
+
+					<input v-if='isMyTeam' 
+						v-model.trim='teamname'
+					>
+					<span v-else>{{teamname}}</span>
+				</div>
+				<div>
+					<b>等级:</b>
+					<span>{{teamLevel}}</span>
+					
+				</div>
+				<div>
+					<b>人数:</b>
+					<span>{{teamMemberNumber}}</span>
+					
+				</div>
+				<h4>队长留言:</h4>
+				<textarea
+					v-if='isMyTeam'
+					v-model.trim='teamIntroduce'
+				>{{teamIntroduce}}
+				</textarea>
+				
+				<div
+					v-else
+					class="textarea"
+				>{{teamIntroduce}}
+				</div>
+
+				<div>
+					<button
+						style='margin-top:5px;'
+						v-on:click='textUpdate'
+						class="btn btn-primary"
+					>{{subBtnText}}
+					</button>
+				</div>
+
+	        </div>
+		</div>
+	</div>
+
+</div>
+
+<%include frameuse.ejs%>
+<script type="text/javascript">
+	
+var TeamUid = '<%= uid%>';
+var Teamname = '<%= name%>';
+var TeamPassword = '<%=password%>';
+var TeamLevel = '<%=level%>';
+var TeamIntroduce = '<%=introduce%>';
+
+// var TeamMembers = JSON.parse(jsonKeep('<%=member%>'));
+var TeamMembers = '<%=member%>';
+
+var TeamHeadImage = '<%=headImg%>';
+
+
+
+console.log(TeamUid);
+console.log(Teamname);
+console.log(TeamPassword);
+console.log(TeamLevel);
+console.log(TeamIntroduce);
+console.log(TeamMembers);
+console.log(TeamHeadImage);
+
+
+</script>
+<script src='js/teams.js'></script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<footer
+    style='position:fixed;
+        height:10px;
+        display:block;
+        width:100%;
+        bottom:2%;   
+        text-align:center;'
+>
+<ul
+    style='list-style: none;padding:0;margin:0;'
+>
+    <li>@SeaNet</li>
+</ul>
+</footer>
+
+
+
+
+<script src='vue/vue.js'></script>
+<script src='jquery/jquery.min.js'></script>
+<script src='bootstrap/js/bootstrap.min.js'></script>
+<script src='js/zhelp.js'></script>
+<script>
+	//var UID = localStorage.getItem('UID');
+	var UID = sessionStorage.getItem('UID');
+    var UserEnsure = {
+		uid:UID
+	};
+
+    console.log(UID);
+
+    if(!UID){
+        localStorage.setItem('UID','wait');
+        sessionStorage.setItem('UID','wait');
+        window.location.href = '/';
+    }
+
+</script>
