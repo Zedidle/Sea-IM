@@ -6,3 +6,4 @@ test/
 clearlogin.js
 inidb.js
 package-lock.json
+./build/public/img/uploads

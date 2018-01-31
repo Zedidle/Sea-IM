@@ -1,0 +1,5 @@
+var Logoff = {
+	template:`
+
+	`,
+}

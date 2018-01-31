@@ -3,11 +3,21 @@
   "description": "Chatting Web project",
   "author": "ZFC<476409251@qq.com>",
   "private": true,
+
+
+
+
   "scripts": {
-    "start": "node build/app.js",
+    "start": "node backstage/app.js",
     "sup": "supervisor build/app.js",
     "pm2": "pm2 start build/app.js"
   },
+
+
+
+
+
+
   "dependencies": {
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",

@@ -1,4 +1,4 @@
-const config = require('./build/config.js');
+const config = require('./backstage/config.js');
 
 
 const
@@ -6,7 +6,7 @@ const
 	less = require('gulp-less'),
 	autoprefixer = require('gulp-autoprefixer'),
 	minifyCSS = require('gulp-minify-css'), 
-	jshint = require('gulp-jshint'),
+	// jshint = require('gulp-jshint'),
 	map = require("map-stream"),
 	uglify = require('gulp-uglify'), 
 	pump = require('pump'),
@@ -86,26 +86,26 @@ gulp.task('pro-js',function(){
 gulp.task('js', function () {
 	var map = require("map-stream");
 	var customerReporter = map(function(file,cb){  
-		if(!file.jshint.success){  
-		 //打印出错误信息
-		 console.log("jshint fail in:" + file.path);  
-		 file.jshint.results.forEach(function(err){  
-		     if(err){  
-		        console.log(err);  
-		        console.log("在 "+file.path+" 文件的第"+err.error.line+" 行的第"+err.error.character+" 列发生错误");  
-		     }  
-		 });  
-		}  
+		// if(!file.jshint.success){  
+		//  //打印出错误信息
+		//  console.log("jshint fail in:" + file.path);  
+		//  file.jshint.results.forEach(function(err){  
+		//      if(err){  
+		//         console.log(err);  
+		//         console.log("在 "+file.path+" 文件的第"+err.error.line+" 行的第"+err.error.character+" 列发生错误");  
+		//      }  
+		//  });  
+		// }  
 	});
 
 	gulp.src(['./src/js/**/*.js','!./src/js/main-*'])
-	    .pipe(jshint())
+	    // .pipe(jshint())
 	    .pipe(gulp.dest('./build/public/js'))
 	    .pipe(customerReporter)
 
 	// gulp.src(['./src/js/main-*.js','./src/js/lib.js'])
 	gulp.src(['./src/js/main-*.js'])
-	    .pipe(jshint())
+	    // .pipe(jshint())
 	    // .pipe(concat('main.js'))
 	    .pipe(gulp.dest('./build/public/js'))
 	    .pipe(customerReporter)
@@ -140,7 +140,7 @@ gulp.task('views', function() {
 
 gulp.task('routes', function() {
 	gulp.src('./src/routes/**/*.js')
-	.pipe(gulp.dest('./build/routes'))
+	.pipe(gulp.dest('./backstage/routes'))
 
 	reload();
 });
