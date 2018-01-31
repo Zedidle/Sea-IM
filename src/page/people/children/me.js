@@ -1,14 +1,6 @@
-var people = new Vue({
-     el:'.container',
+var People = new Vue({
      data:{
-          name:name,
-          personHeadImage:PersonHeadImage,
-          introduce:introduce,
-          sex:sex,
-          hobby:hobby,
-          birthday:birthday,
-          subBtnText:'更新',
-          // headImageData:''
+
      },
      methods:{
           backToMainPage:function(){

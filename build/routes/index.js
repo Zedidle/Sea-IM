@@ -1,6 +1,5 @@
 const start = require('./start');
 const people = require('./people');
-const back = require('./back');
 const unreadnumber = require('./unreadnumber');
 const team = require('./team');
 const search = require('./search');
@@ -27,6 +26,5 @@ module.exports = function(app){
 	app.use('/',team);
 	app.use('/',search);
 	app.use('/',message);
-	app.use('/',back);
 	app.use('/',unreadnumber);
 }

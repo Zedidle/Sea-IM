@@ -1,4 +1,7 @@
-$('#main').append(`
+
+const MessageFrame = {
+
+  template:`
 <div
   v-show='messageframeSeen'
   class='messageframe'
@@ -21,75 +24,75 @@ $('#main').append(`
     </div>
   </div>
 
-	<div
-		class="getMoreMessageOnFrame-btn"
-		v-on:click='getMoreMessage'
-	>Get More Message
-	</div>
+  <div
+    class="getMoreMessageOnFrame-btn"
+    v-on:click='getMoreMessage'
+  >Get More Message
+  </div>
 
     <div
-    	id='messageframe-cont'
-    	class='messageframe-cont'
-    	v-on:scroll='messageContentOnScroll'
+      id='messageframe-cont'
+      class='messageframe-cont'
+      v-on:scroll='messageContentOnScroll'
     ></div>
 
     <div
-    	v-show='expressionSeen'
-    	class='messageframe-expression'>
+      v-show='expressionSeen'
+      class='messageframe-expression'>
     </div> 
 
     <div class='messageframe-say'>
       <button
-      	class='messageframe-face'
-      	v-on:click='showExpressions'
+        class='messageframe-face'
+        v-on:click='showExpressions'
       >
-      	<span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> 
+        <span class="glyphicon glyphicon-sunglasses" aria-hidden="true"></span> 
       </button>
 
       <input
-      	id='messageframe-input'
-      	v-on:keyup.enter='sendMessage'
+        id='messageframe-input'
+        v-on:keyup.enter='sendMessage'
       >
 
       <button
-      	v-on:click='sendMessage'
-      	class='messageframe-subm'
+        v-on:click='sendMessage'
+        class='messageframe-subm'
       >
         <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
       </button>
     </div>
 
-	<div
+  <div
     v-show='moreinfoSeen'
     class='moreinfo'
   >
-		<div
+    <div
       v-show='teamMembersSeen'
       class='teamMembers'
     >
-			<div v-on:click='closeTeamMembers'>
-				<span style='cursor: pointer;' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			</div>
-			<ul></ul>
-		</div>
+      <div v-on:click='closeTeamMembers'>
+        <span style='cursor: pointer;' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+      <ul></ul>
+    </div>
     
-		<div style='float:left;'>
-			<div
+    <div style='float:left;'>
+      <div
         class='moreinfo-close'
         v-on:click='closeMoreinfo'
       >
-				<span style='cursor: pointer;' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-			</div>
-			
+        <span style='cursor: pointer;' class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+      </div>
+      
       <img v-bind:src="moreInfo.headImg" />
-			
+      
       <hr style='border-color: #C0D0D0;border-width: 2px;'>
-			<div class="info">
-				<div>
+      <div class="info">
+        <div>
           <h3>UID&nbsp: </h3>
           <h4>{{moreInfo.uid}}</h4>
         </div>
-				<div>
+        <div>
           <h3>名称&nbsp: </h3>
           <h4>{{moreInfo.name}}</h4>
         </div>
@@ -97,30 +100,30 @@ $('#main').append(`
           <h3>等级&nbsp: </h3>
           <h4>{{moreInfo.level}}</h4>
         </div>
-				<div v-show='isTeam'>
+        <div v-show='isTeam'>
           <h3>人数&nbsp: </h3>
           <h4>{{moreInfoTeamMemberNumber}}</h4>
         </div>
-				<div v-show='!isTeam'>
+        <div v-show='!isTeam'>
           <h3>性别&nbsp: </h3>
           <h4>{{moreInfo.sex}}</h4>
         </div>
-				<div v-show='!isTeam'>
+        <div v-show='!isTeam'>
           <h3>爱好&nbsp: </h3>
           <h4>{{moreInfo.hobby}}</h4>
         </div>
-				<div v-show='!isTeam'>
+        <div v-show='!isTeam'>
           <h3>生日&nbsp: </h3>
           <h4>{{moreInfo.birthday}}</h4>
         </div>
-				<div>
+        <div>
           <h3>介绍&nbsp: </h3>
           <h4>{{moreInfo.introduce}}</h4>
         </div>
-			</div>
-			<hr style=' float:left; width:100%;border-color: #C0D0D0;border-width: 1px;'>
-			<div class="more">
-				<button 
+      </div>
+      <hr style=' float:left; width:100%;border-color: #C0D0D0;border-width: 1px;'>
+      <div class="more">
+        <button 
           v-show='!isTeam'
           v-on:click='starOrUnstar'
           class="btn btn-success"
@@ -128,7 +131,7 @@ $('#main').append(`
           aria-expanded="false"
         >Star/Unstar
         </button>
-				<button
+        <button
           v-show='!isTeam'
           v-on:click='deleteTheRecentChat'
           class="btn btn-warning"
@@ -136,7 +139,7 @@ $('#main').append(`
           aria-expanded="false"
         >Delete Chat
         </button>
-				<button
+        <button
           v-show='isTeam'
           v-on:click='exitTeam'
           class="btn btn-danger"
@@ -144,7 +147,7 @@ $('#main').append(`
           aria-expanded="false"
         >Exit Team
         </button>
-				<button
+        <button
           v-show='isTeam'
           v-on:click='showMembers'
           class="btn btn-primary"
@@ -152,8 +155,10 @@ $('#main').append(`
           aria-expanded="false"
         >Show Members
         </button>
-			</div>
-		</div>
-	</div>
+      </div>
+    </div>
+  </div>
 </div>
-`);
+  `,
+
+};

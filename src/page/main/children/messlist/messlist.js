@@ -1,4 +1,4 @@
-var MessLisComponent = {
+var MessList = {
   props:{
     type:{
       type:String,

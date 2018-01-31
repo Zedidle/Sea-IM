@@ -1,4 +1,4 @@
-var UserInfoComponent = {
+var UserInfo = {
   props:{
     info:Object
   },

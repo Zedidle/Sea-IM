@@ -1,4 +1,4 @@
-var DomorePartComponent = {
+const Domore = {
   template:
     `<div id='domore'>
       <div
@@ -45,7 +45,6 @@ var DomorePartComponent = {
     logOff:function(){
       main.isWantToLogOff = true; 
     },
-
     getPersonInfo:function(){
       zPost('/people',UserEnsure);
     },

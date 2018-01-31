@@ -1,13 +1,23 @@
 const config = require('./config.js');
-const fs = require('fs');
+
+
 const express = require('express');
 const app = express();
-const LIB = require('./routes/lib.js');
+
+
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
+
+
+
+
 const routes = require('./routes')(app);
-const path = require('path');
-const mongoose=require('mongoose');
+
+
+
+
+// 获得数据库信息
+const mongoose = require('mongoose');
 const User = require('./model/user');
 const Unread = require('./model/unread');
 const Message = require('./model/message');
@@ -15,6 +25,24 @@ const Tmessage = require('./model/tmessage');
 const People = require('./model/people');
 const Team = require('./model/team');
 const Loginlist = require('./model/loginlist');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 mongoose.Promise = global.Promise;  
 
@@ -28,19 +56,49 @@ mongoose.connect(config.db, {useMongoClient:true}, (err) => {
 User.update({}, {$set:{login:false}}, {multi:true} ,(err) => {
   if(err) throw err;
   console.log("All user logout!");
-})
-
-//设置公共静态路由
-app.use(express.static(path.join(__dirname, 'public')));
-app.set('views',__dirname + "/views");
-app.get('*', function(req, res){
-    res.render('404.ejs', {
-
-    });
 });
 
+//设置公共静态路由
+app.use(express.static('./build/static'));
+app.use(express.static('./build/public'));
+
+
+
+//设置视图根目录
+app.set('views',[
+  __dirname+"/static/common",
+  __dirname
+]);
+
+
+
+//404页
+app.get('*', function(req, res){ res.render('404.ejs',{}) });
+
+
+
+
+
+
+
+
+server.listen(config.port, config.ip, function(){
+  console.log(config.ip+':'+config.port);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 io.on('connection', function(socket){
-  //receive the heartbeat package ,and keep the user on line;
 
   socket.on('heartbeat',function(uid){
     User.update({uid}, {$set:{login:true}}, (err) => { 
@@ -54,6 +112,7 @@ io.on('connection', function(socket){
       });
     },19000);
   });
+
 
   socket.on('chat', function(J_msg) {
     //1.服务器接收格式化了的消息，并解格式化；
@@ -222,8 +281,4 @@ io.on('connection', function(socket){
       }
     });
   });
-});
-
-server.listen(config.port, config.ip, function(){
-  console.log(config.ip+':'+config.port);
 });

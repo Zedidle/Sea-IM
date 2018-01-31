@@ -1,4 +1,3 @@
-const LIB = require('./lib');
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path');
@@ -6,7 +5,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer({ dest: 'dist/public/img/uploads/' });
+const upload = multer({ dest: 'build/public/img/uploads/' });
 const User = require('../model/user');
 const Unread = require('../model/unread');
 const Message = require('../model/message');
@@ -66,12 +65,10 @@ router.get('/getInfo', (req,res) => {
 
 	if(type==='team'){
 		Team.find({uid}, null, {limit:1}, (err,team)=>{
-			LIB.check(team[0]);
 			res.send(team[0]);
 		});
 	}else{
 		People.find({uid},null,{limit:1},(err,person)=>{
-			LIB.check(person[0]);
 			res.send(person[0]);
 		});
 	}

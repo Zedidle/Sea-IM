@@ -1,6 +1,5 @@
 const start = require('./start');
 const people = require('./people');
-const back = require('./back');
 const unreadnumber = require('./unreadnumber');
 const team = require('./team');
 const search = require('./search');

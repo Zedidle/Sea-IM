@@ -1,11 +1,10 @@
-const LIB = require('./lib');
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer({ dest: 'dist/public/img/uploads/' });
+const upload = multer({ dest: 'build/public/img/uploads/' });
 const User = require('../model/user');
 const Unread = require('../model/unread');
 const Message = require('../model/message');
@@ -22,7 +21,6 @@ const router = express.Router();
 
 router.post('/test',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	LIB.check(data,'test');
 	var J_data = JSON.stringify({
 		answer:'finish to test',
 	});

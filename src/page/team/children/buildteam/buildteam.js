@@ -116,35 +116,41 @@ const BuildTeam = {
             flagPassword:false,
             flagPassword1:false,
 
-            welcomeStyle{
-                font-size:24px;
-                color:#556;
-                text-align:center;
-                margin:10px;
+
+
+
+
+
+
+            welcomeStyle:{
+                'font-size':'24px',
+                'color':'#556',
+                'text-align':'center',
+                'margin':'10px',
             },
-            teamFormStyle{
-                margin:0 auto;
-                border:2px solid #0A74D0;
-                border-top:25px solid #0A74D0;
-                border-bottom:10px solid #0A74D0;
-                border-left:2px solid #0A74D0;
-                border-right:2px solid #0A74D0;
-                box-shadow: 0 0 10px #999;
-                width:300px;
-                padding:20px;
+            teamFormStyle:{
+                'margin':'0 auto',
+                'border':'2px solid #0A74D0',
+                'border-top':'25px solid #0A74D0',
+                'border-bottom':'10px solid #0A74D0',
+                'border-left':'2px solid #0A74D0',
+                'border-right':'2px solid #0A74D0',
+                'box-shadow': '0 0 10px #999',
+                'width':'300px',
+                'padding':'20px',
             },
-            submitBtnStyle{
-                width:60%;
-                height:40px;
-                float:left;
+            submitBtnStyle:{
+                width:'60%',
+                height:'40px',
+                float:'left',
             },
-            backBtnStyle{
-                float:right;
-                width:30%;
-                height:40px;
+            backBtnStyle:{
+                float:'right',
+                width:'30%',
+                height:'40px',
             },
-            tipStyle{
-                height:15px;
+            tipStyle:{
+                height:'15px'
             }
         }
     },

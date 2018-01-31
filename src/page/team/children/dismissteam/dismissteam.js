@@ -83,38 +83,39 @@ var DismissTeam = {
 			styleTipTeamPassword:{
 				height:'15px',
 				color:'green'
-			}，
-
-			dismissTeamStyle{
-				margin-top:10%;
-				width:300px;
-		        border:1px solid #B71210;
-		        box-shadow: 0 0 2px #55FFD6;
-		        padding:0;
 			},
 
-			titleStyle{
-			    background-color:#BB1111;
-				color:#FFF;
-			    margin-bottom:20px;
-			    height:30px;
-			    line-height: 30px;
-			    font-weight:600;
-			    font-size:16px;
-			    text-align: center;
+
+
+			dismissTeamStyle:{
+				'margin-top':'10%',
+				width:'300px',
+		        border:'1px solid #B71210',
+		        'box-shadow': '0 0 2px #55FFD6',
+		        padding:0,
+			},
+			titleStyle:{
+			    'background-color':'#BB1111',
+				color:'#FFF',
+			    'margin-bottom':'20px',
+			    'height':'30px',
+			    'line-height': '30px',
+			    'font-weight':600,
+			    'font-size':'16px',
+			    'text-align': 'center',
 			},
 
-			dismissFormStyle{
-				margin:20px;
+			dismissFormStyle:{
+				margin:'20px'
 			},
 
-			formSubmitBtnStyle{
-				width:60%;
-				float:left;
+			formSubmitBtnStyle:{
+				width:'60%',
+				float:'left',
 			},
-			backToMainPageBtnStyle{
-				width:30%;
-				float:right;
+			backToMainPageBtnStyle:{
+				width:'30%',
+				float:'right',
 			}
 		}
 	},

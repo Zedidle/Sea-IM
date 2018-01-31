@@ -3,21 +3,12 @@
   "description": "Chatting Web project",
   "author": "ZFC<476409251@qq.com>",
   "private": true,
-
-
-
-
   "scripts": {
-    "start": "node backstage/app.js",
+    "start": "node build/app.js",
     "sup": "supervisor build/app.js",
-    "pm2": "pm2 start build/app.js"
+    "pm2": "pm2 start build/app.js",
+    // NODE_ENV=production browserify -g envify -e main.js | uglifyjs -c -m > build.js
   },
-
-
-
-
-
-
   "dependencies": {
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
@@ -38,9 +29,11 @@
     "socket.io": "^2.0.3"
   },
   "devDependencies": {
+    "babel-preset-env": "^1.6.1",
     "browser-sync": "^2.23.6",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
+    "gulp-babel": "^7.0.1",
     "gulp-cache": "^0.4.6",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
@@ -53,6 +46,8 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^3.0.0",
     "jshint": "^2.9.5",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
     "map-stream": "0.0.7",
     "pump": "^2.0.0",
     "rename": "^1.0.4",

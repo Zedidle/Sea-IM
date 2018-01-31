@@ -142,13 +142,13 @@ console.log(TeamHeadImage);
     `,
 
     data:{
-        teamUid:TeamUid,
-        teamname:Teamname,
-        teamPassword:TeamPassword,
-        teamLevel:TeamLevel,
-        teamIntroduce:TeamIntroduce,
-        teamMembers:TeamMembers,
-        teamHeadImage:TeamHeadImage,
+        teamUid:false,
+        teamname:false,
+        teamPassword:false,
+        teamLevel:false,
+        teamIntroduce:false,
+        teamMembers:false,
+        teamHeadImage:false,
 
         subBtnText:'更新',
 

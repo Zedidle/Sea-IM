@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer({ dest: 'dist/public/img/uploads/' });
+const upload = multer({ dest: 'build/public/img/uploads/' });
 const User = require('../model/user');
 const Unread = require('../model/unread');
 const Message = require('../model/message');
@@ -18,12 +18,13 @@ const jsonParser = bodyParser.json();
 const router = express.Router();
 
 
-//start: login page,
-router.get('/',(req,res)=>{ 
-	res.render('main.ejs', { 
-		loginTip:''
-	}); 
-});
+
+
+// entry
+router.get('/',(req,res)=>{ res.render('app.ejs', {}) });
+
+
+
 
 //used by public/js/login.js g5,
 router.get('/regist',(req,res)=>{ 

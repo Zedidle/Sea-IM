@@ -1,4 +1,3 @@
-const LIB = require('./lib');
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path');
@@ -6,7 +5,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer({dest: 'dist/public/img/uploads/',});
+const upload = multer({dest: 'build/public/img/uploads/',});
 const User = require('../model/user');
 const Unread = require('../model/unread');
 const Message = require('../model/message');
@@ -22,7 +21,6 @@ const router = express.Router()
 //used by public/js/main.js g77
 router.post('/people',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	LIB.userFakeLogout(User,data.uid);
 	People.find({uid:data.uid}, null, {limit:1}, (err,person) => {
 		if(err) throw err;
 
@@ -57,7 +55,6 @@ router.post('/peopleImageUpdate', upload.any(), (req,res) => {
 //peoples text uploads
 router.post('/peopleTextUpdate',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	LIB.check(data,'text information of people to change:');
 	People.update({uid:data.uid},{$set:data},(err)=>{
 		if(err) throw err;
 		res.send(data);

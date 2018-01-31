@@ -1,4 +1,4 @@
-const config = require('./backstage/config.js');
+const config = require('./build/config.js');
 
 
 const
@@ -10,7 +10,7 @@ const
 	map = require("map-stream"),
 	uglify = require('gulp-uglify'), 
 	pump = require('pump'),
-	imagemin = require('gulp-imagemin')
+	imagemin = require('gulp-imagemin'),
 	clean = require('gulp-clean'),
 	concat = require('gulp-concat');
 
@@ -113,18 +113,20 @@ gulp.task('js', function () {
 	reload();
 });
 
-gulp.task('less', function() {
-	gulp.src('./src/less/main-*')
-	.pipe(less())
-	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
-	.pipe(minifyCSS())
-	.pipe(concat('main.css'))
-	.pipe(gulp.dest('./build/public/css'));
+gulp.task('page', function () {
+	gulp.src(['./src/page/**/*'])
+		.pipe(concat('app.js'))
+	    .pipe(gulp.dest('./build/public/'))
+  
+	reload();
+});
 
-	gulp.src(['./src/less/*.less','!./src/less/main-*','!./src/less/config.less'])
+gulp.task('less', function() {
+	gulp.src('./src/less/**/*')
 	.pipe(less())
 	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
-	.pipe(minifyCSS())
+	// .pipe(minifyCSS())
+	.pipe(concat('app.css'))
 	.pipe(gulp.dest('./build/public/css'));
 
 	reload();
@@ -140,20 +142,45 @@ gulp.task('views', function() {
 
 gulp.task('routes', function() {
 	gulp.src('./src/routes/**/*.js')
-	.pipe(gulp.dest('./backstage/routes'))
+	.pipe(gulp.dest('./build/routes'))
+
+	reload();
+});
+
+gulp.task('img', function() {
+	gulp.src('./src/img/**/*.*')
+	.pipe(gulp.dest('./build/public/img'))
 
 	reload();
 });
 
 
+gulp.task('voice', function() {
+	gulp.src('./src/voice/**/*.*')
+	.pipe(gulp.dest('./build/public/voice'))
+
+	reload();
+});
+
+gulp.task('app.ejs', function() {
+	gulp.src('./build/app.ejs')
+	.pipe(gulp.dest('./build'))
+
+	reload();
+});
+
 // 创建一个任务确保JS任务完成之前能够继续响应
 gulp.task('js-watch', ['js']);
+gulp.task('page-watch', ['page']);
 gulp.task('less-watch', ['less']);
 gulp.task('views-watch', ['views']);
 gulp.task('routes-watch', ['routes']);
+gulp.task('img-watch', ['img']);
+gulp.task('voice-watch', ['voice']);
+gulp.task('app.ejs-watch', ['app.ejs']);
 
 // 使用默认任务启动Browsersync，监听JS,Less
-gulp.task('serve', ['js','less','views','routes'], function () {
+gulp.task('serve', ['js','less','views','routes','img','voice','page'], function () {
 
     // 从这个项目的根目录启动服务器
     browserSync.init({
@@ -163,7 +190,13 @@ gulp.task('serve', ['js','less','views','routes'], function () {
     // 添加 browserSync.reload 到任务队列里
     // 所有的浏览器重载后任务完成。
     gulp.watch("./src/js/**/*.js", ['js-watch']);
+    gulp.watch("./src/page/**/*", ['page-watch']);
     gulp.watch("./src/less/**/*.less", ['less-watch']);
     gulp.watch("./src/views/**/*.ejs", ['views-watch']);
     gulp.watch("./src/routes/**/*.js", ['routes-watch']);
+    gulp.watch("./src/img/**/*", ['img-watch']);
+    gulp.watch("./src/voice/**/*", ['voice-watch']);
+
+    gulp.watch("./build/app.ejs",['app.ejs-watch']);
+
 });

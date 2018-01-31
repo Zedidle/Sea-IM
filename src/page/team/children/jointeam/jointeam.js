@@ -26,16 +26,16 @@ var JoinTeam = {
 	data:{
 
 		containerStyle:{
-			border:'solid 2px #008D8E';
-			'border-radius': '0.5em';
-			width:'370px';
-			display: 'block';
-			margin:'20% auto';
-			padding:'1em';
-			'box-shadow': '0 0 2px #596F8C';
+			border:'solid 2px #008D8E',
+			'border-radius': '0.5em',
+			width:'370px',
+			display: 'block',
+			margin:'20% auto',
+			padding:'1em',
+			'box-shadow': '0 0 2px #596F8C',
 		},
 		tipStyle:{
-			color:'red';
+			color:'red',
 		}
 
 	},

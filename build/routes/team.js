@@ -1,11 +1,10 @@
-const LIB = require('./lib');
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer({ dest: 'dist/public/img/uploads/' });
+const upload = multer({ dest: 'build/public/img/uploads/' });
 const User = require('../model/user');
 const Unread = require('../model/unread');
 const Message = require('../model/message');
@@ -22,8 +21,6 @@ const router = express.Router();
 //used by public/js/main.js g78,
 router.post('/myteam',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	LIB.userFakeLogout(User,data.uid);
-	// LIB.check(data,'myteam');
 
 	//set the variable to recored,
 	var teamids = [],teaminfos = [];
@@ -39,7 +36,6 @@ router.post('/myteam',urlencodedParser,(req,res)=>{
 			if(err) throw err;
 
 			teamids = loginlist[0].team
-			LIB.check(teamids,'my joined teams:');
 
 			teamids.forEach((teamid)=>{
 				Team.find(
@@ -85,7 +81,6 @@ router.get('/teams', (req,res)=>{
 
 	Team.find({uid},null,{limit:1},(err,team)=>{ 
 		if(err) throw err;
-		LIB.check(team[0],'team:');
 		res.render('teams.ejs',team[0]);
 	});
 });
@@ -113,7 +108,6 @@ router.post('/teamsImageUpdate',upload.any(),(req,res)=>{
 //更新团队内容
 router.post('/teamsTextUpdate',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	LIB.check(data,'content of the team:');
 	Team.update({uid:data.uid},{$set:data},(err)=>{
 		if(err) throw err;
 		res.send(true);
@@ -124,7 +118,6 @@ router.post('/teamsTextUpdate',urlencodedParser,(req,res)=>{
 //used by public/js/main.js,
 router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	// LIB.check(data,'deal with team:');
 
 	Loginlist.find(
 		{
@@ -136,7 +129,6 @@ router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 		},
 		function(err,loginlist){
 			if(err) throw err;
-			LIB.check(loginlist,'loginlist');
 
 			var teamIds = loginlist[0].team; 
 			var j = false;
@@ -164,7 +156,6 @@ router.post('/successBuildTeam',urlencodedParser,(req,res)=>{
 	var teamname = data.teamname;
 	var password = data.password;
 
-	LIB.check(data,'success to build a team:');
 
 	var team = new Team({
 		headImg:'/img/teamDefaultHead.jpg',
@@ -207,7 +198,6 @@ router.post('/successBuildTeam',urlencodedParser,(req,res)=>{
 			if(err) throw err;
 			console.log(unread);
 			var tunRead = unread[0]['tunRead'];
-			LIB.check(tunRead,'tunRead of the user:');
 
 			tunRead[uid] = 0;
 			Unread.update(

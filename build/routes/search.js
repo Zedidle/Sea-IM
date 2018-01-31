@@ -1,4 +1,3 @@
-const LIB = require('./lib');
 const crypto = require('crypto')
 const fs = require('fs')
 const path = require('path');
@@ -6,7 +5,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const upload = multer({ dest: 'dist/public/img/uploads/' });
+const upload = multer({ dest: 'build/public/img/uploads/' });
 const User = require('../model/user');
 const Unread = require('../model/unread');
 const Message = require('../model/message');
@@ -66,8 +65,6 @@ router.get('/joinJudge', (req,res)=>{
 //used by public/js/main.js g177,
 router.post('/join',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	LIB.userRelogin(User,data.uid);
-	LIB.check(data,'join:');
 	res.render('join.ejs',{
 		uid:data.uid,
 		tid:data.tid
@@ -78,14 +75,11 @@ router.post('/join',urlencodedParser,(req,res)=>{
 // used by views/join.ejs g68, 
 router.post('/join_ok',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	LIB.userRelogin(User,data.uid);
-	LIB.check(data,'ok to join:');
 	Team.find({uid:data.tid},null,{limit:1},(err,detail)=>{
 		if(detail[0].password===data.password){
 			Team.update({uid:data.tid},{$inc:{membernumber:1},$push:{member:data.uid}},(err)=>{
 				Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
 					var tunRead = detail[0]['tunRead'];
-					LIB.check(tunRead,'search the team and join it successfully:')
 					tunRead[data.tid] = 0;
 					Message.update({uid:data.uid},{$set:{tunRead}},(err)=>{});
 				});
@@ -101,8 +95,6 @@ router.post('/join_ok',urlencodedParser,(req,res)=>{
 //used by public/js/main.js g173,
 router.post('/star',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	// LIB.userRelogin(User,data.uid);
-	// LIB.check(data,'star check:');
 	//update the loginlist of the user,
 	Loginlist.update({uid:data.uid},{$addToSet:{star:data.sid}},(err)=>{});
 	//update the unread of the user in recent,
@@ -116,7 +108,6 @@ router.post('/star',urlencodedParser,(req,res)=>{
 	});
 	//get the information of the star,and send to the page,
 	People.find({uid:data.sid},null,{limit:1},(err,detail)=>{
-		// LIB.check(detail[0],'the information of the star:');
 		var J_data = JSON.stringify(detail[0]);
 		//the J_data for render in main.ejs, add star information to the star list immediately,
 		res.send(J_data);
