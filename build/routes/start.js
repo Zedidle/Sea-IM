@@ -1,30 +1,12 @@
-const crypto = require('crypto')
-const fs = require('fs')
-const path = require('path');
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const multer = require('multer');
-const upload = multer({ dest: 'build/public/img/uploads/' });
-const User = require('../model/user');
-const Unread = require('../model/unread');
-const Message = require('../model/message');
-const Tmessage = require('../model/tmessage');
-const People = require('../model/people');
-const Team = require('../model/team');
-const Loginlist = require('../model/loginlist');
-const urlencodedParser = bodyParser.urlencoded({ extended: false })
-const jsonParser = bodyParser.json();
-const router = express.Router();
-
-
+const {
+	router,
+	urlencodedParser,
+	
+} = require('../../configs/server.config.js');
 
 
 // entry
-router.get('/',(req,res)=>{ res.render('app.ejs', {}) });
-
-
-
+router.get('/',(req,res)=>{ res.render('index.ejs', {}) });
 
 //used by public/js/login.js g5,
 router.get('/regist',(req,res)=>{ 
@@ -251,12 +233,6 @@ router.post('/', urlencodedParser,(req,res)=>{
 		});
 	})
 });
-
-
-
-
-
-
 
 
 

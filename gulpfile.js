@@ -1,4 +1,5 @@
-const config = require('./build/config.js');
+// const config = require('./build/config.js');
+const config = require('./configs/server.config.js');
 
 
 const
@@ -9,10 +10,72 @@ const
 	// jshint = require('gulp-jshint'),
 	map = require("map-stream"),
 	uglify = require('gulp-uglify'), 
-	pump = require('pump'),
+	gutil = require('gulp-util'),
+	// pump = require('pump'),
 	imagemin = require('gulp-imagemin'),
 	clean = require('gulp-clean'),
 	concat = require('gulp-concat');
+
+
+var combiner = require('stream-combiner2');
+var browserify = require('browserify');
+// var to5ify = require('6to5ify');
+var babelify = require('babelify');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
+var sourcemaps = require('gulp-sourcemaps');
+var vueify = require('vueify');
+var envify = require('envify/custom');
+
+
+
+
+gulp.task('development', function(){
+
+});
+
+
+
+// production 
+gulp.task('production', function () {
+
+  vueify.compiler.applyConfig(require('./configs/vue.config.js'));
+
+  var b = browserify('./src/main.js',require('./configs/browserify.config.js'))
+    .transform(babelify)  //使用ES6转换到ES5的语法编译
+    .transform(vueify)  //编译vue模板
+    .transform(
+      // 必填项，以处理 node_modules 里的文件
+      { global: true },
+      envify({ NODE_ENV: 'production' })
+      // envify({ NODE_ENV: 'development' })
+    )
+
+  return combiner.obj([
+      b.bundle(),  //开始连接并捆绑所有文件
+        source('bundle.js'),   //命名捆绑成的文件，并当作源文件
+        buffer(),   //转换成二进制文件,方便产生map
+        sourcemaps.init({loadMaps: true}),  //生成map
+        uglify().on('error', gutil.log),   //压缩
+        sourcemaps.write('./'),  //map文件相对压缩文件的位置
+        gulp.dest('./build/public/js') // 压缩文件的相对输出位置
+    ])
+    // .on('error', console.error.bind(console)); //确认开启报错
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 var browserSync = require('browser-sync').create();
@@ -24,8 +87,6 @@ gulp.task('clean',function(){
 	gulp.src('./build/public/js/*.js')
 		.pipe(clean());
 	gulp.src('./build/public/css/*.css')
-		.pipe(clean());
-	gulp.src('./build/public/views/**/*.ejs')
 		.pipe(clean());
 });
 
@@ -52,27 +113,22 @@ gulp.task('pro-js',function(){
 		  console.error('Error from ' + name + ' in compress task', err.toString());
 		};
 	}
-	pump([
+	// pump([
 		gulp.src(['./src/js/**/*.js','!./src/js/main-*'])
 		    .pipe(uglify())
 		    .on('error', createErrorHandler('PRO-NOT-MAIN'))
 		    .pipe(gulp.dest('./build/public/js'))
-	]);
+	// ]);
 
 
-	pump([
+	// pump([
 		gulp.src(['./src/js/main-*','./src/js/lib.js'])
 		    .pipe(uglify())
 		    .on('error', createErrorHandler('PRO-MAINJS'))
 		    .pipe(concat('main.js'))
 		    .pipe(gulp.dest('./build/public/js'))
-	]);
+	// ]);
 });
-
-
-
-
-
 
 
 
@@ -174,13 +230,13 @@ gulp.task('js-watch', ['js']);
 gulp.task('page-watch', ['page']);
 gulp.task('less-watch', ['less']);
 gulp.task('views-watch', ['views']);
-gulp.task('routes-watch', ['routes']);
+// gulp.task('routes-watch', ['routes']);
 gulp.task('img-watch', ['img']);
 gulp.task('voice-watch', ['voice']);
 gulp.task('app.ejs-watch', ['app.ejs']);
 
 // 使用默认任务启动Browsersync，监听JS,Less
-gulp.task('serve', ['js','less','views','routes','img','voice','page'], function () {
+gulp.task('serve', ['js','less','views','img','voice','page'], function () {
 
     // 从这个项目的根目录启动服务器
     browserSync.init({
@@ -193,7 +249,8 @@ gulp.task('serve', ['js','less','views','routes','img','voice','page'], function
     gulp.watch("./src/page/**/*", ['page-watch']);
     gulp.watch("./src/less/**/*.less", ['less-watch']);
     gulp.watch("./src/views/**/*.ejs", ['views-watch']);
-    gulp.watch("./src/routes/**/*.js", ['routes-watch']);
+
+    // gulp.watch("./src/routes/**/*.js", ['routes-watch']);
     gulp.watch("./src/img/**/*", ['img-watch']);
     gulp.watch("./src/voice/**/*", ['voice-watch']);
 
