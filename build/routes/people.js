@@ -7,19 +7,9 @@ const {
 //used by public/js/main.js g77
 router.post('/people',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	People.find({uid:data.uid}, null, {limit:1}, (err,person) => {
+	People.findOne({uid:data.uid}, null, (err,p) => {
 		if(err) throw err;
-
-		var info = person[0];
-		res.render('people.ejs',{
-			uid:info.uid,
-			headImg:info.headImg,
-			name:info.name,
-			sex:info.sex,
-			introduce:info.introduce,
-			hobby:info.hobby,
-			birthday:info.birthday
-		});
+		res.render('people.ejs',p);
 	});
 });
 

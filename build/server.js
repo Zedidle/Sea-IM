@@ -26,7 +26,8 @@ require('./routes')(app);
 // 启用数据库
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;  
-mongoose.connect(db, {useMongoClient:true}, (err) => {
+// mongoose.connect(db, {useMongoClient:true}, (err) => {
+mongoose.connect(db, (err) => {
   if(err){
     console.log('connect database error -->',err);
     process.exit(1);
@@ -54,10 +55,22 @@ app.use(express.static('./static'));
 app.use(express.static('./build/public'));
 
 //设置视图根目录
-app.set('views',[
-  __dirname+"/static/common",
-  __dirname
-]);
+// app.set('views',[
+//   __dirname+"/static/common",
+//   __dirname
+// ]);
+
+// 绑定根目录
+// app.set('root',__dirname);
+
 
 //设置404页
-app.get('*', function(req, res){ res.render('404.ejs',{}) });
+app.get('*', function(req, res){  
+  res.sendFile(__dirname + '/static/common/404.html'); 
+});
+
+
+//-------------------------Entry--------------------------
+router.get('/',(req,res)=>{ 
+  res.sendFile(__dirname+'/index.html')
+});

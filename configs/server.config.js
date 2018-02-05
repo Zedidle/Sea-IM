@@ -1,4 +1,7 @@
 // 全部的后台模块引用
+const z = require('zhelp');
+
+
 const express = require('express');
 const router = express.Router();
 
@@ -34,6 +37,7 @@ module.exports = {
 	port: 8000,
 	db: 'mongodb://localhost/seanet',
 	
+	z,
 	session,
 	express,
 	router,

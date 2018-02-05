@@ -8,10 +8,22 @@ var loginlistSchema = new Schema({
     	type: String,
     	unique: true
     },
-    recent_people:Array,
-    recent_team:Array,
-    star:Array,
-    team:Array
+    recent_people:{
+        type:Array,
+        default:[],
+    },
+    recent_team:{
+        type:Array,
+        default:[],
+    },
+    star:{
+        type:Array,
+        default:[],
+    },
+    team:{
+        type:Array,
+        default:[],
+    }
 })
 
 var Loginlist = mongoose.model('Loginlist', loginlistSchema);

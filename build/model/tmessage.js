@@ -3,7 +3,10 @@ var Schema = mongoose.Schema;
 
 var tmessageSchema = new Schema({
     uid:String,
-    mess:Array,
+    mess:{
+        type:Array,
+        default:[],   
+    },
     // var mess = [{
     //    "uid" : "z00003",
     //    "to" : Same as the receiver,

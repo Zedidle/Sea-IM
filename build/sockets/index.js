@@ -27,9 +27,8 @@ module.exports = function(server){
     console.time(1);
     console.log(msg);
 
-    People.find({uid:msg.from}, null, {limit:1}, (err, pinfo) => {
+    People.findOne({uid:msg.from},(err, p) => {
       if(err) throw err;
-      var p = pinfo[0];
       // 2.获取来信者信息，并把来信者信息和接收到的消息组合起来，成为数据库设计中的消息结构体；
       var m = {
         uid:msg.from,
@@ -49,21 +48,25 @@ module.exports = function(server){
       // 3.判断消息来自于团队还是个人，从而进入不同的处理分支；
       if(msg.type!=='team'){
         // 1.如果来自于个人，则判断接收者是否在线，在线则直接把消息结构体发送给接收者，否则使得接收者对应未读消息+1；
-        User.find({uid:msg.to}, null, {limit: 1}, (err,detail) => {
+        User.findOne({uid:msg.to},(err,d)=>{
           if(err) throw err;
 
-          if(detail[0].login){
+          if(d.login){
+            //在线
             io.emit(msg.to,J_m);
           }else{
-            Unread.find({uid:msg.to}, 'punRead', {limit:1}, (err,detail) => {
+            //不在线
+            Unread.findOne({uid:msg.to}, (err,d) => {
               if(err) throw err;
 
-              var punRead = detail[0].punRead;
+              var punRead = d.punRead;
+
+              //如果没有创建过对应的未读数量值，则新建为1
               if(!punRead[msg.from]){
-                punRead[msg.from] = 0;
+                punRead[msg.from] = 1;
+              }else{
+                punRead[msg.from]++;
               }
-              
-              punRead[msg.from]++;
 
               Unread.update(
                 {
@@ -87,31 +90,31 @@ module.exports = function(server){
         //add the message to the receiver and sender.
         // 3.更新通讯双方对应的消息记录；
         // 4.如果之前都没建立过通讯的话，则双方登记对方
-        Message.find({uid:msg.to}, null, {limit:1}, (err, reveiver_mess) => {
+        Message.findOne({uid:msg.to}, (err, reveiverM) => {
           if(err) throw err;
 
-          let mess = reveiver_mess[0].mess;
+          let mess = reveiverM.mess;
 
           console.log('reveiver:'+ mess);
-
 
           if(!mess[msg.from]){ 
             mess[msg.from]=[];
           }
+
           mess[msg.from].push(m);
+          
           Message.update({uid:msg.to}, {$set:{mess}}, (err) => {
             if(err) throw err;
             console.log('reveiver update message;')
           });
         });
 
-        Message.find({uid:msg.from}, null, {limit:1}, (err, sender_mess) => {
+        Message.findOne({uid:msg.from}, (err, senderM) => {
           if(err) throw err;
         
-          let mess = sender_mess[0].mess;
+          let mess = senderM.mess;
 
           console.log('sender:'+mess);
-
 
           if(!mess[msg.to]){
             mess[msg.to]=[];
@@ -166,8 +169,8 @@ module.exports = function(server){
         // 1.如果来自于团队，则读取团队中的成员列表；
         console.time('Team');
         
-        Team.find({uid:msg.to}, 'member', (err,detail) => {
-          var members = detail[0].member;
+        Team.findOne({uid:msg.to}, (err,t) => {
+          var members = t.member;
           var tm = m;
           tm.uid = msg.to;
           tm.from_user = msg.from;

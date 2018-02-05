@@ -8,12 +8,18 @@ var teamSchema = new Schema({
     name: String,
     headImg:{
         type: String,
-        default: '/img/defaultHead.png'
+        default: '/img/teamDefaultHead.jpg'
     },
     password:String,
-    level:Number,
+    level:{
+        type:Number,
+        default:1   
+    },
     member: Array,
-    introduce:String,
+    introduce:{
+        type:String,
+        introduce:'队长暂时没有话要说。'
+    },
 });
 
 var Team = mongoose.model('Team', teamSchema);

@@ -21,15 +21,15 @@ router.post('/unReadTo0', urlencodedParser, (req, res) => {
 	var type = req.body.type;
 
 	//处理用户的未读消息数
-	Unread.find({ uid }, null, {limit:1}, (err, u) => {
+	Unread.findOne({ uid }, (err, u) => {
 		var unread;
 		//根据不同的类型做出不同的处理
 		if(type!=='team'){
-			unread = u[0].punRead;
+			unread = u.punRead;
 			unread[to] = 0;
 			Unread.update({ uid }, {$set:{punRead:unread}}, (err)=>{});
 		}else{
-			unread = u[0].tunRead;
+			unread = u.tunRead;
 			unread[to] = 0;
 			Unread.update({ uid }, {$set:{tunRead:unread}}, (err)=>{});
 		}
@@ -55,17 +55,9 @@ router.get('/getUnreadMess', (req,res) => {
 	console.log(data);
 
 	if(data.type==='team'){
-		Tmessage.find(
-			{
-				uid:data.getUid
-			},
-			null,
-			{	
-				limit:1
-			},
-			function(err,detail){
+		Tmessage.findOne({uid:data.getUid},(err,d)=>{
 				if(err) throw err;
-				var m = detail[0].mess;
+				var m = d.mess;
 				while(unread&&m){
 					mess.unshift(m.pop());
 					unread--;
@@ -74,18 +66,9 @@ router.get('/getUnreadMess', (req,res) => {
 			}
 		);
 	}else{
-		Message.find(
-			{
-				uid:data.uid
-			},
-			null,
-			{
-				limit:1
-			},
-			function(err,detail){
+		Message.findOne({uid:data.uid},(err,d)=>{
 				if(err) throw err;
-				console.log(detail);
-				var mf = detail[0].mess[data.getUid];
+				var mf = d.mess[data.getUid];
 				while(unread&&mf){
 					mess.unshift(mf.pop());
 					unread--;

@@ -1,43 +1,133 @@
-// const config = require('./build/config.js');
-const config = require('./configs/server.config.js');
-
+const {
+	ip,
+	port,
+} = require('./configs/server.config.js');
 
 const
 	gulp = require('gulp'),
 	less = require('gulp-less'),
 	autoprefixer = require('gulp-autoprefixer'),
 	minifyCSS = require('gulp-minify-css'), 
-	// jshint = require('gulp-jshint'),
 	map = require("map-stream"),
 	uglify = require('gulp-uglify'), 
 	gutil = require('gulp-util'),
-	// pump = require('pump'),
-	imagemin = require('gulp-imagemin'),
 	clean = require('gulp-clean'),
-	concat = require('gulp-concat');
-
-
-var combiner = require('stream-combiner2');
-var browserify = require('browserify');
-// var to5ify = require('6to5ify');
-var babelify = require('babelify');
-var source = require('vinyl-source-stream');
-var buffer = require('vinyl-buffer');
-var sourcemaps = require('gulp-sourcemaps');
-var vueify = require('vueify');
-var envify = require('envify/custom');
-
+	concat = require('gulp-concat'),
+	combiner = require('stream-combiner2'),
+	browserify = require('browserify'),
+	babelify = require('babelify'),
+	source = require('vinyl-source-stream'),
+	buffer = require('vinyl-buffer'),
+	sourcemaps = require('gulp-sourcemaps'),
+	vueify = require('vueify'),
+	envify = require('envify/custom'),
+	runSequence = require('run-sequence'),
+	gulpSequence = require('gulp-sequence')
 
 
 
-gulp.task('development', function(){
+var browserSync = require('browser-sync').create();
+// 'reload' is method to reload the browser
+var reload = browserSync.reload;
 
+
+
+
+
+// -----------------------Use Vue template---------------------------
+
+
+gulp.task('clean-dev-main',function(){
+	console.log('Cleaning files for task "dev-main" ');
+
+	gulp.src('build/public/js/*')
+	.pipe(clean());
 });
 
 
 
-// production 
-gulp.task('production', function () {
+
+// 开发环境 ， 使用npm run dev
+
+gulp.task('dev-main',function(){
+
+  vueify.compiler.applyConfig(require('./configs/vue.config.js'));
+  var b = browserify('./src/main.js',require('./configs/browserify.config.js'))
+    .transform(babelify)  //使用ES6转换到ES5的语法编译
+    .transform(vueify)  //编译vue模板
+    .transform(
+      // 必填项，以处理 node_modules 里的文件
+      { global: true },
+      envify({ NODE_ENV: 'development' })
+     )
+
+    console.log('转换ES6 --> ES5');
+    console.log('编译vue Template');
+    console.log('转换为开发环境');
+
+    console.log('根据依赖合并所有模块')
+    console.log('压缩JS : 正在监听错误...')
+    console.log('生成sourcemap')
+    console.log('输出报错流...');
+    console.log('输出文件！')
+  
+  combiner.obj([
+      b.bundle(),  //开始连接并捆绑所有文件
+        source('bundle.js'),   //命名捆绑成的文件，并当作源文件
+        buffer(),   
+        sourcemaps.init({loadMaps: true}),  //生成map
+        uglify().on('error', gutil.log),   //压缩
+        sourcemaps.write('./'),  //map文件相对压缩文件的位置
+        gulp.dest('./build/public/js') // 压缩文件的相对输出位置
+    ])
+    .on('error', console.error.bind(console)); //确认开启报错
+   
+
+});
+
+
+gulp.task('dev-main-watch',['dev-main'],function(){
+	browserReload();
+})
+function browserReload(){
+	return reload();
+}
+
+
+gulp.task('development',function(){
+	    // 从这个项目的根目录启动服务器
+    
+	gulpSequence(
+		'clean-dev-main',
+		'font-styles',
+		'dev-main',
+		function(){
+			console.log('According to the Sequence... Finished!');
+		}
+	)
+
+
+    browserSync.init({
+        proxy: ip +':'+port
+    });
+
+
+    gulp.watch(["src/main.js","./src/**/*.js","./configs/ui.config.js"],["dev-main-watch"]);
+    gulp.watch("./src/**/*.vue",["dev-main-watch"]);
+	gulp.watch(['./src/less/**/*.less','./configs/config.less'],['font-styles']);
+	console.log('正在监听:*.vue');
+	console.log('正在监听:*.less');
+	console.log('正在监听:*.js');
+
+});
+
+    
+
+
+
+// 生产环境 ， 使用npm run build
+
+gulp.task('pro-main',function(){
 
   vueify.compiler.applyConfig(require('./configs/vue.config.js'));
 
@@ -48,19 +138,75 @@ gulp.task('production', function () {
       // 必填项，以处理 node_modules 里的文件
       { global: true },
       envify({ NODE_ENV: 'production' })
-      // envify({ NODE_ENV: 'development' })
     )
 
+    console.log('转换ES6 --> ES5');
+    console.log('编译vue Template');
+    console.log('转换为生产环境');
+
+    console.log('根据依赖合并所有模块')
+    console.log('压缩JS : 正在监听错误...')
+    console.log('输出！')
+  
   return combiner.obj([
       b.bundle(),  //开始连接并捆绑所有文件
         source('bundle.js'),   //命名捆绑成的文件，并当作源文件
         buffer(),   //转换成二进制文件,方便产生map
-        sourcemaps.init({loadMaps: true}),  //生成map
         uglify().on('error', gutil.log),   //压缩
-        sourcemaps.write('./'),  //map文件相对压缩文件的位置
         gulp.dest('./build/public/js') // 压缩文件的相对输出位置
     ])
-    // .on('error', console.error.bind(console)); //确认开启报错
+
+});
+
+// production 
+gulp.task('production',['pro-main'], function () {
+    // 从这个项目的根目录启动服务器
+    console.log('开启端口监听：'+ip +':'+port);
+    browserSync.init({
+        proxy: ip +':'+port
+    });
+});
+
+
+
+
+
+
+
+
+
+//----------------------------Uglify Images------------------------------
+// More info of module(gulp-image): https://www.npmjs.com/package/gulp-image
+const imagemin = require('gulp-imagemin');
+
+
+gulp.task('clean-images',function(){
+	gulp.src(['build/public/img/*'])
+	.pipe(clean());
+	console.log('Clean Images in Build Public');
+})
+
+gulp.task('image', function () {
+  gulp.src([
+  	'src/img/**/*.jpg',
+  	'src/img/**/*.png',
+  	'src/img/**/*.jpeg',
+  	'src/img/**/*.gif',
+  	'src/img/**/*.svg'
+  ])
+    .pipe(imagemin())
+    .pipe(gulp.dest('build/public/img'));
+
+});
+ 
+gulp.task('img', function(){
+ 	gulpSequence(
+ 		'clean-images',
+        'image',
+        function(){
+        	console.log('输出完成！');
+        }
+	);
 });
 
 
@@ -76,11 +222,82 @@ gulp.task('production', function () {
 
 
 
+// -------------------Only For Styles---------------------------
+
+gulp.task('css',function(){
+	gulp.src('./src/less/**/*.less')
+	.pipe(less())
+	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+	.pipe(concat('app.css'))
+	.pipe(sourcemaps.init({loadMaps: true}))  //生成map
+	.pipe(minifyCSS())
+    .pipe(sourcemaps.write('./'))  //map文件相对压缩文件的位置
+	.pipe(gulp.dest('./build/public/css'));
+
+	reload();
+	console.log('构建压缩合并css完成：*.less --> app.css')
+})
 
 
-var browserSync = require('browser-sync').create();
-// 'reload' is method to reload the browser
-var reload = browserSync.reload;
+
+
+// ------------------ Font --------------------------
+gulp.task('font',function(){
+	gulp.src(['./src/font/css/animation.css','./src/font/css/fontello.css'])
+	.pipe(concat('font.css'))
+	.pipe(minifyCSS())
+	.pipe(gulp.dest('./build/public/css'));
+
+	console.log('合并Font完成！')
+});
+
+gulp.task('font-app',function(){
+	gulp.src([
+		'./build/public/css/app.css'
+		,'./build/public/css/font.css'
+		,'./build/static/bootstrap/css/bootstrap.min.css'
+	])
+	.pipe(concat('font-app.css'))
+	.pipe(gulp.dest('./build/public/css'))
+});
+
+
+
+gulp.task('font-styles',function(){
+ 	gulpSequence(
+ 		'css',
+        'font',
+        'font-app',
+        function(){
+        	console.log('字体和样式输出完成！');
+      		reload();
+        }
+	);
+});
+
+
+gulp.task('watch-styles',function(){
+	gulp.watch(['./src/less/**/*.less','./configs/config.less'],['font-styles']);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ---------------------------------No Use Vue Template-------------------------------
+
+
+
+
 
 // clean the js and css
 gulp.task('clean',function(){
@@ -129,6 +346,28 @@ gulp.task('pro-js',function(){
 		    .pipe(gulp.dest('./build/public/js'))
 	// ]);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -240,7 +479,7 @@ gulp.task('serve', ['js','less','views','img','voice','page'], function () {
 
     // 从这个项目的根目录启动服务器
     browserSync.init({
-        proxy: config.ip +':'+config.port
+        proxy: ip +':'+port
     });
 
     // 添加 browserSync.reload 到任务队列里

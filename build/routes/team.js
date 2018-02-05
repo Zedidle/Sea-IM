@@ -5,54 +5,27 @@ const {
 } = require('../../configs/server.config.js');
 //used by public/js/main.js g78,
 router.post('/myteam',urlencodedParser,(req,res)=>{
-	var data = req.body;
+	let data = req.body;
 
 	//set the variable to recored,
-	var teamids = [],teaminfos = [];
-	Loginlist.find(
-		{
-			uid:data.uid
-		},
-		null,
-		{
-			limit:1
-		},
-		function(err,loginlist){
+	let tinfos = [];
+	Loginlist.findOne({ uid:data.uid }).
+		exec((err,l)=>{
 			if(err) throw err;
-
-			teamids = loginlist[0].team
-
-			teamids.forEach((teamid)=>{
-				Team.find(
-					{
-						uid:teamid
-					},
-					null,
-					{
-						limit:1
-					},
-					function(err,teaminfo){
+			let tids = l.team;
+			tids.forEach(tid=>{
+				Team.findOne({uid:tid},(err,tinfo)=>{
 						if(err) throw err;
-
-						teaminfos.push(teaminfo[0]);
-
+						tinfos.push(tinfo);
+						if(tinfos.length === tids.length){
+							res.render('myteam.ejs',{ 
+			 					uid:data.uid,
+			 					tinfos:JSON.stringify(tinfos)
+			 				});
+						}
 					}
 				);
 			});
-
-			(function render(){
-				if(teaminfos.length === teamids.length){
-					res.render('myteam.ejs',{ 
-	 					uid:data.uid,
-	 					teaminfos:JSON.stringify(teaminfos)
-	 				});
-	 			}else{
-		 			setTimeout(function(){
-		 				render();
-		 			},50);
-	 			}
-			})();
-			
 		}
 	);
 });
@@ -64,9 +37,9 @@ router.post('/myteam',urlencodedParser,(req,res)=>{
 router.get('/teams', (req,res)=>{
 	var uid = req.query.uid;
 
-	Team.find({uid},null,{limit:1},(err,team)=>{ 
+	Team.findOne({uid},(err,t)=>{ 
 		if(err) throw err;
-		res.render('teams.ejs',team[0]);
+		res.render('teams.ejs',t);
 	});
 });
 
@@ -104,31 +77,22 @@ router.post('/teamsTextUpdate',urlencodedParser,(req,res)=>{
 router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
 
-	Loginlist.find(
-		{
-			uid:data.uid
-		},
-		null,
-		{
-			limit:1
-		},
-		function(err,loginlist){
+	Loginlist.findOne({uid:data.uid})
+		.exec((err,l)=>{
 			if(err) throw err;
 
-			var teamIds = loginlist[0].team; 
+			var tids = l.team; 
 			var j = false;
 
-			for(var teamid of teamIds){
-				if(teamid===data.uid){
+			for(let tid of tids){
+				if(tid===data.uid){
 					j = true;
 					break;
 				}
 			}
 
 			var ejs = j?'tipDealWithTeam.ejs':'buildteam.ejs';
-			res.render( ejs, {
-				uid:data.uid
-			});
+			res.render( ejs, { uid:data.uid });
 		})
 })
 
@@ -143,25 +107,15 @@ router.post('/successBuildTeam',urlencodedParser,(req,res)=>{
 
 
 	var team = new Team({
-		headImg:'/img/teamDefaultHead.jpg',
 		uid : uid,
 		name: teamname,
 		password:password,
-		level:1,
 		member:[data.uid],
-		introduce:'队长没有什么要说。'
 	});
 	
-	var tmessage = new Tmessage({
-		uid:uid,
-		mess:[]
-	});
+	var tmessage = new Tmessage({ uid });
 
-	Loginlist.update(
-		{
-			uid: uid
-		},
-		{
+	Loginlist.update({uid},{
 			$push:{
 				team: uid
 			}
@@ -171,18 +125,10 @@ router.post('/successBuildTeam',urlencodedParser,(req,res)=>{
 		}
 	);
 	
-	Unread.find(
-		{
-			uid:uid
-		},
-		null,
-		{
-			limit:1
-		},
-		function(err,unread){
+	Unread.findOne({uid},(err,unread)=>{
 			if(err) throw err;
 			console.log(unread);
-			var tunRead = unread[0]['tunRead'];
+			var tunRead = unread['tunRead'];
 
 			tunRead[uid] = 0;
 			Unread.update(

@@ -3,14 +3,21 @@ var Schema = mongoose.Schema;
 
 var unReadSchema = new Schema({
     uid:String,
-    punRead:Object,
-    tunRead:Object,
+    punRead:{
+        type:Object,
+        default:{ _:''}
+    },
+    tunRead:{
+        type:Object,
+        default:{ _:''}
+    }
 
-    // unRead={
+    // punRead={
     // 	u1:number,
     // 	u2:number,
     // 	...
     // }
+
 
     // mostly 4 team;
     // tunRead={

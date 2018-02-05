@@ -13,20 +13,20 @@ router.post('/getMoreMessage', urlencodedParser, (req,res)=>{
 
 	new Promise((resolve,reject)=>{
 		if(data.type!=='team'){
-			Message.find({uid:receiveUid}, null, {limit:1}, (err,mess) => {
+			Message.findOne({uid:receiveUid}, 'mess', (err,m) => {
 				if(err) throw err;
-				if(mess.length){
+				if(m){
 					console.log()
-					resolve(mess[0]['mess'][fromUid]);
+					resolve(m.mess[fromUid]);
 				}else{
 					resolve(false);
 				}
 			});
 		}else{
-			Tmessage.find({uid:fromUid}, null, {limit:1}, (err,tmess) => {
+			Tmessage.findOne({uid:fromUid}, 'mess', (err,tm) => {
 				if(err) throw err;
-				if(tmess.length){
-					resolve(tmess[0].mess);
+				if(tm){
+					resolve(tm.mess);
 				}else{
 					resolve(false);
 				}
@@ -49,12 +49,12 @@ router.get('/getInfo', (req,res) => {
 	//如果是团队则会导致系统崩溃,为什么？
 
 	if(type==='team'){
-		Team.find({uid}, null, {limit:1}, (err,team)=>{
-			res.send(team[0]);
+		Team.findOne({uid}, null, (err,t)=>{
+			res.send(t);
 		});
 	}else{
-		People.find({uid},null,{limit:1},(err,person)=>{
-			res.send(person[0]);
+		People.findOne({uid},null,(err,p)=>{
+			res.send(p);
 		});
 	}
 });

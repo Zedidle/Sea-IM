@@ -1,15 +1,19 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
+
 var messageSchema = new Schema({
     uid:{
         type: String,
         unique: true
     },
-    mess:Object
+    mess:{
+        type:Object,
+        default:{ _:''}
+    }
+
     // "mess" : {
-    //     "0" : "0",
-    //     "userId" : [
+    //     "otherUserId" : [
     //         {
     //             "uid" : "z00003",
     //             "to" : Same as the receiver,

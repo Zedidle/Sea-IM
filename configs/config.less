@@ -1,0 +1,122 @@
+body{
+	background-size:100%;
+	background-repeat:no-repeat;
+	background-position: left 50% top 0%;
+	@media(max-width: 960px){
+		background-size:1360px 700px;
+	}
+}
+
+
+#bg-change-btn{
+  color:#EEF; 
+  cursor:pointer;
+  position:fixed;
+  bottom:5%;
+  left:5%;
+}
+
+*{
+	margin:0;
+	padding:0;
+	font-family: "微软雅黑";
+	transition: all 0.2s;
+}
+
+.none{
+	display: none;
+}
+.unvisible{
+	visibility: hidden;
+}
+.title{
+    background-color:#EEE;
+    height:40px;
+    line-height: 40px;
+    font-weight:600;
+    font-size:16px;
+    text-align: center;
+}
+
+@modernBlue:#006699;
+@friendBlue:#004466;
+@deepBlue:#006699;
+@hashBlue:#006666; 
+@happyBlue:#3399CC;
+@deepSeaBlue:#338877;
+@lightSeaBlue:#3A8F82;
+@seaBlue:#77CCCC;
+@purpleBlue:#333366;
+@commonBlue:#669999;
+@lightBlue:#00CCCC;
+@greenBlue:#003333;
+@lightBlack:#555555;
+@modernBlack:#000033;
+@yellow:#FFFFCC;
+@white:#FFF;
+@deepGreen:#009966; 
+@modernPurple:#330033;
+@deepRed:#330000;
+@easyGray:#EEEEEE;
+@lightGray:#EEEEFF;
+@grayRed:#993333;
+@lightRed:#BB1111;
+@brown:#CC9966;
+
+
+
+
+
+
+
+
+
+
+// ----------------Vue Tranition Styles------------------
+
+.fadeX50-enter-active, .fadeX50-leave-active {
+    transition: all .5s ease;
+}
+.fadeX50-enter{
+  opacity:0;
+  transform: translateX(50px);
+}
+.fadeX50-leave-to{
+  opacity:0;
+  transform: translateX(50px);
+}
+
+
+.fadeY-10-enter-active, .fadeY-10-leave-active {
+    transition: all .5s ease;
+}
+.fadeY-10-enter{
+  opacity:0;
+  transform: translateY(-10px);
+}
+.fadeY-10-leave-to{
+  opacity:0;
+  transform: translateY(-10px);
+}
+
+
+.bounce-enter-active {
+  animation: bounce-in .5s;
+}
+.bounce-leave-active {
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0) translateX(-50%) translateY(-50%);
+  }
+  50% {
+    transform: scale(1.2) translateX(-50%) translateY(-50%);
+  }
+  100% {
+    transform: scale(1) translateX(-50%) translateY(-50%);
+  }
+}
+
+
+

@@ -4,13 +4,20 @@ import mutations from './mutations'
 import actions from './action'
 import getters from './getters'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 const state = {
 	latitude: '', // 当前位置纬度
 	longitude: '', // 当前位置经度
 
-	login: false,//是否登录
+  loginOrRegist: 'l' || 'r', //开始界面时，是处于登录状态还是注册状态, l:login ; r:regist
+            
+
+  //处于注册成功状态
+  isSuccessRegist: false,
+
+
+	isLogin: false,//是否登录
 	UID: null,//用户ID
 	userInfo: null, //用户信息
 	

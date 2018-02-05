@@ -15,9 +15,9 @@ router.get('/search', (req,res) => {
 		if(err) throw err;
 		result.team = team.length?team[0]:'';
 
-		People.find({ uid }, null, {limit:1}, (err,person) => {
+		People.findOne({ uid }, null, (err,p) => {
 			if(err) throw err;
-			result.person = person.length?person[0]:'';
+			result.person = p;
 			res.send(result);
 		});
 	});
@@ -29,13 +29,13 @@ router.get('/joinJudge', (req,res)=>{
 	var uid = req.query.uid;
 	var tid = req.query.uid;
 
-	Loginlist.find({ uid }, null, {limit:1}, (err,loginlist) => {
+	Loginlist.findOne({ uid }, null, (err,loginlist) => {
 		if(err) throw err;
 		var judge='ok';
 
-		if(loginlist[0].team.length<4){
-			for(var teamid of loginlist[0].team){
-				if(teamid === tid){ 
+		if(loginlist.team.length<4){
+			for(var teamid of loginlist.team){
+				if(teamid === tid){
 					judge = '你已经加入了这个团队!'; 
 					break; 
 				}
@@ -62,11 +62,11 @@ router.post('/join',urlencodedParser,(req,res)=>{
 // used by views/join.ejs g68, 
 router.post('/join_ok',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	Team.find({uid:data.tid},null,{limit:1},(err,detail)=>{
-		if(detail[0].password===data.password){
+	Team.findOne({uid:data.tid},null,(err,d)=>{
+		if(d.password===data.password){
 			Team.update({uid:data.tid},{$inc:{membernumber:1},$push:{member:data.uid}},(err)=>{
-				Message.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-					var tunRead = detail[0]['tunRead'];
+				Message.findOne({uid:data.uid},null,(err,d)=>{
+					var tunRead = d['tunRead'];
 					tunRead[data.tid] = 0;
 					Message.update({uid:data.uid},{$set:{tunRead}},(err)=>{});
 				});
@@ -85,8 +85,8 @@ router.post('/star',urlencodedParser,(req,res)=>{
 	//update the loginlist of the user,
 	Loginlist.update({uid:data.uid},{$addToSet:{star:data.sid}},(err)=>{});
 	//update the unread of the user in recent,
-	Unread.find({uid:data.uid},null,{limit:1},(err,detail)=>{
-		var punRead = detail[0].punRead;
+	Unread.findOne({uid:data.uid},null,(err,d)=>{
+		var punRead = d.punRead;
 		//judge if punRead has id of the star for recent list,
 		if(!punRead[data.sid]){ 
 			punRead[data.sid] = 0;
@@ -94,11 +94,10 @@ router.post('/star',urlencodedParser,(req,res)=>{
 		};
 	});
 	//get the information of the star,and send to the page,
-	People.find({uid:data.sid},null,{limit:1},(err,detail)=>{
-		var J_data = JSON.stringify(detail[0]);
-		//the J_data for render in main.ejs, add star information to the star list immediately,
-		res.send(J_data);
-	});
+	People.findOne({uid:data.sid})
+		.exec((err,d)=>{
+			res.send(JSON.stringify(d));
+		});
 });
 
 

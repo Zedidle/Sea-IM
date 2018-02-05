@@ -6,7 +6,10 @@ var userSchema = new Schema({
     updateTime: { type: Date, default: Date.now },
     uid:String,
     password:String,
-    login:Boolean,
+    login:{
+    	type:Boolean,
+    	default:false
+    }
 })
 
 var User = mongoose.model('User', userSchema);
