@@ -13,7 +13,7 @@ var peopleSchema = new Schema({
 	},
     name :{
     	type: String,
-    	name : 'User'+(Math.random()*Math.random()*Math.pow(10,8)).toString().slice(0,8),
+    	default : 'User'+(Math.random()*Math.random()*Math.pow(10,8)).toString().slice(0,8),
     },
     introduce:{
     	type:String,

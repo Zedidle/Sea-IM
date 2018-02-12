@@ -25,11 +25,11 @@ const upload = multer({ dest: 'build/public/img/uploads/' });
 // 数据库模板
 const User = require('../build/model/user');
 const Unread = require('../build/model/unread');
-const Message = require('../build/model/message');
-const Tmessage = require('../build/model/tmessage');
+const Pmess = require('../build/model/pmess');
+const Tmess = require('../build/model/tmess');
 const People = require('../build/model/people');
 const Team = require('../build/model/team');
-const Loginlist = require('../build/model/loginlist');
+const List = require('../build/model/list');
 
 
 module.exports = {
@@ -49,10 +49,10 @@ module.exports = {
 	upload,
 	User,
 	Unread,
-	Message,
-	Tmessage,
+	Pmess,
+	Tmess,
 	People,
 	Team,
-	Loginlist,
+	List,
 
 }

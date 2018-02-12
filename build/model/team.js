@@ -18,7 +18,7 @@ var teamSchema = new Schema({
     member: Array,
     introduce:{
         type:String,
-        introduce:'队长暂时没有话要说。'
+        default:'队长暂时没有话要说。'
     },
 });
 

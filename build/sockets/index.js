@@ -1,3 +1,15 @@
+const {
+  User,
+  People,
+  Pmess,
+  Tmess,
+  Team,
+  Loginlist,
+  Unread,
+} = require('../../configs/server.config.js');
+
+
+
 module.exports = function(server){
 
 	var io = require('socket.io')(server);
@@ -68,18 +80,14 @@ module.exports = function(server){
                 punRead[msg.from]++;
               }
 
-              Unread.update(
-                {
-                  uid:msg.to
-                },
+              Unread.update({uid:msg.to},
                 {
                   $set:{
                     punRead
                   }
-                }, 
-                function(err){
-                  if(err) throw err;
-                });
+                }
+              ).exec();
+
             })
           }
         })
@@ -90,84 +98,52 @@ module.exports = function(server){
         //add the message to the receiver and sender.
         // 3.更新通讯双方对应的消息记录；
         // 4.如果之前都没建立过通讯的话，则双方登记对方
-        Message.findOne({uid:msg.to}, (err, reveiverM) => {
-          if(err) throw err;
-
+        Pmess.findOne({uid:msg.to}, (err, reveiverM) => {
           let mess = reveiverM.mess;
 
           console.log('reveiver:'+ mess);
-
-          if(!mess[msg.from]){ 
-            mess[msg.from]=[];
-          }
-
+          // 登记
+          if(!mess[msg.from]){ mess[msg.from]=[]; }
           mess[msg.from].push(m);
-          
-          Message.update({uid:msg.to}, {$set:{mess}}, (err) => {
-            if(err) throw err;
-            console.log('reveiver update message;')
-          });
+          Pmess.update({uid:msg.to}, {$set:{mess}}).exec();
         });
 
-        Message.findOne({uid:msg.from}, (err, senderM) => {
-          if(err) throw err;
-        
+        Pmess.findOne({uid:msg.from}, (err, senderM) => {
           let mess = senderM.mess;
 
           console.log('sender:'+mess);
 
-          if(!mess[msg.to]){
-            mess[msg.to]=[];
-          }
+          //登记
+          if(!mess[msg.to]){ mess[msg.to]=[]; }
+          
           mess[msg.to].push(m);
-          Message.update({uid:msg.from}, {$set:{mess}}, (err) => {
-            if(err) throw err;
-            console.log('sender update message;')
-          });
+
+          Pmess.update({uid:msg.from}, {$set:{mess}}).exec();
         });
 
         //make loginlist.recent_people of msg.from addToSet msg.to,
         //the third argument of update is used to decide whether update all contents that is meeting the condition,
-         // 4.更新接收方最近联系信息；
-        Loginlist.update(
-          {
-            uid: msg.from
-          },
+         // 4.更新接收方最近联系人；
+        Loginlist.update({uid: msg.from},
           {
             $addToSet:{
               recent_people: msg.to
             }
-          },
-          {
-            multi:false
-          },
-          function(err){
-            if(err) throw err;
           }
-        );
+        ).exec();
 
         //make loginlist.recent_people of msg.to addToSet msg.from,
-        Loginlist.update(
-          {
-            uid: msg.to
-          },
+        Loginlist.update({uid: msg.to},
           {
             $addToSet:{
               recent_people: msg.from
             }
-          },
-          {
-            multi:false
-          },
-          function(err){
-            if(err) throw err;
           }
-        );
+        ).exec();
 
       }else{
         // if this message is come from a team.
         // 1.如果来自于团队，则读取团队中的成员列表；
-        console.time('Team');
         
         Team.findOne({uid:msg.to}, (err,t) => {
           var members = t.member;
@@ -184,13 +160,10 @@ module.exports = function(server){
             });
           }
            // 3.更新团队的消息记录；
-          Tmessage.update({uid:msg.to}, {$push:{mess:tm}}, (err) => {
-            console.timeEnd('Team');
-          });
+          Tmess.update({uid:msg.to}, {$push:{mess:tm}}).exec();
         });
       }
     });
   });
 });
-
 };

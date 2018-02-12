@@ -27,11 +27,11 @@ router.post('/unReadTo0', urlencodedParser, (req, res) => {
 		if(type!=='team'){
 			unread = u.punRead;
 			unread[to] = 0;
-			Unread.update({ uid }, {$set:{punRead:unread}}, (err)=>{});
+			Unread.update({ uid }, {$set:{punRead:unread}}).exec();
 		}else{
 			unread = u.tunRead;
 			unread[to] = 0;
-			Unread.update({ uid }, {$set:{tunRead:unread}}, (err)=>{});
+			Unread.update({ uid }, {$set:{tunRead:unread}}).exec();
 		}
 	});
 });
@@ -55,27 +55,25 @@ router.get('/getUnreadMess', (req,res) => {
 	console.log(data);
 
 	if(data.type==='team'){
-		Tmessage.findOne({uid:data.getUid},(err,d)=>{
-				if(err) throw err;
-				var m = d.mess;
-				while(unread&&m){
-					mess.unshift(m.pop());
-					unread--;
-				}
-				res.send(mess);
+		Tmess.findOne({uid:data.getUid},(err,d)=>{
+			if(err) throw err;
+			var m = d.mess;
+			while(unread&&m){
+				mess.unshift(m.pop());
+				unread--;
 			}
-		);
+			res.send(mess);
+		});
 	}else{
-		Message.findOne({uid:data.uid},(err,d)=>{
-				if(err) throw err;
-				var mf = d.mess[data.getUid];
-				while(unread&&mf){
-					mess.unshift(mf.pop());
-					unread--;
-				}
-				res.send(mess);
+		Pmess.findOne({uid:data.uid},(err,d)=>{
+			if(err) throw err;
+			var mf = d.mess[data.getUid];
+			while(unread&&mf){
+				mess.unshift(mf.pop());
+				unread--;
 			}
-		);
+			res.send(mess);
+		});
 	}
 })
 

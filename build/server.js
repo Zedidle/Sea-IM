@@ -26,10 +26,9 @@ require('./routes')(app);
 // 启用数据库
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;  
-// mongoose.connect(db, {useMongoClient:true}, (err) => {
-mongoose.connect(db, (err) => {
+mongoose.connect(db, {useMongoClient:true}, (err) => {
   if(err){
-    console.log('connect database error -->',err);
+    console.log('Connect DB Fail! Error: ',err);
     process.exit(1);
   }
 });

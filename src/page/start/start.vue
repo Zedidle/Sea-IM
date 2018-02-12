@@ -1,5 +1,5 @@
 <template>
-	<div id='LRform'>
+	<div id='LRform' v-show='!isLogin'>
 		<form
 	        class="bs-example bs-example-form"
 	    >
@@ -152,7 +152,7 @@ export default{
         ...mapState([
         	'loginOrRegist',
             'isLogin',
-            'isSuccessRegist'
+            'isSuccessRegist',
         ]),
 
 		lBtnS(){
@@ -198,7 +198,8 @@ export default{
             'startLogin',
             'startRegist',
             'toLogin',
-            'toggleRegistS'
+            'toggleRegistS',
+            'getAllLoginData',
         ]),
 
 
@@ -233,64 +234,34 @@ export default{
 
             let vm = this;
 
+            console.log(vm.pw);
+
         	if(this.flagUid && this.flagPw){
             $.get('/loginJudge', {
               uid: this.uid,
-              password: this.password
-            }, function(isOkToLogin){
+              password: this.pw
+            },function(isOkToLogin){
+              console.log('2333');
+              console.log(isOkToLogin);
               if(isOkToLogin){
-                vm.uid = data.uid;
-                vm.password = data.password;
-                  
+
                 $.post('/login',{
                   uid:vm.uid,
-                  password:vm.password
+                  password:vm.pw
                 },function(allData){
-                  //这里去获得所有状态到vuex里
-
-                //*************************
-                
-
-
-
-
-
-
-
-
-
-
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                  //将帐号记录在浏览器
-                  // localStorage.setItem('UID',this.uid);
-                  // sessionStorage.setItem('UID',this.uid);
+                    //这里去获得所有状态到vuex里
+                    vm.getAllLoginData(allData);
+                    //并使页面跳转
+                    console.log('to /m');
+                    vm.$router.push({ path: '/m'});
                 });
 
-
-                }else{
-                  this.lBtnText = '帐号已登录';
-                  setTimeout(function(){
-                    vm.lBtnText = '登录';
-                  }, 2000);
-                }
+              }else{
+                this.lBtnText = '帐号已登录';
+                setTimeout(function(){
+                  vm.lBtnText = '登录';
+                }, 2000);
+              }
             });
           }else{
               this.lBtnText = '请检查每个输入项';
@@ -318,6 +289,9 @@ export default{
                         vm.uid = '';
                         vm.pw = '';
                         vm.pww = '';
+                        vm.tipUid = '';
+                        vm.tipPw = '';
+                        vm.tipPww = '';
                         // 提示注册成功的组件出现
                         vm.toggleRegistS();
                     }else{
@@ -359,7 +333,7 @@ export default{
                     	vm.tipUid = '账号已被使用';
                     	vm.tipUidS.color = 'red';
                 	}else{
-
+                        vm.tipUid = '';
                 	}
                 }else{
                 	console.log(vm.LOR);

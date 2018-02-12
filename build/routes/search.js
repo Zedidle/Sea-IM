@@ -1,21 +1,21 @@
 const {
 	router,
 	urlencodedParser,
-	
+	List,
 } = require('../../configs/server.config.js');
 
 
 //used by public/js/main-content.js,
 router.get('/search', (req,res) => {
-	var uid = req.query.uid;
-	var result = {};
+	let uid = req.query.uid;
+	let result = {};
 
 	//获取该ID的团队和人物信息
-	Team.find({uid},null,{limit:1},(err,team) => {
+	Team.findOne({uid},(err,t) => {
 		if(err) throw err;
-		result.team = team.length?team[0]:'';
+		result.team = t;
 
-		People.findOne({ uid }, null, (err,p) => {
+		People.findOne({ uid }, (err,p) => {
 			if(err) throw err;
 			result.person = p;
 			res.send(result);
@@ -26,15 +26,15 @@ router.get('/search', (req,res) => {
 //used by public/js/main-content.js,
 //if a person choice to join a team, must pass this part,
 router.get('/joinJudge', (req,res)=>{
-	var uid = req.query.uid;
-	var tid = req.query.uid;
+	let uid = req.query.uid;
+	let tid = req.query.uid;
 
-	Loginlist.findOne({ uid }, null, (err,loginlist) => {
+	List.findOne({ uid },(err,l) => {
 		if(err) throw err;
-		var judge='ok';
+		let judge='ok';
 
-		if(loginlist.team.length<4){
-			for(var teamid of loginlist.team){
+		if(l.team.length<4){
+			for(let teamid of l.team){
 				if(teamid === tid){
 					judge = '你已经加入了这个团队!'; 
 					break; 
@@ -51,7 +51,7 @@ router.get('/joinJudge', (req,res)=>{
 
 //used by public/js/main.js g177,
 router.post('/join',urlencodedParser,(req,res)=>{
-	var data = req.body;
+	let data = req.body;
 	res.render('join.ejs',{
 		uid:data.uid,
 		tid:data.tid
@@ -61,16 +61,16 @@ router.post('/join',urlencodedParser,(req,res)=>{
 
 // used by views/join.ejs g68, 
 router.post('/join_ok',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-	Team.findOne({uid:data.tid},null,(err,d)=>{
+	let data = JSON.parse(req.body.J_data);
+	Team.findOne({uid:data.tid},(err,d)=>{
 		if(d.password===data.password){
 			Team.update({uid:data.tid},{$inc:{membernumber:1},$push:{member:data.uid}},(err)=>{
-				Message.findOne({uid:data.uid},null,(err,d)=>{
-					var tunRead = d['tunRead'];
+				Pmess.findOne({uid:data.uid},(err,d)=>{
+					let tunRead = d['tunRead'];
 					tunRead[data.tid] = 0;
-					Message.update({uid:data.uid},{$set:{tunRead}},(err)=>{});
+					Pmess.update({uid:data.uid},{$set:{tunRead}}).exec();
 				});
-				Loginlist.update({uid:data.uid},{$push:{team:data.tid}},(err)=>{});
+				List.update({uid:data.uid},{$push:{team:data.tid}}).exec();
 				res.send(true); 
 			});
 		}else{
@@ -81,23 +81,20 @@ router.post('/join_ok',urlencodedParser,(req,res)=>{
 
 //used by public/js/main.js g173,
 router.post('/star',urlencodedParser,(req,res)=>{
-	var data = JSON.parse(req.body.J_data);
-	//update the loginlist of the user,
-	Loginlist.update({uid:data.uid},{$addToSet:{star:data.sid}},(err)=>{});
+	let data = JSON.parse(req.body.J_data);
+	//update the List of the user,
+	List.update({uid:data.uid},{$addToSet:{star:data.sid}}).exec();
 	//update the unread of the user in recent,
 	Unread.findOne({uid:data.uid},null,(err,d)=>{
-		var punRead = d.punRead;
+		let punRead = d.punRead;
 		//judge if punRead has id of the star for recent list,
 		if(!punRead[data.sid]){ 
 			punRead[data.sid] = 0;
-			Unread.update({uid:data.uid},{$set:{punRead}},err=>{});
+			Unread.update({uid:data.uid},{$set:{punRead}}).exec();
 		};
 	});
 	//get the information of the star,and send to the page,
-	People.findOne({uid:data.sid})
-		.exec((err,d)=>{
-			res.send(JSON.stringify(d));
-		});
+	People.findOne({uid:data.sid},(err,d)=>{ res.send(JSON.stringify(d)); });
 });
 
 

@@ -7,7 +7,7 @@ const {
 //used by public/js/main.js g77
 router.post('/people',urlencodedParser,(req,res)=>{
 	var data = req.body;
-	People.findOne({uid:data.uid}, null, (err,p) => {
+	People.findOne({uid:data.uid}, (err,p) => {
 		if(err) throw err;
 		res.render('people.ejs',p);
 	});
@@ -19,7 +19,6 @@ router.post('/peopleImageUpdate', upload.any(), (req,res) => {
 	var uid = req.body.uid;
 	var image = req.files[0];
 	var readpath = 'img/uploads/'+image.filename;
-	console.log(image);
 	People.update({ uid }, { $set:{ headImg:readpath }}, (err) => {
 		if(err) throw err;
 		res.send(readpath);

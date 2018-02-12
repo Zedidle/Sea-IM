@@ -40,8 +40,8 @@ var reload = browserSync.reload;
 gulp.task('clean-dev-main',function(){
 	console.log('Cleaning files for task "dev-main" ');
 
-	gulp.src('build/public/js/*')
-	.pipe(clean());
+	// gulp.src('build/public/js/*')
+	// .pipe(clean());
 });
 
 
@@ -225,7 +225,8 @@ gulp.task('img', function(){
 // -------------------Only For Styles---------------------------
 
 gulp.task('css',function(){
-	gulp.src('./src/less/**/*.less')
+	gulp.src(['./src/less/**/*.less',
+		'./configs/config.less'])
 	.pipe(less())
 	.pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
 	.pipe(concat('app.css'))
@@ -242,23 +243,41 @@ gulp.task('css',function(){
 
 
 // ------------------ Font --------------------------
+/*合并字体样式所需的css和提取对应字体族*/
 gulp.task('font',function(){
-	gulp.src(['./src/font/css/animation.css','./src/font/css/fontello.css'])
+
+
+// 直接这样使用
+// <i class="icon iconfont icon-back"></i>
+	gulp.src(['./src/font/iconfont.css'])
 	.pipe(concat('font.css'))
 	.pipe(minifyCSS())
 	.pipe(gulp.dest('./build/public/css'));
-
 	console.log('合并Font完成！')
+
+	gulp.src([
+		'./src/font/*.eot',
+		'./src/font/*.svg',
+		'./src/font/*.ttf',
+		'./src/font/*.woff'
+		]).
+	pipe(gulp.dest('./build/public/css'))
+	console.log('转移字体族完成');
 });
 
+
+/*合并应用的样式和字体样式*/
 gulp.task('font-app',function(){
+	/*不知为何这里的合并样式无效*/
 	gulp.src([
-		'./build/public/css/app.css'
-		,'./build/public/css/font.css'
-		,'./build/static/bootstrap/css/bootstrap.min.css'
+		'./build/public/css/app.css',
+		// './build/public/css/font.css',
+		'./build/static/bootstrap/css/bootstrap.min.css'
 	])
-	.pipe(concat('font-app.css'))
+	.pipe(concat('bootstrap-app.css'))
 	.pipe(gulp.dest('./build/public/css'))
+
+	console.log('合并应用的样式和字体样式完成');
 });
 
 

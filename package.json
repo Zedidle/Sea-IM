@@ -11,7 +11,9 @@
     "sup": "supervisor build/server.js",
     "style": "gulp font-styles",
     "pm2": "pm2 start build/app.js",
-    "clear": "node test/clearData.js"
+    "clean": "node test/cleanData.js",
+    "logoff": "node test/cleanLogin.js",
+    "setData":"node test/setData.js"
   },
   "browser": {
     "vue": "vue/dist/vue.js"

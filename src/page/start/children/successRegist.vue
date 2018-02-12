@@ -60,7 +60,7 @@
     left:50%;
     width: 400px;
     height:200px;
-    padding-top:20px;
+    padding-top:30px;
     color:#333;
     background:rgba(255,255,255,0.8);
     transform: translateX(-50%) translateY(-50%);

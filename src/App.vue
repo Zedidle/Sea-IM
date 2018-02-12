@@ -10,15 +10,25 @@
 
 
 
-    <transition name='fadeX50'>
-      <h1 
-        :style='h1Style'
-        v-show='show'
-        @click = 'showGreeting'
-        @mouseover = 'onH1Color'
-        @mouseout = 'offH1Color'
-        >{{greeting}}</h1>
-    </transition>
+  <transition name='fadeX50'>
+
+    <h1 
+      :style='h1Style'
+      class='welcome'
+      v-show='welcomeShow'
+      @click = 'showGreeting'
+      @mouseover = 'onH1Color'
+      @mouseout = 'offH1Color'
+      >{{greeting}}
+
+    </h1>
+  </transition>
+
+
+
+  <transition name='waiting'>
+    <i v-show='waiting'></i>
+  </transition>
   </div>
 </template>
 
@@ -31,29 +41,37 @@ import {mapState} from 'vuex';
   		data(){
   			return {
   				greeting:'SeaNet',
-          show:true,
-          h1Style:{
-            textAlign:'center',
-            color:'#EEF',
-            cursor:'pointer',
-            fontSize:'60px',
-          }
+          welcomeShow:true,
+          waiting:true,
+          onH1:false,
   			}
   		},
       computed:{
         ...mapState([
           'isLogin'
-          ])
+        ]),
+        h1Style(){
+          return{
+            position:'absolute',
+            top:this.isLogin?'5%':'45%',
+            left:this.isLogin?'70%':'60%',
+            transition:'all 1s',
+            textAlign:'center',
+            cursor:'pointer',
+            fontSize:'60px',
+            color:this.onH1?'#036497':'#EEF'
+          }
+        }
       },
       methods:{
         showGreeting:function(){
           this.show = false;
         },
         onH1Color:function(){
-          this.h1Style.color = '#036497';
+          this.onH1 = true;
         },
         offH1Color:function(){
-          this.h1Style.color = '#EEF';
+          this.onH1 = false;
         }
       }
   	}
@@ -72,6 +90,13 @@ import {mapState} from 'vuex';
     justify-content: space-between;
     @media(max-width: 768px){
       display: block;
+    }
+  }
+  
+  .welcome{
+    color:#666;
+    @media(max-width:768px){
+      top:5%;
     }
   }
 </style>

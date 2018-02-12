@@ -9,25 +9,22 @@ router.post('/myteam',urlencodedParser,(req,res)=>{
 
 	//set the variable to recored,
 	let tinfos = [];
-	Loginlist.findOne({ uid:data.uid }).
-		exec((err,l)=>{
-			if(err) throw err;
-			let tids = l.team;
-			tids.forEach(tid=>{
-				Team.findOne({uid:tid},(err,tinfo)=>{
-						if(err) throw err;
-						tinfos.push(tinfo);
-						if(tinfos.length === tids.length){
-							res.render('myteam.ejs',{ 
-			 					uid:data.uid,
-			 					tinfos:JSON.stringify(tinfos)
-			 				});
-						}
-					}
-				);
+	List.findOne({ uid:data.uid },(err,l)=>{
+		if(err) throw err;
+		let tids = l.team;
+		tids.forEach(tid=>{
+			Team.findOne({uid:tid},(err,tinfo)=>{
+				if(err) throw err;
+				tinfos.push(tinfo);
+				if(tinfos.length === tids.length){
+					res.render('myteam.ejs',{ 
+	 					uid:data.uid,
+	 					tinfos:JSON.stringify(tinfos)
+	 				});
+				}
 			});
-		}
-	);
+		});
+	});
 });
 
 
@@ -77,23 +74,22 @@ router.post('/teamsTextUpdate',urlencodedParser,(req,res)=>{
 router.post('/DealWithTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
 
-	Loginlist.findOne({uid:data.uid})
-		.exec((err,l)=>{
-			if(err) throw err;
+	List.findOne({uid:data.uid},(err,l)=>{
+		if(err) throw err;
 
-			var tids = l.team; 
-			var j = false;
+		var tids = l.team; 
+		var j = false;
 
-			for(let tid of tids){
-				if(tid===data.uid){
-					j = true;
-					break;
-				}
+		for(let tid of tids){
+			if(tid===data.uid){
+				j = true;
+				break;
 			}
+		}
 
-			var ejs = j?'tipDealWithTeam.ejs':'buildteam.ejs';
-			res.render( ejs, { uid:data.uid });
-		})
+		var ejs = j?'tipDealWithTeam.ejs':'buildteam.ejs';
+		res.render( ejs, { uid:data.uid });
+	})
 })
 
 
@@ -105,55 +101,27 @@ router.post('/successBuildTeam',urlencodedParser,(req,res)=>{
 	var teamname = data.teamname;
 	var password = data.password;
 
-
-	var team = new Team({
-		uid : uid,
+	new Team({
+		uid,
 		name: teamname,
 		password:password,
 		member:[data.uid],
-	});
+	}).save();
 	
-	var tmessage = new Tmessage({ uid });
+	new Tmess({ uid }).save();
 
-	Loginlist.update({uid},{
-			$push:{
-				team: uid
-			}
-		},
-		function(err){
-			if(err) throw err;
-		}
-	);
+	List.update({uid},{$push:{team: uid}}).exec();
 	
 	Unread.findOne({uid},(err,unread)=>{
+		if(err) throw err;
+		var tunRead = unread['tunRead'];
+
+		tunRead[uid] = 0;
+		Unread.update({uid:data.uid},{$set:{tunRead}},(err)=>{
 			if(err) throw err;
-			console.log(unread);
-			var tunRead = unread['tunRead'];
-
-			tunRead[uid] = 0;
-			Unread.update(
-				{
-					uid:data.uid
-				},
-				{
-					$set:{
-						tunRead
-					}
-				},
-				function(err){
-					if(err) throw err;
-					res.render('successBuildTeam.ejs',{
-					});
-				}
-			);
-
-		}
-	);
-
-	team.save();
-	tmessage.save();
-
-
+			res.render('successBuildTeam.ejs',{});
+		});
+	});
 });
 
 
@@ -163,10 +131,7 @@ router.post('/successBuildTeam',urlencodedParser,(req,res)=>{
 //退出团队
 router.post('/exitTeam',urlencodedParser,(req,res)=>{
 	var data = JSON.parse(req.body.J_data);
-	Team.update(
-		{
-			uid:data.tid
-		},
+	Team.update({uid:data.tid},
 		{
 			$pull:{
 				member:data.uid
@@ -175,24 +140,17 @@ router.post('/exitTeam',urlencodedParser,(req,res)=>{
 				membernumber:-1
 			}
 		},
-		function(err){
-			if(err) throw err;
-		}
-	);
-	Loginlist.update(
-		{
-			uid:data.uid
-		},
+	).exec();
+
+	List.update({uid:data.uid},
 		{
 			$pull:{
 				recent_team:data.tid,
 				team:data.tid
 			}
-		},
-		function(err){
-			if(err) throw err;
 		}
-	);
+	).exec();
+
 	res.send(true);
 })
 
@@ -203,14 +161,13 @@ router.get('/showMembers', (req,res) => {
 
 	var tid = req.query.tid;
 	
-	Team.find({uid:tid},'member',{limit:1},(err,detail)=>{
-		var members = detail[0].member;
+	Team.findOne({uid:tid},(err,t)=>{
+		var members = t.member;
 		var member_infos = [];
 		members.forEach(member=>{
-			People.find({uid:member},null,{limit:1},(err,detail)=>{
-				member_infos.push(detail[0]);
+			People.findOne({uid:member},(err,p)=>{
+				member_infos.push(p);
 				if(member_infos.length===members.length){
-					console.log(member_infos);
 					res.send(JSON.stringify(member_infos));
 				}
 			})
@@ -226,9 +183,7 @@ router.get('/dismissTeam', (req,res)=>{
 	var uid = req.query.uid;
 	console.log(req.query);
 
-	Team.find({uid},'password',{limit:1},(err,team)=>{
-		if(err) throw err;
-
+	Team.findOne({uid},(err,t)=>{
 		res.render('dismissTeam.ejs',{
 			team_password:team[0].password,
 		});
@@ -240,15 +195,12 @@ router.post('/successDismissTeam',urlencodedParser,(req,res)=>{
 	var data = req.body;
 	console.log(data);
 
-	Team.find({uid:data.ID},null,{limit:1},(err,detail)=>{
-		var members = detail[0].member;
+	Team.findOne({uid:data.ID},(err,d)=>{
+		var members = d.member;
 		members.forEach(userid=>{
-			Loginlist.update({uid:userid},{$pull:{team:userid}},(err)=>{
-				console.log(userid + ' quit whit the team '+data.ID);				
-			});
+			List.update({uid:userid},{$pull:{team:data.ID}}).exec();
 		})
 		Team.remove({uid:data.ID},(err)=>{
-			console.log('success to delete the team in DB');
 			res.render('successDismissTeam.ejs',{
 				uid:data.ID
 			});
