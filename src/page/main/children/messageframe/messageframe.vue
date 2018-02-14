@@ -5,6 +5,7 @@
 >
   <div class='messageframe-top'>
     <div
+      @click = 'closeMessageframe'
       class='messageframe-close'
     >
       <i 
@@ -28,21 +29,49 @@
 
   <div
     class="getMoreMessageOnFrame-btn"
-  >Get More Message
+  >
+      <i
+      :style='iconS'
+      class="icon iconfont icon-code"
+      ></i>
   </div>
+  <transition name='bounce'>
+    <expression></expression>
+  </transition>
 
-  <div
+  <ul
     id='messageframe-cont'
     class='messageframe-cont'
-  ></div>
+  >
+    <li v-for='i in messContent'>
+      <img 
+        class='avator'
+        :style = 'mFloat(i)'
+        :src='i.headImg'
+      >
+      <div 
+        :style = 'mFloat(i)'
+        class='info'
+      >
+        <div :style='textAlign(i)'>
+          <div class="name">{{i.name}}</div>
+          <span>{{i.time}}</span>
+        </div>
+        <div class="content">
+          {{i.content}}
+        </div>
+      </div>
+      <br clear='both'>
+    </li>
+  </ul>
 
-  <expression></expression>
 
   <div class='messageframe-say'>
     <button
+      @click = 'toggleExpressions'
       class='messageframe-face'
     >
-      <i 
+      <i
       :style='iconS'
       class="icon iconfont icon-smile"
       ></i>
@@ -53,6 +82,7 @@
     >
     <button
       class='messageframe-subm'
+      @click='sendMessage'
     >
       <i 
       :style='iconS'
@@ -67,9 +97,10 @@
 
 
 <script>
+
+// import z from 'zhelp';
 import {mapState,mapMutations} from 'vuex';
 import expression from './children/expression.vue'
-
 
 export default {
   data(){
@@ -93,18 +124,122 @@ export default {
       'messname',
       'messtype',
       'moreInfo',
+      'messContent',
+      'UID',
+      'list',
+      'recentInfo',
     ]),
+  },
+  created(){
+    console.log('messageframe created');
+    socket.on(this.UID, (m)=>{
+      let msg = JSON.parse(m);
+      console.log(msg);
+
+      if(msg.type==='p'){
+        //come from yourself or others
+        console.log(1);
+        if((msg.uid === this.UID) || 
+            (msg.to === this.UID && this.messto === msg.uid)
+          ){
+          this.pushMContent(msg);
+          let cont = document.getElementById('messageframe-input');
+          cont.scrollTop = cont.scrollHeight;
+        }else{
+          // add unread
+        console.log(2);
+          for(let i of this.rencentInfo){
+            if(i.uid===msg.uid && !i.level){
+              i.unr++;
+              break;
+            }
+          }
+        }
+
+      }else if(msg.type==='t'){
+
+        // come from yourself in team
+        // or come from others in team
+        if((msg.from === this.UID) || 
+          (this.messtype==='t' && msg.uid === this.messto)
+          ){
+          this.pushMContent(msg);
+          let cont = document.getElementById('messageframe-input');
+          cont.scrollTop = cont.scrollHeight;
+        }else{
+          console.log(4);
+          for(let i of this.rencentInfo){
+            if(i.uid===msg.uid && i.level){
+              i.unr++;
+              break;
+            }
+          }
+        }
+      }
+      
+    });
   },
   methods:{
     ...mapMutations([
-      'toggleDomore',
+      'closeMessageframe',
+      'toggleExpressions',
+      'pushMContent',
+      'unshiftMContent',
+
     ]),
+    mFloat(msg){
+      let f;
+      if(msg.type==='t'){
+        f=(msg.from===this.UID)?"right":"left";
+      }else{
+        f=(msg.uid===this.UID)?"right":"left";
+      }
+      return {
+        float:f,
+      };
+    },
+    textAlign(msg){
+      let f;
+      if(msg.type==='t'){
+        f=(msg.from===this.UID)?"right":"left";
+      }else{
+        f=(msg.uid===this.UID)?"right":"left";
+      }
+      return {
+        textAlign:f,
+      };
+    },
+
+    dayTime(){
+      let d = new Date();
+      let h = ('0'+d.getHours()).slice(-2);
+      let min = ('0'+d.getMinutes()).slice(-2);
+
+      return h+':'+min
+    },
+
+    //发送消息
+    sendMessage:function(){
+      var v = document.getElementById('messageframe-input').value.trim();
+      if(v.length){
+        var msg = {
+          time:this.dayTime(),
+          type:this.messtype,
+          content:v,
+          to:this.messto,
+          from:this.UID
+        };
+        socket.emit('chat', JSON.stringify(msg));
+      }
+      document.getElementById('messageframe-input').value = '';
+    },
+
 
     //when the mess come, if messageFrame is opning, check the messtype and messto, 
     //if satisfy the condition, it will run this function to show the message.
     //插入新消息到消息内容框
     //isTop判断是否要上插并滚动到最顶
-    createMessDiv:function(msg, isTop){
+    createMessDiv:function(msg, toTop){
 
       if(!msg){
         this.noMoreMessage();
@@ -112,7 +247,7 @@ export default {
       }
 
       //根据类型和消息来源判断消息框浮动方向
-      var f = judgeTypeforFloatDirection(msg, UID);
+      var f = judgeTypeforFloatDirection(msg, this.UID);
       console.log(msg);
       
       //获取消息内容框对象
@@ -121,37 +256,18 @@ export default {
       //转翻译表情信息
       var msgContent = main.expressionsParse(msg.content);
 
-      if(isTop){
+      if(toTop){
         $(cont).prepend(vCreateMessDiv(msg, f, msgContent));
+        //置顶
         cont.scrollTop = 0; 
       }else{
         
-        //添加消息到内容框
-        $(cont).append(vCreateMessDiv(msg, f, msgContent));
-        
-        //清空输入框
         $('#messageframe-input')[0].value = '';
-        
-        //置顶
         cont.scrollTop = cont.scrollHeight;
       }
 
     },
         
-    //发送消息
-    sendMessage:function(){
-      var v = document.getElementById('messageframe-input').value.trim();
-      if(v.length){
-        var msg = {
-          time:mTime(),
-          type:this.messtype,
-          content:v,
-          to:this.messto,
-          from:UID
-        };
-        socket.emit('chat', JSON.stringify(msg));
-      }
-    },
     
 
     showMembers:function(){
@@ -169,20 +285,11 @@ export default {
       this.teamMembersSeen = false;
     },
 
-    messageframeClose:function(){
-      this.messageframeSeen=false;
-      this.teamMembersSeen=false;
-      this.messtype='';
-      this.messto='';
 
-      $('.messageframe')[0].style.height = '0%';
-      $('#messageframe-cont')[0].innerHTML = '';
-      $('#messageframe-input')[0].value = '';
-    },
     
     deleteTheRecentChat:function(){
       var data = {
-        uid:UID,
+        uid:this.UID,
         type:main.messtype,
         to:main.messto
       };
@@ -222,9 +329,9 @@ export default {
       console.log(skip);
 
       var data = {
-        receiveUid:UID,
-        fromUid:main.messto,
-        type:main.messtype
+        receiveUid:this.UID,
+        fromUid:this.messto,
+        type:this.messtype
       };
 
       //获取更多聊天记录
@@ -253,98 +360,68 @@ export default {
         },1500);
     },
 
-    //when user receive any message, run this function;
-    messageCome:function(msg){
 
-      console.log(msg);
-      if((msg.uid===main.messto) && (msg.type===main.messtype||
-          msg.type!=='team' && main.messtype==='star')||
-          msg.uid===UID && msg.type!=='team'){
-          
-          this.createMessDiv(msg, false);
-          console.log(1);
-
-        if(msg.uid===uid&&msg.type==='team'&&main.messto!==msg.uid){
-          this.addUnRead(msg);
-          console.log(2);
-        }
-
-
-      }else{
-
-        if(msg.type==='team'){
-          TeamMessageCome.play();
-        }else{
-          PersonMessageCome.play();
-        }
-
-          console.log(3);
-        this.addUnRead(msg);
-      }
-
-      //判断是否存在于最近联系
-      var existInRecent = false;
-
-      if(msg.type==='team'){
-        //check whether the recent_team exist;
-        var lrt = Loginlist.recent_team;
-        for(i=0;i<lrt.length;i++){
-          if(lrt[i]===msg.uid||lrt[i]===msg.to){
-            existInRecent = true;
-            break;
+    expressionToMark(expressionMark){
+          var t;
+          switch(expressionMark){
+            case '呵呵':t = 0; break;
+            case '哈哈':t = 1; break;
+            case '吐舌':t = 2; break;
+            case '啊':t = 3; break;
+            case '酷':t = 4; break;
+            case '怒':t = 5; break;
+            case '开心':t = 6; break;
+            case '汗':t = 7; break;
+            case '泪':t = 8; break;
+            case '黑线':t = 9; break;
+            case '鄙视':t = 10; break;
+            case '不高兴':t = 11; break;
+            case '真棒':t = 12; break;
+            case '钱':t = 13; break;
+            case '疑问':t = 14; break;
+            case '阴险':t = 15; break;
+            case '吐':t = 16; break;
+            case '咦':t = 17; break;
+            case '委屈':t = 18; break;
+            case '花心':t = 19; break;
+            case '呼':t = 20; break;
+            case '笑眼':t = 21; break;
+            case '冷':t = 22; break;
+            case '太开心':t = 23; break;
+            case '滑稽':t = 24; break;
+            case '勉强':t = 25; break;
+            case '狂汗':t = 26; break;
+            case '乖':t = 27; break;
+            case '睡觉':t = 28; break;
+            case '惊哭':t = 29; break;
+            case '生气':t = 30; break;
+            case '惊讶':t = 31; break;
+            case '喷':t = 32; break;
+            case '爱心':t = 33; break;
+            case '心碎':t = 34; break;
+            case '玫瑰':t = 35; break;
+            case '礼物':t = 36; break;
+            case '彩虹':t = 37; break;
+            case '星星月亮':t = 38; break;
+            case '太阳':t = 39; break;
+            case '钱币':t = 40; break;
+            case '灯泡':t = 41; break;
+            case '咖啡':t = 42; break;
+            case '蛋糕':t = 43; break;
+            case '音乐':t = 44; break;
+            case 'haha':t = 45; break;
+            case '胜利':t = 46; break;
+            case '大拇指':t = 47; break;
+            case '弱':t = 48; break;
+            case 'ok':t = 49; break;
           }
+          return t;
         }
-
-      }else{
-
-        //check whether the recent_people exist;
-        var lrp = Loginlist.recent_people;
-        for(i=0;i<lrp.length;i++){
-          if(lrp[i]===msg.uid||lrp[i]===msg.to){
-            existInRecent = true;
-            break;
-          }
-        }
-      }
-
-
-      if(!existInRecent){
-        console.log(4);
-        if(msg.uid===UID){
-          //who send msg and who receive msg is the same;
-
-          //无论如何都要读取对方消息
-          var data = {  
-            uid:msg.to, 
-            type:msg.type
-          };
-
-          $.get('/getInfo',data,function(info){
-            if(msg.type==='team'){
-              Loginlist.recent_team.push(msg.uid);
-            }else{
-              Loginlist.recent_people.push(msg.to);
-            }
-
-            info.unread = 0;
-            main.addRecentLi(info);
-          
-          });
-
-        }else{
-          if(msg.type==='team'){
-            Loginlist.recent_team.push(msg.uid);
-          }else{
-            Loginlist.recent_people.push(msg.uid);
-          }
-          msg.unread = 1;
-          this.addRecentLi(msg);
-        }
-      }
-    },
 
   }
 }
+
+
 
 </script>
 
@@ -463,25 +540,20 @@ export default {
     }
   }
   .getMoreMessageOnFrame-btn {
-    background: rgba(255,255,255,0.8);
+    background: transparent;
     color:#555;
-    width: 15rem;
     text-align: center;
     cursor:pointer;
     padding:0 0.5em 0 0.5em;
     box-shadow: 0 0 2px #999;
-    border:1px solid #90C1C9;
     position: absolute;
-    top:45px;
-    left:40%;
+    top:35px;
+    left:50%;
+    transform:translateX(-50%);
     z-index:1000000;
     &:hover{
-      padding:0 2em 0 2em;
-      box-shadow: 0 0 10px #999;
-      font-size:10px;
-    }
-    @media(max-width:420px){
-      left:27%;
+      box-shadow: 0 0 5px #999;
+      color:#7CC;
     }
   }
   .messageframe-top{
@@ -537,39 +609,40 @@ export default {
     overflow-y:scroll; 
     font-size:1.2em;
     padding-top:25px;
-    .messli{
-      padding:0.2em;
+    li{
       margin-bottom:0.4em;
-      width:100%;
-      transform:translateY(-20%);
       .avator{
         width:60px;
-        padding-top: 0.2em;
-        margin:0.2em;
+        height:60px;
+        /*float:left;*/
+        border-radius: 50%;
+        border:1px solid #999;
       }
       .info{
-        max-width: 500px;
-        @media(max-width:600px){ 
+        min-width:100px;
+        max-width:70%;
+        margin:5px;
+        /*float:left;*/
+        transform: translateY(-10px);
+        @media(max-width:468px){ 
           max-width:300px; 
-        }
-        @media(max-width:400px){ 
-          max-width:200px; 
         }
         div{
           width:100%;
+          padding:0 5px;
           .name{
             margin-right: 0.5em;
             font-size: 0.9em; 
+            width:auto;
             display: inline-block;
           }
         }
         .content{
           margin: 0.2em 0.4em 0 0;
-          border:1px solid #aaa;
-          padding:0.2em;
-          box-shadow: 1px 1px 2px #999;
-          width:100%;
-          font-size:1.2em;
+          padding: 0.2em;
+          word-break:break-all;
+          box-shadow: 0px 0px 5px #999;
+          font-size: 1.2em;
           .expression-chatting{
             width:30px;
             height:30px;
@@ -580,25 +653,7 @@ export default {
       }
     }
   }
-  .messageframe-expression{
-    background:rgba(255,255,255,0.5);
-    width:auto;
-    height:auto;
-    position:absolute;
-    bottom:40px;
-    z-index:100000;
-    div{
-      cursor:pointer;
-      width: 30px;
-      height: 30px;
-      margin:5px;
-      float: left;
-      display: inline-block;
-      &:hover{
-        background:@seaBlue;
-      }
-    }
-  }
+  
   .messageframe-say{
     overflow: hidden;
     border:solid 2px @seaBlue;

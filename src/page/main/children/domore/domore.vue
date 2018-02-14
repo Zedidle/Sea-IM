@@ -4,24 +4,24 @@
     id='domore'
   >
       <div 
-        id='person'
         class='ele'
         data-toggle='tooltip'
         data-placement='left'
-        title='个人信息'
+        title='个人'
+        @click='togglePeople'
       >
-      P
+        <i class='icon iconfont icon-account'></i>
       </div>
+
       <div
-        id='myteam'
         class='ele'
         data-toggle='tooltip'
         data-placement='top'
         title='团队'
+        @click='toggleTeam'
       >
-      T
+        <i class='icon iconfont icon-hot'></i>
       </div>
- 
 
       <div
         id='logOff'
@@ -54,6 +54,8 @@ export default {
     ...mapMutations([
       'toggleDomore',
       'toLogoff',
+      'togglePeople',
+      'toggleTeam',
     ]),
   }
 }
@@ -64,14 +66,14 @@ export default {
 <style lang='less' scoped>
 #domore{
   
-  position:absolute;
   width:240px;
+  position:absolute;
   top:50%;
   left:50%;
   transform: translateX(-50%) translateY(-50%);
+  box-shadow: 0 0 10px #999;
   overflow: hidden;
   z-index: 10000000;
-  box-shadow: 0 0 10px #999;
   
 
 
@@ -99,7 +101,7 @@ export default {
     line-height: 50px;
     border-radius: 10%;
     margin:10px;
-    font-size: 1.8em;
+    font-weight: 600;
     text-align: center;
     display: inline-block;
     cursor:pointer;

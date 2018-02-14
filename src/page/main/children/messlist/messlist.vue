@@ -3,16 +3,17 @@
     id='list'
   >
       <li
-        @click='showMessageframe({uid:i.uid,name:i.name,type:i.type})'
+        @click='showMessageframe({uid:i.uid,name:i.name,type:i.level?"t":"p"})'
         v-for='i in recentInfo'
       >
         <span class='uid'>{{i.uid}}</span>
-        <span class='type'>{{i.level?"team":"people"}}
+        <span class='type'>{{i.level?"t":"p"}}
         </span>
 
         <div class='info'>
           <div class='name'>
-            {{i.name}} 
+            {{i.name}}
+            <span class='badge' v-show='i.unr' >{{i.unr}}</span>
           </div>
 
           <div class='introduce'>{{i.introduce}}</div>
@@ -50,7 +51,6 @@ export default {
 
 
 
-
     addUnRead:function(msg){
       var msgUid = msg.uid;
 
@@ -85,26 +85,21 @@ export default {
       }
 
       //同时完成Loginlist的更改
-      if(data.type ==='team'){
-        for(i=0;i<Loginlist.recent_team.length;i++){
-          if(Loginlist.recent_team[i] === data.to){
-            Loginlist.recent_team.splice(i,1);
-            break;
-          }
-        }
-      }else{
-        for(i=0;i<Loginlist.recent_people.length;i++){
-          console.log(Loginlist.recent_people[i]);
-          console.log(data.to);
-          console.log(Loginlist.recent_people[i] === data.to);
-          if(Loginlist.recent_people[i] === data.to){
-            console.log(2333);
-            Loginlist.recent_people.splice(i,1);
-            console.log(Loginlist.recent_people);
-            break;
-          }
-        }
-      }
+      // if(data.type ==='team'){
+      //   for(i=0;i<Loginlist.recent_team.length;i++){
+      //     if(Loginlist.recent_team[i] === data.to){
+      //       Loginlist.recent_team.splice(i,1);
+      //       break;
+      //     }
+      //   }
+      // }else{
+      //   for(i=0;i<list.recent_people.length;i++){
+      //     if(Loginlist.recent_people[i] === data.to){
+      //       Loginlist.recent_people.splice(i,1);
+      //       break;
+      //     }
+      //   }
+      // }
     },
     unReadAdd1InDB:function(msgType,msgUid,msgTo){
       var data = {
@@ -119,39 +114,6 @@ export default {
     showBadge:function(badgeNumber){
       return Boolean(badgeNumber);
     },
-    liHeight:function(havelevel){
-      var h = this.type==='recent'?
-              havelevel?'80':'50':
-              this.type==='star'?'60':'100';
-      return {
-        height:h+'px',
-        overflow:'hidden'
-      };
-    },
-    avatorStyle:function(havelevel){
-      var w,b_radius;
-      switch(this.type){
-        case('recent'):{
-          w = havelevel?'78':'50';
-          b_radius = havelevel?'0':'50';
-          break;
-        }
-        case('star'):{
-          w='60';
-          b_radius='50';
-          break;
-        }
-        case('team'):{
-          w='90';
-          b_radius='0';
-          break;
-        }
-      }        
-      return { 
-        width:w+'px',
-        borderRadius:b_radius+'%'
-      };
-    },
 
     subUnreadInDB:function(li_uid,haslevel){
       var data = {
@@ -162,7 +124,8 @@ export default {
       };
       $.post('/unReadTo0',data);
     },
-        //  当某个messli被点击时，触发该方法
+    
+    //  当某个messli被点击时，触发该方法
     //  event:触发的事件
     //  liUid:触发事件的对象所需要的对应聊天ID
     //  hasLevel:只有团队才有等级,判断是否是一个团队对象
@@ -196,11 +159,11 @@ export default {
     },
 
     getUnreadMess:function(getUid,unread,type){
-      var data = {
+      let data = {
         uid:UID,
-        getUid:getUid,
-        unread:unread,
-        type:type
+        getUid,
+        unread,
+        type,
       };
 
       console.log('Data of get unread Messages:');
@@ -213,6 +176,7 @@ export default {
         }
       });
     },
+
   }
 }
 
@@ -243,6 +207,11 @@ export default {
       float:left;
       .name{
         height:20px;
+      }
+      .badge{
+        padding:2px 4px 2px 4px;
+        border-radius: 50%;
+        background-color: red;
       }
       .introduce{
         height:40px;

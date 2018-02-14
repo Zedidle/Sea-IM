@@ -2,7 +2,6 @@
     <div id='team-search' >
 
 		</div>
-  	</div>
 </template>
 
 <script>

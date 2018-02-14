@@ -70,7 +70,7 @@ export default {
       float: right;
       text-align: center;
       height:45px;
-      line-height: 45px;
+      line-height: 40px;
       width:35%;
       font-size:28px;
       border-right:2px solid #999;
@@ -89,7 +89,7 @@ export default {
       float: left;
       text-align: center;
       height:45px;
-      line-height: 45px;
+      line-height: 40px;
       width:55%;
       font-size: 28px;
       border:1px solid #456; 

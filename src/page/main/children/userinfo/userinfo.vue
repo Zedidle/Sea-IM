@@ -6,9 +6,11 @@
       :src='userInfo.headImg'
       @click='toggleDomore'
     >
-    <div>
-      <div>{{userInfo.name}}</div>
-      <div>{{userInfo.introduce}}</div>
+    <div
+      class='info'
+    >
+      <input v-model='userInfo.name'>
+      <textarea v-model='userInfo.introduce'></textarea>
     </div>
   
   </div>
@@ -67,15 +69,36 @@ export default {
       }
     }
 
-    &>div{
-      display: inline-block;
+    .info{
       float:left;
-      min-width:160px;
+      padding-left:5px;
+      width:160px;
       height:100%;
+      input{
+        background:transparent;
+        display: inline-block;
+        width:160px;
+        height:25px;
+        border:none;
+        &:hover{
+          box-shadow:0 0 5px #999;
+        };
+      }
+      textarea{
+        background:transparent;
+        display: inline-block;
+        overflow: hidden;
+        width:160px;
+        height: 40px;
+        border:none;
+        &:hover{
+          box-shadow:0 0 5px #999;
+        };
+      }
     }
     .active{
       border:2px solid #399891;
-      border-radius: 5%;
+      border-radius: 0%;
     }
   }
 

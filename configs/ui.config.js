@@ -1,14 +1,15 @@
 console.log('load ui config');
 
 module.exports = function(){  
-    document.querySelector('#bg-change-btn').onmouseover = function(){
+    document.getElementById('bg-change-btn').onmouseover = function(){
       console.log('hover');
-      document.querySelector('#bg-change-btn').className = 'demo-icon icon-spin3 animate-spin';
+      document.getElementById('bg-change-btn').className = 'spin';
     }
-    document.querySelector('#bg-change-btn').onmouseout = function(){
+    document.getElementById('bg-change-btn').onmouseout = function(){
       console.log('out');
-      document.querySelector('#bg-change-btn').className = 'demo-icon icon-spin3';
+      document.getElementById('bg-change-btn').className = '';
     }
+    
     var BgController = function(obj){
       this.v = 1;
       this.update = function(){

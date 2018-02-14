@@ -8,20 +8,21 @@
   <link rel="stylesheet" href="css/font.css">
 </head>
 <body>
-  <li style='rwww.win2.cn/g9
-  transform:rotate(50deg)'>
-    <i style='color:#FFF;' class="icon iconfont icon-back"></i>
-  </li>
-  <i class="icon iconfont icon-back"></i>
   <div id="app">
     <router-view></router-view>
   </div>
   
+
+  <span
+    id='bg-change-btn'
+  >
   <i 
     title='更换背景'
-    id='bg-change-btn'
-    class="demo-icon icon-spin3"
+    style='font-weight: 600;'
+    class="icon iconfont icon-refresh"
   ></i>
+  </span>
+
   <footer
       style='position:fixed;
           height:10px;
@@ -37,6 +38,7 @@
     </ul>
   </footer>
   <script src="/socket.io/socket.io.js"></script>
+  <script> let socket = io('localhost:8000'); </script>
   <script src='js/bundle.js'></script>
 </body>
 </html>

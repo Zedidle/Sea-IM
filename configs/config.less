@@ -39,6 +39,21 @@ body{
     text-align: center;
 }
 
+.spin{
+  color:red;
+  animation:oSpin 2s infinite linear;
+}
+
+@keyframes oSpin {
+  0% {
+    transform:rotate(0deg);
+  }
+  100% {
+    transform:rotate(360deg);
+  }
+}
+
+
 @modernBlue:#006699;
 @friendBlue:#004466;
 @deepBlue:#006699;
@@ -102,20 +117,20 @@ body{
 
 
 .bounce-enter-active {
-  animation: bounce-in .5s;
+  animation: bounce-in .3s;
 }
 .bounce-leave-active {
-  animation: bounce-in .5s reverse;
+  animation: bounce-in .3s reverse;
 }
 @keyframes bounce-in {
   0% {
-    transform: scale(0) translateX(-50%) translateY(-50%);
+    transform: scale(0) translateX(-50%);
   }
   50% {
-    transform: scale(1.2) translateX(-50%) translateY(-50%);
+    transform: scale(1.1) translateX(-50%);
   }
   100% {
-    transform: scale(1) translateX(-50%) translateY(-50%);
+    transform: scale(1) translateX(-50%);
   }
 }
 

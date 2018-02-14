@@ -16,7 +16,6 @@ server.listen(port, ip, function(){
   console.log("释放端口："+ip+':'+port);
 });
 
-
 // 启用通讯
 require('./sockets')(server);
 

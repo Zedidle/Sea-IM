@@ -1,5 +1,5 @@
 const {
-	z,
+	// z,
 	User,
 	router,
 	urlencodedParser,
@@ -75,8 +75,13 @@ router.get('/loginJudge', (req,res) => {
 	let hash = crypto.createHash('sha1');
 	hash.update(password)
 
-	User.findOne({ uid, password:hash.digest('hex')})
-		.exec((err,u)=>{ res.send(!(u&&u.login)); })
+	User.findOne({ uid, password:hash.digest('hex')},(err,u)=>{ 
+		if(u){
+			res.send(u.login?'l':true);
+		}else{
+			res.send(false);
+		}
+	});
 });
 
 
@@ -112,7 +117,7 @@ router.post('/login', urlencodedParser,(req,res)=>{
 			List.findOne({uid},(err,d)=>{
 
 				
-			z.check(d,'list');
+			// z.check(d,'list');
 
 				let 
 					J_list = JSON.stringify(d),
@@ -194,12 +199,7 @@ router.post('/login', urlencodedParser,(req,res)=>{
 
 					//login: true
 					User.update({uid},{$set:{login:true}},(err)=>{
-						console.log('(user)'+uid+' login');
-						setTimeout(function(){
-							User.update({uid},{$set:{login:false}},(err)=>{
-								console.log(uid + ' stop');
-							});
-						},9000);
+						console.log(uid+' login');
 					});
 				});
 			});
@@ -214,10 +214,7 @@ router.post('/login', urlencodedParser,(req,res)=>{
 router.post('/logOff',urlencodedParser,(req,res)=>{
 	let uid = req.body.uid;
 	User.update({uid},{$set:{login:false}},(err)=>{ 
-		console.log('(user)'+uid+" logoff ↓");
-	});
-	res.render('login.ejs',{ 
-		loginTip:''
+		console.log(uid+" logoff ↓");
 	});
 });
 

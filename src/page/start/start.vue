@@ -237,38 +237,34 @@ export default{
             console.log(vm.pw);
 
         	if(this.flagUid && this.flagPw){
-            $.get('/loginJudge', {
-              uid: this.uid,
-              password: this.pw
-            },function(isOkToLogin){
-              console.log('2333');
-              console.log(isOkToLogin);
-              if(isOkToLogin){
+                $.get('/loginJudge', { uid: this.uid, password: this.pw },(j)=>{
+                    console.log(j);
+                    if(j==='l'){
+                        vm.lBtnText = '帐号已登录!';
+                        setTimeout(function(){ vm.lBtnText = '登录'; }, 2000);
+                        return ;
+                    }   
 
-                $.post('/login',{
-                  uid:vm.uid,
-                  password:vm.pw
-                },function(allData){
-                    //这里去获得所有状态到vuex里
-                    vm.getAllLoginData(allData);
-                    //并使页面跳转
-                    console.log('to /m');
-                    vm.$router.push({ path: '/m'});
+                    if(j){
+                        $.post('/login',{
+                          uid:vm.uid,
+                          password:vm.pw
+                        },function(allData){
+                            //这里去获得所有状态到vuex里
+                            vm.getAllLoginData(allData);
+                            //并使页面跳转
+                            console.log('to /m');
+                            vm.$router.push({ path: '/m'});
+                        });
+                    }else{
+                        vm.lBtnText = 'Account IS Not Match With PW';
+                        setTimeout(function(){ vm.lBtnText = '登录'; }, 2000);
+                    }
                 });
-
-              }else{
-                this.lBtnText = '帐号已登录';
-                setTimeout(function(){
-                  vm.lBtnText = '登录';
-                }, 2000);
-              }
-            });
-          }else{
-              this.lBtnText = '请检查每个输入项';
-              setTimeout(function(){
-                  vm.lBtnText = '登录';
-              }, 2000);
-          }
+            }else{
+                this.lBtnText = '请检查每个输入项';
+                setTimeout(function(){ vm.lBtnText = '登录'; }, 2000);
+            }
         },
 
         rSubmit:function(){

@@ -4,48 +4,45 @@ const {
   Pmess,
   Tmess,
   Team,
-  Loginlist,
+  List,
   Unread,
 } = require('../../configs/server.config.js');
-
 
 
 module.exports = function(server){
 
 	var io = require('socket.io')(server);
 
-  console.log('√---服务器开启socket通讯---√');
-  console.log("开始监听|心跳包|聊天消息|");
+  console.log('-----------服务器开启socket通讯-----------');
+  console.log("--------------|||开始监听|||-------------");
+  console.log("----------------聊天消息---------------");
+  console.log("-----------------心跳包---------------");
   
   io.on('connection', function(socket){
 
     socket.on('heartbeat',function(uid){
       User.update({uid}, {$set:{login:true}}, (err) => { 
-        if(err) throw err;
-        console.log(uid + ' login');
+        console.log(uid + ' in');
       });
       setTimeout(function(){
         User.update({uid}, {$set:{login:false}}, (err) => { 
-          if(err) throw err;
-
-          console.log(uid + ' logout'); 
+          console.log(uid + ' out'); 
         });
-      },19000);
+      },9000);
     });
+    
 
   socket.on('chat', function(J_msg) {
     //1.服务器接收格式化了的消息，并解格式化；
     var msg = JSON.parse(J_msg);
-    console.time(1);
     console.log(msg);
 
     People.findOne({uid:msg.from},(err, p) => {
-      if(err) throw err;
       // 2.获取来信者信息，并把来信者信息和接收到的消息组合起来，成为数据库设计中的消息结构体；
       var m = {
         uid:msg.from,
-        to:msg.to,
         type:msg.type,
+        to:msg.to,
         headImg:p.headImg,
         name:p.name,
         time:msg.time,
@@ -53,41 +50,25 @@ module.exports = function(server){
         introduce:p.introduce
       };
 
-      LIB.check(m,'Consistent message');
-
       J_m = JSON.stringify(m);
-      console.timeEnd(1);
       // 3.判断消息来自于团队还是个人，从而进入不同的处理分支；
-      if(msg.type!=='team'){
+      if(msg.type==='p'){
         // 1.如果来自于个人，则判断接收者是否在线，在线则直接把消息结构体发送给接收者，否则使得接收者对应未读消息+1；
-        User.findOne({uid:msg.to},(err,d)=>{
-          if(err) throw err;
-
+        User.findOne({uid:m.to},(err,d)=>{
+          console.log(d)
           if(d.login){
             //在线
+            console.log(d.uid + ' on');
             io.emit(msg.to,J_m);
           }else{
             //不在线
             Unread.findOne({uid:msg.to}, (err,d) => {
-              if(err) throw err;
 
-              var punRead = d.punRead;
-
+              var punr = d.punr;
               //如果没有创建过对应的未读数量值，则新建为1
-              if(!punRead[msg.from]){
-                punRead[msg.from] = 1;
-              }else{
-                punRead[msg.from]++;
-              }
+              punr[msg.from] = punr[msg.from]?punr[msg.from]+1:1;
 
-              Unread.update({uid:msg.to},
-                {
-                  $set:{
-                    punRead
-                  }
-                }
-              ).exec();
-
+              Unread.update({uid:msg.to}, { $set:{ punr } } ).exec();
             })
           }
         })
@@ -98,10 +79,8 @@ module.exports = function(server){
         //add the message to the receiver and sender.
         // 3.更新通讯双方对应的消息记录；
         // 4.如果之前都没建立过通讯的话，则双方登记对方
-        Pmess.findOne({uid:msg.to}, (err, reveiverM) => {
-          let mess = reveiverM.mess;
-
-          console.log('reveiver:'+ mess);
+        Pmess.findOne({uid:msg.to}, (err, receiverM) => {
+          let mess = receiverM.mess;
           // 登记
           if(!mess[msg.from]){ mess[msg.from]=[]; }
           mess[msg.from].push(m);
@@ -110,9 +89,6 @@ module.exports = function(server){
 
         Pmess.findOne({uid:msg.from}, (err, senderM) => {
           let mess = senderM.mess;
-
-          console.log('sender:'+mess);
-
           //登记
           if(!mess[msg.to]){ mess[msg.to]=[]; }
           
@@ -124,22 +100,10 @@ module.exports = function(server){
         //make loginlist.recent_people of msg.from addToSet msg.to,
         //the third argument of update is used to decide whether update all contents that is meeting the condition,
          // 4.更新接收方最近联系人；
-        Loginlist.update({uid: msg.from},
-          {
-            $addToSet:{
-              recent_people: msg.to
-            }
-          }
-        ).exec();
+        List.update({uid: msg.from},{ $addToSet:{ recent_people: msg.to } } ).exec();
 
         //make loginlist.recent_people of msg.to addToSet msg.from,
-        Loginlist.update({uid: msg.to},
-          {
-            $addToSet:{
-              recent_people: msg.from
-            }
-          }
-        ).exec();
+        List.update({uid: msg.to}, { $addToSet:{ recent_people: msg.from }} ).exec();
 
       }else{
         // if this message is come from a team.
@@ -148,8 +112,9 @@ module.exports = function(server){
         Team.findOne({uid:msg.to}, (err,t) => {
           var members = t.member;
           var tm = m;
+          // change owner of msg as 'uid' and save the sender as 'from'
           tm.uid = msg.to;
-          tm.from_user = msg.from;
+          tm.from = msg.from;
           // 2.遍历成员列表并把消息结构体发送给每个成员；
           teamBroadcast(members,tm);
           function teamBroadcast(members, msgToTeam) {

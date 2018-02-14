@@ -16,7 +16,7 @@
       :style='h1Style'
       class='welcome'
       v-show='welcomeShow'
-      @click = 'showGreeting'
+      @click = 'hideGreeting'
       @mouseover = 'onH1Color'
       @mouseout = 'offH1Color'
       >{{greeting}}
@@ -64,8 +64,8 @@ import {mapState} from 'vuex';
         }
       },
       methods:{
-        showGreeting:function(){
-          this.show = false;
+        hideGreeting:function(){
+          this.welcomeShow = false;
         },
         onH1Color:function(){
           this.onH1 = true;
