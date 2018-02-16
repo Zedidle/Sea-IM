@@ -1,4 +1,91 @@
+import $ from 'jquery';
+
 export default {
+
+
+	showPTodo(state,props){
+		console.log('mutations:showPTodo:')
+		state.onPTodo = true;
+		state.pTodoProps = props;
+	},
+	hidePTodo(state){
+		state.onPTodo = false;
+	},
+
+	getMoreMessage(state){
+    //读取现有信息长度
+    let skip = state.messContent.length;
+
+    console.log('---------getMoreMessage---------');
+    console.log('now messages in content: skip:')
+    console.log(skip);
+
+	let getMoreMBtn = document.getElementById('getMoreMessageOnFrame-btn');
+	getMoreMBtn.style.color = '#7CC';
+	setTimeout(()=>{getMoreMBtn.style.color = '#555';},2000);
+
+
+    console.log('mess record length:');
+    console.log(state.messRecord.length);
+    if(state.messRecord.length){
+
+    	console.log('get messages from record');
+			addMoreMessages(state.messRecord);
+
+
+    }else{
+      console.log('get messages from DB');
+			//获取更多聊天记录
+			$.get('/getMoreMessage', {
+				receiveUid:state.UID,
+				fromUid:state.messto,
+				type:state.messtype
+			}, (m)=>{
+				console.log('get the messages from DB:');
+				console.log(m);
+				state.messRecord = m?m:[];
+				addMoreMessages(m);
+			});
+    }
+
+  	function addMoreMessages(messR){
+  		console.log('addMoreMessages');
+    	let mr = null;
+    	for(let i=0;i<5;i++){
+	  		mr = messR[messR.length-1-skip-i];
+	  		if(mr){
+	  			state.messContent.unshift(mr);
+	  		}else{
+	  			/*no more*/
+	  			console.log('no more');
+	  			setTimeout(()=>{
+	  				getMoreMBtn.style.color = 'red';
+	  				setTimeout(()=>{getMoreMBtn.style.color = '#555';},2000);
+	  			},500);
+	  			break;
+	  		}
+	  	}
+	  	let cont = document.getElementById('messageframe-cont');
+	  	cont.scrollTop = 0;
+  	}
+
+  },
+
+
+	searchPeople(state,keyword){
+
+		console.log('---------searchPeople---------')
+		console.log('keyword:');
+		console.log(keyword);
+		$.get('/searchPeople',{
+			keyword,
+		},(d)=>{
+			console.log('searchPeople-callback:');
+			console.log(d);
+			state.foundPeopleInfo=d;
+		})
+	},
+
 
 	// 直接转换成登录状态
 	startLogin(state){
@@ -25,7 +112,23 @@ export default {
 
 
 
+	findStars(state,keyword){
 
+		console.log('findStars');
+		console.log(state.starInfo);
+		console.log(keyword);
+
+		if(keyword){
+			state.foundStarsInfo = [];
+			for(let i of state.starInfo){
+				if(i.uid.match(keyword)||i.name.match(keyword)){
+					state.foundStarsInfo.push(i);
+				}
+			}
+		}
+		console.log(state.foundStarsInfo);
+	},
+	
 	/*登录时获取所有用户信息的方法*/
 	getAllLoginData(state,d){
 		console.log('-------|||GET-ALL-LOGIN-DATA|||-------');
@@ -83,8 +186,8 @@ export default {
 
 
 
-		state.starInfo = JSON.parse(d.recentInfo);
-		state.teamInfo = JSON.parse(d.recentInfo);
+		state.starInfo = JSON.parse(d.starInfo);
+		state.teamInfo = JSON.parse(d.teamInfo);
 
 	},
 
@@ -162,6 +265,8 @@ export default {
 		state.messageframeSeen = true;
 		console.log('-------|||SHOW-MESSAGEFRAME|||-------');
 		console.log(d.uid,d.name,d.type);
+
+
 	},
 
 	closeMessageframe:function(state){
@@ -170,6 +275,7 @@ export default {
 	  state.messtype=null;
 	  state.messto=null;
       state.messContent = [];
+      state.messRecord = [];
       document.getElementById('messageframe-input').value = '';
     },
 
@@ -181,6 +287,15 @@ export default {
 
     pushMContent(state,msg){
     	state.messContent.push(msg);
+    	setTimeout(()=>{
+	        let cont = document.getElementById('messageframe-cont');
+    	    cont.scrollTop = cont.scrollHeight;
+    	},100);
+
+    	if(state.messRecord.length){
+    		state.messRecord.length++;
+    		// state.messRecord.push(msg);
+    	}
     },
 
     unshiftMContent(state,msgs){
@@ -192,12 +307,7 @@ export default {
 
 
 
-
-
-
-
-
-
+// ---------------add unread base on type and uid;
 
 
 }

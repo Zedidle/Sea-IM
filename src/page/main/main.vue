@@ -60,7 +60,7 @@
       let vm = this;
       setInterval(function(){
         socket.emit('heartbeat',vm.UID);
-        console.log('heartbeat!')
+        // console.log('heartbeat!')
       },10000);
     },
     // methods:vMethods()
@@ -123,7 +123,7 @@
     height:564px;
     border:1px solid #7CC;
     box-shadow: 0 0 15px #999;
-    background:rgba(255,255,255,0.9);
+    background:rgba(247,247,247,0.95);
 
     @media(max-width: 768px){
       top:0%;

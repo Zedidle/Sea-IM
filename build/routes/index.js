@@ -1,6 +1,6 @@
 const start = require('./start');
 const people = require('./people');
-const unreadnumber = require('./unreadnumber');
+const unread = require('./unread');
 const team = require('./team');
 const search = require('./search');
 const message = require('./message');
@@ -13,5 +13,5 @@ module.exports = function(app){
 	app.use('/',team);
 	app.use('/',search);
 	app.use('/',message);
-	app.use('/',unreadnumber);
+	app.use('/',unread);
 }

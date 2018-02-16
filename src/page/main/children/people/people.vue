@@ -10,62 +10,58 @@
 			<i class='icon iconfont icon-wrong'></i>
 		</div>
 
-		<div class="top">
 
-			<transition name='fadeY-10'>
+		<transition name='fadeY-10'>
+		<div
+			id='operator'
+			v-show='!onPSearch'
+		>
 			<div
-				id='operator'
-				v-show='!onPSearch'
+				@click='changeContent("me")'
 			>
-				<div>
-					<i class='icon iconfont icon-accountfilling'></i>
-				</div>
-				<div>
-					<i class='icon iconfont icon-favorite'></i>
-				</div>
-				<div
-					@click='showPSearch'
-				>
-					<i class='icon iconfont icon-search'></i>
-				</div>
+				<i class='icon iconfont icon-accountfilling'></i>
 			</div>
-			</transition>
-
-
-			<transition name='fadeY-10'>
-			<div 
-				id='search'
-				v-show='onPSearch'
+			<div
+				@click='changeContent("stars")'
 			>
-				<span
-					@click='hidePSearch'
-				>
-					<i class='icon iconfont icon-close'></i>
-				</span>
-				<input 
-					v-model='psInput'
-				>
-				<div
-				>
-					<i class='icon iconfont icon-search'></i>
-				</div>
+				<i class='icon iconfont icon-favorite'></i>
 			</div>
-			</transition>
-
-
+			<div
+				@click='changeContent("search")'
+			>
+				<i class='icon iconfont icon-search'></i>
+			</div>
 		</div>
+		</transition>
+
+		<!-- search people -->
+		<transition name='fadeY-10'>
+		<div 
+			id='search'
+			v-show='onPSearch'
+		>
+			<span
+				@click='closePSearch'
+			>
+				<i class='icon iconfont icon-close'></i>
+			</span>
+			<input 
+				v-model='psInput'
+				@keyup.enter = 'searchP'
+			>
+			<div
+				@click='searchP'
+			>
+				<i class='icon iconfont icon-search'></i>
+			</div>
+		</div>
+		</transition>
+
+
 		
-<!-- 		<div class="content">
-			<transition name='fadeY-10'>
-				<me></me>
-			</transition>	
-			<transition name='fadeY-10'>
-				<stars></stars>
-			</transition>	
-			<transition name='fadeY-10'>
-				<search></search>
-			</transition>	
-		</div> -->
+		<div class="content">
+			<component :is='pContent'></component>
+		</div>
 
 	</div>
 
@@ -75,15 +71,16 @@
 
 
 <script>
-	import me from './children/me.vue';
-	import stars from './children/stars.vue';
-	import search from './children/search.vue';
+	import me from './children/me/me.vue';
+	import stars from './children/stars/stars.vue';
+	import search from './children/search/search.vue';
 
 	import {mapState,mapMutations} from 'vuex';
 	export default {
 		data(){
 			return{
 				psInput:'',
+				pContent:'me',  //default:me||stars||search
 			}
 		},
 		components:{
@@ -103,7 +100,28 @@
 				'togglePeople',
 				'showPSearch',
 				'hidePSearch',
+				'searchPeople',
 			]),
+			searchP(){
+				console.log('----------searchP----------');
+				console.log('psInput:');
+				console.log(this.psInput);
+				if(this.psInput){
+					this.searchPeople(this.psInput);
+				}
+			},
+			changeContent(d){
+				this.pContent = d;
+				if(d==='search'){
+					this.showPSearch()
+				}
+
+			},
+			closePSearch(){
+				this.hidePSearch();
+				this.pContent = 'me';
+			}
+
 		}
 	}
 
@@ -140,69 +158,74 @@
 				}
 			}
 		}
-		.top{
+
+		#operator{
 			height:40px;
+			margin-top:40px;
+			div{
+				text-align: center;
+				font-weight: 600;
+				float: left;
+				width:99px;
+				line-height:40px; 
+				height: 40px;
+				border-bottom:1px solid #7CC;
 
-			#operator{
+				&:hover{
+					box-shadow: 0 0 5px #999;
+					color:#77CCCC;
+					cursor:pointer;
+				};
+			}
+		}
+
+		#search{
+			&:after{
+				display:block;
+				clear:both;
+				content:"";
+				visibility:hidden;
+				height:0;
+			}
+			span{
+				display: inline-block;
+				float:left;
 				height:40px;
-				div{
-					text-align: center;
-					font-weight: 600;
-					float: left;
-					width:99px;
-					line-height:40px; 
-					height: 40px;
-					border-bottom:1px solid #7CC;
-
-					&:hover{
-						box-shadow: 0 0 5px #999;
-						color:#77CCCC;
-						cursor:pointer;
-					};
-				}
+				width:40px;
+				line-height: 35px;
+				text-align: center;
+				font-size:22px;
+				&:hover{
+					cursor: pointer;
+					color:red;
+					box-shadow: 0 0 5px #999;
+				};
+			}
+			
+			input{
+				border:none;
+				float:left;
+				font-size: 18px;
+				background:transparent;
+				height:40px;
+				width:200px;
+				&:hover{
+					box-shadow: 0 5px 5px #999;
+					color:#77CCCC;
+				};		
 			}
 
-			#search{
-				span{
-					display: inline-block;
-					float:left;
-					height:40px;
-					width:40px;
-					line-height: 35px;
-					text-align: center;
-					font-size:22px;
-					&:hover{
-						cursor: pointer;
-						color:red;
-						box-shadow: 0 0 5px #999;
-					};
-				}
-				
-				input{
-					border:none;
-					float:left;
-					font-size: 18px;
-					background:transparent;
-					height:40px;
-					width:200px;
-					&:hover{
-						box-shadow: 0 5px 5px #999;
-						color:#77CCCC;
-					};		
-				}
-
-				div{
-					float:left;
-					width:58px;
-					height:40px;
-					line-height: 40px;
-					text-align: center;
-					&:hover{
-						cursor: pointer;
-						box-shadow: 0 0 5px #999;
-						color:#77CCCC;
-					};
-				}
+			div{
+				float:left;
+				width:58px;
+				height:40px;
+				line-height: 40px;
+				text-align: center;
+				&:hover{
+					cursor: pointer;
+					box-shadow: 0 0 5px #999;
+					color:#77CCCC;
+				};
 			}
 		}
 

@@ -69,10 +69,10 @@ export default {
     .cancelLogoff-btn{
       float: right;
       text-align: center;
-      height:45px;
-      line-height: 40px;
-      width:35%;
-      font-size:28px;
+      height:35px;
+      line-height: 30px;
+      width:45%;
+      font-size:22px;
       border-right:2px solid #999;
       border:1px solid #456; 
       margin:5px;
@@ -88,10 +88,10 @@ export default {
     .ensureLogoff-btn{
       float: left;
       text-align: center;
-      height:45px;
-      line-height: 40px;
-      width:55%;
-      font-size: 28px;
+      line-height: 30px;
+      height:35px;
+      width:45%;
+      font-size: 22px;
       border:1px solid #456; 
       margin:5px;
       color:#FFF;

@@ -6,37 +6,33 @@ const {
 	List,
 } = require('../../configs/server.config.js');
 
-router.post('/getMoreMessage', urlencodedParser, (req,res)=>{
-	var data = req.body;
-	console.log(data);
+router.get('/getMoreMessage', (req,res)=>{
+	let receiveUid = req.query.receiveUid;
+	let fromUid = req.query.fromUid;
+	let type = req.query.type;
 
-	var receiveUid = data.receiveUid;
-	var fromUid = data.fromUid;
+	console.log('---------getMoreMessage---------')
+	console.log('receiveUid:');
+	console.log(receiveUid);
+	console.log('fromUid:');
+	console.log(fromUid);
+	console.log('type:');
+	console.log(type);
 
 	new Promise((resolve,reject)=>{
-		if(data.type!=='team'){
-			Pmess.findOne({uid:receiveUid}, 'mess', (err,m) => {
-				if(err) throw err;
-				if(m){
-					console.log()
-					resolve(m.mess[fromUid]);
-				}else{
-					resolve(false);
-				}
+		if(type==='p'){
+			Pmess.findOne({uid:receiveUid},(err,m) => {
+				resolve(m?m.mess[fromUid]:false);
 			});
 		}else{
-			Tmess.findOne({uid:fromUid}, 'mess', (err,tm) => {
-				if(err) throw err;
-				if(tm){
-					resolve(tm.mess);
-				}else{
-					resolve(false);
-				}
+			Tmess.findOne({uid:fromUid}, (err,m) => {
+				resolve(m?m.mess:false);
 			});
 		}
-	}).then((messages) => {
-		console.log(messages);
-		res.send(messages);
+	}).then((mess) => {
+		console.log('get the messages:')
+		console.log(mess);
+		res.send(mess);
 	});
 });
 

@@ -19,16 +19,11 @@ module.exports = function(server){
   console.log("-----------------心跳包---------------");
   
   io.on('connection', function(socket){
-
     socket.on('heartbeat',function(uid){
-      User.update({uid}, {$set:{login:true}}, (err) => { 
-        console.log(uid + ' in');
-      });
+      User.update({uid}, {$set:{login:true}}).exec();
       setTimeout(function(){
-        User.update({uid}, {$set:{login:false}}, (err) => { 
-          console.log(uid + ' out'); 
-        });
-      },9000);
+        User.update({uid}, {$set:{login:false}}).exec();
+      },9800);
     });
     
 
@@ -39,16 +34,18 @@ module.exports = function(server){
 
     People.findOne({uid:msg.from},(err, p) => {
       // 2.获取来信者信息，并把来信者信息和接收到的消息组合起来，成为数据库设计中的消息结构体；
-      var m = {
-        uid:msg.from,
-        type:msg.type,
-        to:msg.to,
-        headImg:p.headImg,
-        name:p.name,
-        time:msg.time,
-        content:msg.content,
-        introduce:p.introduce
+      let m = {
+          uid:msg.from,
+          type:msg.type,
+          to:msg.to,
+          time:msg.time,
+          content:msg.content,
       };
+      if(p){
+        m.headImg = p.headImg,
+        m.name = p.name,
+        m.introduce = p.introduce
+      }
 
       J_m = JSON.stringify(m);
       // 3.判断消息来自于团队还是个人，从而进入不同的处理分支；
@@ -105,7 +102,7 @@ module.exports = function(server){
         //make loginlist.recent_people of msg.to addToSet msg.from,
         List.update({uid: msg.to}, { $addToSet:{ recent_people: msg.from }} ).exec();
 
-      }else{
+      }else if(msg.type==='t'){
         // if this message is come from a team.
         // 1.如果来自于团队，则读取团队中的成员列表；
         

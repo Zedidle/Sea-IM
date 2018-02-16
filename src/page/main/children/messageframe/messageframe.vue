@@ -28,7 +28,8 @@
 
 
   <div
-    class="getMoreMessageOnFrame-btn"
+    id="getMoreMessageOnFrame-btn"
+    @click='getMoreMessage'
   >
       <i
       :style='iconS'
@@ -132,49 +133,30 @@ export default {
   },
   created(){
     console.log('messageframe created');
-    socket.on(this.UID, (m)=>{
+    let vm = this;
+    socket.on(vm.UID, (m)=>{
       let msg = JSON.parse(m);
+      console.log('----------socket message come---------')
       console.log(msg);
 
-      if(msg.type==='p'){
-        //come from yourself or others
-        console.log(1);
-        if((msg.uid === this.UID) || 
-            (msg.to === this.UID && this.messto === msg.uid)
-          ){
-          this.pushMContent(msg);
-          let cont = document.getElementById('messageframe-input');
-          cont.scrollTop = cont.scrollHeight;
-        }else{
-          // add unread
-        console.log(2);
-          for(let i of this.rencentInfo){
-            if(i.uid===msg.uid && !i.level){
-              i.unr++;
-              break;
-            }
-          }
-        }
+      /********** IMPORTANT ***********/
+      //Messages come from people or team, receive it and make the different things!
+      if(
+          ((msg.type==='p')&&
+          ((msg.uid === vm.UID) || 
+            (msg.to === vm.UID && vm.messto === msg.uid)
+          )) || 
+          ((msg.type==='t')&&
+          ((msg.from === vm.UID) || 
+            (vm.messtype==='t' && msg.uid === vm.messto)
+          ))
+        ){
 
-      }else if(msg.type==='t'){
+          msg.content = vm.expressionsParse(msg.content);
+          vm.pushMContent(msg);
 
-        // come from yourself in team
-        // or come from others in team
-        if((msg.from === this.UID) || 
-          (this.messtype==='t' && msg.uid === this.messto)
-          ){
-          this.pushMContent(msg);
-          let cont = document.getElementById('messageframe-input');
-          cont.scrollTop = cont.scrollHeight;
-        }else{
-          console.log(4);
-          for(let i of this.rencentInfo){
-            if(i.uid===msg.uid && i.level){
-              i.unr++;
-              break;
-            }
-          }
-        }
+      }else{
+          vm.addUnread(msg);
       }
       
     });
@@ -185,8 +167,45 @@ export default {
       'toggleExpressions',
       'pushMContent',
       'unshiftMContent',
-
+      'getMoreMessage',
     ]),
+
+
+
+
+
+    // Because it dosen't work in vuex, as object's properties.
+    addUnread(msg){
+
+      let recentInfo = document.querySelectorAll('#list>li');
+      let uid,type,unr;
+
+      for(let i of recentInfo){
+        uid = i.querySelector('.uid').innerText;
+        type = i.querySelector('.type').innerText;
+        unr = i.querySelector('.unread').innerText;
+        if(uid===msg.uid && type===msg.type){
+          if(unr){
+            i.querySelector('.unread').innerText = parseInt(unr)+1;
+          }else{
+            i.querySelector('.unread').innerText = 1;
+          }
+          i.querySelector('.unread').style.visibility = 'visible'
+          break;
+        }
+      }
+
+    },
+
+    addRecentLi:function(info){
+      main.recentInfo.unshift(info);
+      if(main.messtype === 'team'){
+        Loginlist.recent_team.unshift(info.uid);
+      }else{
+        Loginlist.recent_people.unshift(info.uid);
+      }
+    },
+
     mFloat(msg){
       let f;
       if(msg.type==='t'){
@@ -268,7 +287,6 @@ export default {
 
     },
         
-    
 
     showMembers:function(){
       main.teamMembersSeen = true;
@@ -323,43 +341,25 @@ export default {
       this.moreinfoSeen = true;
     },
 
-    getMoreMessage:function(){
-      //读取现有信息长度
-      var skip = document.querySelectorAll('#messageframe-cont>.messli').length;
-      console.log(skip);
-
-      var data = {
-        receiveUid:this.UID,
-        fromUid:this.messto,
-        type:this.messtype
-      };
-
-      //获取更多聊天记录
-      $.post('/getMoreMessage', data, function(messages){
+    expressionsParse(msgContent){
+      while(msgContent.match(/\#\(.{1,4}\)/)){
+        var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/))
         
-        console.log(messages);
+        console.log(msgMatch.slice(2,-1));
+        var t = this.expressionToMark(msgMatch.slice(2,-1));
 
-        if(messages){
-          var l = messages.length;
-          for(var i=0;i<5;i++){
-            //这里的做法是把与对方的聊天消息一次全部拿出来
-            //再慢慢读取
-            main.createMessDiv(messages[l-1-skip-i], true);
-          }
-        }else{
-          main.noMoreMessage();
-        }
-      });
+        msgContent = msgContent.replace(
+          /#\(.{1,4}\)/,
+          `<div
+            class='expression-chatting'
+            style='background-image:url(img/faces.png); 
+              background-position:0px -${t*30}px;'
+          >
+          </div>`
+          );
+      }
+      return msgContent;
     },
-       //没有更多聊天记录的提示
-    noMoreMessage:function(){
-        var getMessBtn = $('.getMoreMessageOnFrame-btn')[0];
-        getMessBtn.innerText = 'No More';
-        setTimeout(function(){
-          getMessBtn.innerText = 'Get More Message';
-        },1500);
-    },
-
 
     expressionToMark(expressionMark){
           var t;
@@ -539,7 +539,7 @@ export default {
       .showMember{}
     }
   }
-  .getMoreMessageOnFrame-btn {
+  #getMoreMessageOnFrame-btn{
     background: transparent;
     color:#555;
     text-align: center;
@@ -625,7 +625,7 @@ export default {
         /*float:left;*/
         transform: translateY(-10px);
         @media(max-width:468px){ 
-          max-width:300px; 
+          max-width:220px; 
         }
         div{
           width:100%;

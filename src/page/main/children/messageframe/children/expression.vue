@@ -42,28 +42,6 @@
 				}
 			},
 
-
-
-		    expressionsParse(msgContent){
-		      while(msgContent.match(/\#\(.{1,4}\)/)){
-		        var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/))
-		        
-		        console.log(msgMatch.slice(2,-1));
-		        var t = expressionTextToImage(msgMatch.slice(2,-1));
-
-		        msgContent = msgContent.replace(
-		          /#\(.{1,4}\)/,
-		          `<div
-		            class='expression-chatting'
-		            style='background-image:url(img/faces.png); 
-		              background-position:0px -${t*30}px;'
-		          >
-		          </div>`
-		          );
-		      }
-		      return msgContent;
-		    },
-
 		    expressionToText(e){
 			  let t;
 			  switch(parseInt(e.target.attributes[1].value)){
@@ -142,6 +120,12 @@
 	box-shadow: 0 0 10px #999;
 	transform: translateX(-50%);
     z-index:100000000000000;
+    @media(max-width: 468px){
+    	width:90%;
+    	height:130px;
+    	overflow: scroll;
+
+    }
     div{
 		cursor:pointer;
 		width: 30px;

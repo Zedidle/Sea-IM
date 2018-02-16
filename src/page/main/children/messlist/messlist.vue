@@ -3,17 +3,17 @@
     id='list'
   >
       <li
-        @click='showMessageframe({uid:i.uid,name:i.name,type:i.level?"t":"p"})'
+        @click='clickMessLi({uid:i.uid,name:i.name,type:i.level?"t":"p"})'
         v-for='i in recentInfo'
       >
         <span class='uid'>{{i.uid}}</span>
-        <span class='type'>{{i.level?"t":"p"}}
-        </span>
+        <!-- !!!can not change the sequence!!!-->
+        <span class='type'>{{i.level?'t':'p'}}</span>
 
         <div class='info'>
           <div class='name'>
             {{i.name}}
-            <span class='badge' v-show='i.unr' >{{i.unr}}</span>
+            <span class='unread' v-show='i.unr' >{{i.unr}}</span>
           </div>
 
           <div class='introduce'>{{i.introduce}}</div>
@@ -28,7 +28,7 @@
 
 <script>
 import {mapState,mapMutations} from 'vuex';
-
+import $ from 'jquery';
 
 export default {
 
@@ -41,33 +41,53 @@ export default {
   computed:{
     ...mapState([
       'recentInfo',
+      'UID',
     ]),
   },
   methods:{
     ...mapMutations([
       'toggleDomore',
       'showMessageframe',
+      'pushMContent',
     ]),
 
+    clickMessLi(d){
 
-
-    addUnRead:function(msg){
-      var msgUid = msg.uid;
-
-      this.dealUnread(msgUid, true);
-      this.unReadAdd1InDB(msg.type, msg.uid, msg.to);
+      this.showMessageframe(d);
+      this.subUnread(d);
     },
 
-    addRecentLi:function(info){
-      main.recentInfo.unshift(info);
+    subUnread(d){
 
-      if(main.messtype === 'team'){
-        Loginlist.recent_team.unshift(info.uid);
-      }else{
-        Loginlist.recent_people.unshift(info.uid);
+      //sub unread base on type and uid;
+      let recentInfo = document.querySelectorAll('#list>li');
+      let uid,type,unr;
+
+      for(let i of recentInfo){
+        uid = i.querySelector('.uid').innerText;
+        type = i.querySelector('.type').innerText;
+        if(uid===d.uid && type===d.type){
+          unr = i.querySelector('.unread').innerText;
+          i.querySelector('.unread').innerText = '';
+          i.querySelector('.unread').style.visibility = 'hidden';
+          break;
+        }
       }
 
+      //get unread messages
+      let vm = this;
+      $.get('/getUnreadMess', {
+        uid:this.UID,
+        getUid:d.uid,
+        type:d.type,
+        unr,
+      }, (d)=>{
+        for(let i of d){
+          vm.pushMContent(i);
+        }
+      });
     },
+
     removeRecentLi:function(data){
       console.log('removeRecentLi:');
 
@@ -83,23 +103,6 @@ export default {
           break;
         }
       }
-
-      //同时完成Loginlist的更改
-      // if(data.type ==='team'){
-      //   for(i=0;i<Loginlist.recent_team.length;i++){
-      //     if(Loginlist.recent_team[i] === data.to){
-      //       Loginlist.recent_team.splice(i,1);
-      //       break;
-      //     }
-      //   }
-      // }else{
-      //   for(i=0;i<list.recent_people.length;i++){
-      //     if(Loginlist.recent_people[i] === data.to){
-      //       Loginlist.recent_people.splice(i,1);
-      //       break;
-      //     }
-      //   }
-      // }
     },
     unReadAdd1InDB:function(msgType,msgUid,msgTo){
       var data = {
@@ -110,11 +113,6 @@ export default {
       };
       $.post('/unReadAdd1',data);
     },
-
-    showBadge:function(badgeNumber){
-      return Boolean(badgeNumber);
-    },
-
     subUnreadInDB:function(li_uid,haslevel){
       var data = {
         type: haslevel?'team':'people',
@@ -125,57 +123,7 @@ export default {
       $.post('/unReadTo0',data);
     },
     
-    //  当某个messli被点击时，触发该方法
-    //  event:触发的事件
-    //  liUid:触发事件的对象所需要的对应聊天ID
-    //  hasLevel:只有团队才有等级,判断是否是一个团队对象
-    //  receiverName:对应接收者的名称，用于聊天框顶部标明在和谁聊天
-    //  unread:未读数量,根据未读数量截取聊天记录中的对应消息
-    openMessage:function(event, liUid, hasLevel, receiverName, unread){
-      main.moreinfoSeen = false;
-      // this.$emit('dealU', liUid, hasLevel);
 
-      console.log(arguments);
-
-      main.dealUnread(liUid,hasLevel);
-      this.subUnreadInDB(liUid, hasLevel);
-
-      main.messtype = hasLevel?'team':this.type;
-
-      main.messageframeSeen = true;
-
-      $('.messageframe')[0].style.height = '100%';
-      $('#messageframe-cont')[0].innerHTML = '';
-
-      main.nameOfmessageframe = receiverName;
-
-      main.messto = liUid;
-
-      console.log(typeof unread);
-      console.log('unread:'+unread);
-      if(unread){
-        this.getUnreadMess(main.messto, unread, main.messtype);
-      }
-    },
-
-    getUnreadMess:function(getUid,unread,type){
-      let data = {
-        uid:UID,
-        getUid,
-        unread,
-        type,
-      };
-
-      console.log('Data of get unread Messages:');
-      console.log(data);
-
-      $.get('/getUnreadMess', data, function(d){
-        console.log(d);
-        for(i=0;i<d.length;i++){
-          main.createMessDiv(d[i], false);
-        }
-      });
-    },
 
   }
 }
@@ -207,11 +155,17 @@ export default {
       float:left;
       .name{
         height:20px;
-      }
-      .badge{
-        padding:2px 4px 2px 4px;
-        border-radius: 50%;
-        background-color: red;
+        .unread{
+          color: #FFF;
+          border-radius: 10px;
+          background-color: red;
+          display: inline-block;
+          padding: 2px 5px;
+          font-size: 12px;
+          font-weight: 700;
+          line-height: 1;
+          text-align: center;
+        }
       }
       .introduce{
         height:40px;

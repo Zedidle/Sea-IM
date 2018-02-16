@@ -22,8 +22,22 @@ const state = {
  
   onPeople:false, 
   onPSearch:false,
+  onPTodo:false,
+  pTodoProps:{}, /*uid,x,y*/
+
+
   onTeam:false, 
   onTSearch:false,
+  onTTodo:false,
+  tTodoProps:null,
+
+
+
+
+
+//--------------People-----------------
+  foundStarsInfo:[],
+  foundPeopleInfo:[],
 
 
 
@@ -82,8 +96,8 @@ const state = {
   messto:'',             //聊天对象的ID
   messname:'',           //聊天对象的昵称
   messtype:'',           //聊天的类型：“team/people/recent/star”
-  talkskip: false,       //当前聊天框的聊天数目
   messContent:[],        //content---Message Body----
+  messRecord:[],         //record 
 
   
   //更多消息的模板，聊天框右上角显示的信息 和 读取更多消息

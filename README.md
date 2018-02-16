@@ -26,3 +26,6 @@ npm run sup
 <p>MongoDB: NoSQL数据库,支持多变的消息结构</p>
 <p>pm2: 服务端使用pm2部署，常驻进程 </p>
 <p>nginx：服务端使用nginx代理端口转发</p>
+
+
+

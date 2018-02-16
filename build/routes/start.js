@@ -115,17 +115,17 @@ router.post('/login', urlencodedParser,(req,res)=>{
 
 			/*获取联系列表*/
 			List.findOne({uid},(err,d)=>{
-
 				
-			// z.check(d,'list');
-
+					//以下的star和team是要让vuex记录备份的
+					console.log(d);
 				let 
 					J_list = JSON.stringify(d),
-					//以下的star和team是要让vuex记录备份的
 					rp = d.recent_people,
 					rt = d.recent_team,
 					s = d.star,
 					t = d.team;
+
+
 
 				Promise.all([
 

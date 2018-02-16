@@ -2,26 +2,50 @@ const {
 	router,
 	urlencodedParser,
 	List,
+	People,
+	Team,
+	Unread,
 } = require('../../configs/server.config.js');
 
 
-//used by public/js/main-content.js,
-router.get('/search', (req,res) => {
-	let uid = req.query.uid;
-	let result = {};
+router.get('/searchTeam', (req,res) => {
+	let keyword = req.query.keyword;
+	let reg = new RegExp(keyword, 'i'); //不区分大小写
 
-	//获取该ID的团队和人物信息
-	Team.findOne({uid},(err,t) => {
-		if(err) throw err;
-		result.team = t;
-
-		People.findOne({ uid }, (err,p) => {
-			if(err) throw err;
-			result.person = p;
-			res.send(result);
-		});
+	Team.find({
+		$or : [ //多条件，数组
+			{uid : {$regex : reg}},
+			{name : {$regex : reg}}
+		] 
+	},(err,t) => {
+		res.send(t);
 	});
 });
+
+
+router.get('/searchPeople', (req,res) => {
+	let keyword = req.query.keyword;
+	let reg = new RegExp(keyword, 'i'); //不区分大小写
+
+	console.log('------------searchPeople----------');
+	console.log('keyword:');
+	console.log(keyword);
+	console.log('reg:');
+	console.log(reg);
+
+	People.find({
+		$or : [
+			{uid : {$regex : reg}},
+			{name : {$regex : reg}}
+		]
+	},(err,p) => {
+		console.log('The result of the search:');
+		console.log(p);
+		res.send(p);
+	});
+
+});
+
 
 //used by public/js/main-content.js,
 //if a person choice to join a team, must pass this part,
