@@ -1,4 +1,3 @@
-
 function vCreateSearchTeamInfoTemplate(t){
   if(t){
     return "<div id='teamImg'>"+

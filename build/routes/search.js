@@ -9,8 +9,12 @@ const {
 
 
 router.get('/searchTeam', (req,res) => {
+	console.log('-----searchTeam-----');
 	let keyword = req.query.keyword;
 	let reg = new RegExp(keyword, 'i'); //不区分大小写
+
+	console.log('keyword:');
+	console.log(keyword);
 
 	Team.find({
 		$or : [ //多条件，数组
@@ -45,6 +49,10 @@ router.get('/searchPeople', (req,res) => {
 	});
 
 });
+
+
+
+
 
 
 //used by public/js/main-content.js,

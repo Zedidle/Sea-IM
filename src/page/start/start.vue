@@ -404,7 +404,7 @@ export default{
             top:30%;
             transform: translateX(-50%);
         }
-
+            
         #chooseRL{
         	margin:10px;
 			

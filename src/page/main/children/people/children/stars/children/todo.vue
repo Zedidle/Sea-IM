@@ -14,16 +14,19 @@
 		<div><b>{{pTodoProps.uid}}</b></div>
 		<button
 			id='moreinfo'
+			@click='clickMoreInfo'
 		>
 			<i class='icon iconfont icon-account'></i>			
 		</button>
 		<button
 			id='mess'
+			@click = 'clickMessBtn'
 		>
 			<i class='icon iconfont icon-edit'></i>			
 		</button>
 		<button
 			id='remove'
+			@click='removeStar'
 		>
 			<i class='icon iconfont icon-delete'></i>			
 		</button>
@@ -41,8 +44,10 @@ import {mapState,mapMutations} from 'vuex';
 		},
 		computed:{
 			...mapState([
+				'UID',
 				'onPTodo',
 				'pTodoProps',
+				'starInfo',
 			]),
 			pTodoS(){
 				return {
@@ -58,7 +63,37 @@ import {mapState,mapMutations} from 'vuex';
 		methods:{
 			...mapMutations([
 				'hidePTodo',
+				'showSMoreInfo',
+		    	'showMessageframe',
+		    	'toggleDomore',
+		    	'togglePeople',
+		    	'removeStar',
 			]),
+			clickMoreInfo(){
+				console.log('------clickMoreInfo------')
+				console.log('starInfo:');
+				console.log(this.starInfo);
+				for(let i of this.starInfo){
+					if(this.pTodoProps.uid===i.uid){
+						this.showSMoreInfo(i);
+						break;
+					}
+				}
+			},
+			clickMessBtn(){
+				console.log('------clickMoreInfo------')
+				for(let i of this.starInfo){
+					if(this.pTodoProps.uid===i.uid){
+						console.log('------clickMoreInfo------');
+						console.log('star info:');
+						console.log(i);
+        				this.showMessageframe({uid:i.uid,name:i.name,type:i.level?"t":"p"});
+						this.togglePeople();
+						this.toggleDomore();
+						break;
+					}
+				}
+			}
 		}
 		
 	}

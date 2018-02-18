@@ -18,14 +18,18 @@
         id='operator'
         v-show='!onTSearch'
       >
-        <div>
+        <div
+          @click='changeContent("myteam")'
+        >
           <i class='icon iconfont icon-gerenzhongxin'></i>
         </div>
-        <div>
+        <div
+          @click='changeContent("teams")'
+        >
           <i class='icon iconfont icon-earth'></i>
         </div>
         <div
-          @click='showTSearch'
+          @click='changeContent("search")'
         >
           <i class='icon iconfont icon-originalimage'></i>
         </div>
@@ -35,18 +39,21 @@
 
       <transition name='fadeY-10'>
       <div 
-        id='search'
+        class='search'
         v-show='onTSearch'
       >
         <span
-          @click='hideTSearch'
+          @click='closeTSearch'
         >
           <i class='icon iconfont icon-close'></i>
         </span>
-        <input 
+        <input
+          @keyup.enter = 'searchT'
+          placeholder="ID or NAME" 
           v-model='tsInput'
         >
         <div
+          @click='searchT'
         >
           <i class='icon iconfont icon-originalimage'></i>
         </div>
@@ -56,17 +63,9 @@
 
     </div>
     
-<!--    <div class="content">
-      <transition name='fadeY-10'>
-        <myteam></myteam>
-      </transition> 
-      <transition name='fadeY-10'>
-        <jointeam></jointeam>
-      </transition> 
-      <transition name='fadeY-10'>
-        <search></search>
-      </transition> 
-    </div> -->
+    <div class="content">
+      <component :is='tContent'></component>
+    </div>
 
   </div>
 
@@ -77,25 +76,25 @@
 
 <script>
   import myteam from './children/myteam/myteam.vue';
-  import jointeam from './children/otherteams/otherteams.vue';
+  import teams from './children/teams/teams.vue';
   import search from './children/search/search.vue';
 
   import {mapState,mapMutations} from 'vuex';
   export default {
     data(){
       return{
-        psInput:'',
+        tsInput:'',
+        tContent:'myteam',    //default:myteam||jointeam||search
       }
     },
     components:{
       myteam,
-      jointeam,
+      teams,
       search,
     },
     computed:{
       ...mapState([
         'onTeam',
-        'userInfo',
         'onTSearch',
       ]),
     },
@@ -104,7 +103,27 @@
         'toggleTeam',
         'showTSearch',
         'hideTSearch',
+        'searchTeam',
       ]),
+      searchT(){
+        console.log('----------searchT----------');
+        console.log('tsInput:');
+        console.log(this.tsInput);
+        if(this.tsInput){
+          this.searchTeam(this.tsInput);
+        }
+      },
+      changeContent(d){
+        this.tContent = d;
+        if(d==='search'){
+          this.showTSearch()
+        }
+
+      },
+      closeTSearch(){
+        this.hideTSearch();
+        this.tContent = 'myteam';
+      }
     }
   }
 
@@ -165,7 +184,7 @@
         }
       }
 
-      #search{
+      .search{
         span{
           display: inline-block;
           float:left;
@@ -182,6 +201,7 @@
         }
         
         input{
+          text-align: center;
           border:none;
           float:left;
           font-size: 18px;
@@ -210,7 +230,9 @@
     }
 
     .content{
-      height:440px;
+      width:100%;
+      height:420px;
+      overflow-y: scroll;
     }
   }
 

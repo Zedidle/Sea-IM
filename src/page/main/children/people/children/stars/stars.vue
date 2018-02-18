@@ -3,6 +3,7 @@
 		id="stars"
 	>
 		<todo></todo>
+		<star></star>
 
 
 		<!-- find stars in your list base on keyword-->
@@ -52,6 +53,7 @@
 </template>
 <script>
 import todo from './children/todo.vue';
+import star from './children/star.vue';
 import {mapState,mapMutations} from 'vuex';
 	export default {
 		data(){
@@ -64,6 +66,7 @@ import {mapState,mapMutations} from 'vuex';
 		},
 		components:{
 			todo,
+			star,
 		},
 		computed:{
 			...mapState([

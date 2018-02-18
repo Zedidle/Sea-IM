@@ -49,7 +49,7 @@ app.use(session({
 }));
 
 //设置公共静态路由
-app.use(express.static('./static'));
+app.use(express.static('./build/static'));
 app.use(express.static('./build/public'));
 
 //设置视图根目录

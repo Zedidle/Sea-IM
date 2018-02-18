@@ -6,5 +6,5 @@ module.exports = {
 	// entries: ,
 	debug: true,
 	extensions:['vue','js','json'],
-	
+
 }

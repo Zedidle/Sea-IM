@@ -1,142 +1,105 @@
 <template>
-    <div id='team-search' >
+    <div 
+      id='tSearch'
+    >
+      <todo></todo>
+      <team></team>
+      <join></join>
 
-		</div>
+      <transition-group tag='ul' name='fadeY-10'>
+        <li
+          v-for='i in foundTeamsInfo'
+          :key='i.uid'
+          @click='clickLi(i.uid,$event)'
+        >
+          <img :src="i.headImg">
+          <div>
+            <div class='name'>{{i.name}}</div>      
+            <div class='introduce'>{{i.introduce}}</div>      
+            </div>
+        </li>
+      </transition-group>
+    </div>
 </template>
 
 <script>
-	export default {
-		data(){
-			return{
-    			searchId:''
-					
-			}
-		},
-		closeCheckInfo:function(){
-      this.searchId = '';
 
-      $('#search-uid')[0].style.width = '78%';
-      $('#search-close')[0].style.transform = 'translateX(-100%)';
-      $('#search-info')[0].style.display = 'none';
-    },
-    
-    getSearchResponse:function(){
-      $('#search-team-info').html('');
-      $('#search-person-info').html('');
-      
-      if(this.searchId === ''){
-        return false;
-      }
+import todo from './children/todo.vue';
+import team from './children/team.vue';
+import join from './children/join.vue';
+import {mapState,mapMutations} from 'vuex';
 
-      if(this.searchId === UID){
-        $('#search-person-info').html(
-          "<div class='alert alert-info' role='alert'>无法查询你自己</div>"
-          );
-        return false;
-      }
-
-      $('#search-uid')[0].style.width='70%';
-      $('#search-close')[0].style.transform = 'translateX(0)';
-      $('#search-info')[0].style.display = 'block';
-
-      var t = this;
-      $.get("/search",{uid:this.searchId },function(d){
-        var team = d.team;
-        var person = d.person;
-        t.createSearchTeamInfo(team);
-        t.setSearchTeamStatus(team);
-        t.createSearchPersonInfo(person);
-        t.setSearchPersonStatus(person);
-      });
-
-    },
-    
-    createSearchPersonInfo:function(person){
-      $('#search-person-info').html(vCreateSearchPersonInfoTemplate(person));
-    },
-
-    createSearchTeamInfo:function(team){
-      $('#search-team-info').html(vCreateSearchTeamInfoTemplate(team));
-    },
-
-    setSearchTeamStatus:function(team){
-      if(!team){
-        return false;
-      }
-
-      var t = this;
-      $('#join').click(function(){
-        var data = {
-          uid:UID,
-          tid:t.searchId
-        };
-        $.get('/joinJudge',data,function(judge){
-          if(judge==='ok'){ 
-            zPost('/join',data); 
-          }else{
-            $('#search-team-info').append(
-              "<div class='alert alert-info'>"+judge+"</div>"
-            );
-          }
-        });
-      });
-    },
-
-    setSearchPersonStatus:function(person){
-      if(!person){ return false; }
-
-      var t = this;
-      $('#send').click(function(){
-
-        main.messageframeSeen = true;
-        document.querySelector('.messageframe').style.height='100%';
-        main.messtype = 'recent';
-        main.messto = t.searchId;
-        main.nameOfmessageframe = $(this).siblings('#pinfo').find('#name').text();
-
-      });
-
-      $('#search-star-info').click(function(){
-        var stars = loginlist.star;
-        var isStar = false;
-        var data = { 
-          sid:t.searchId,
-          uid:uid
-        };
+export default {
+  data(){
+    return{
+        searchId:''
         
-        if(stars.length){
-          for(var i=0;i<stars.length;i++){
-            if(stars[i]===data.sid){
-              isStar = true;
-              break;
-            }
-          }
-        }
-        if(isStar){
-          $('#search-person-info').prepend(
-            "<div class='alert alert-info' role='alert'>已经标记过！</div>"
-          );
-        }else{
-          $.post('/star',data,function(data_back){
-            v_addThePeopleInStar(data_back);
-            loginlist.star.push(data.sid);
-            $('#search-person-info').prepend(
-              "<div class='alert alert-success' role='alert'>成功标记该用户!</div>"
-            );
-          });
-        }
-      });
     }
+  },
+  components:{
+    todo,
+    team,
+    join,
+  },
+  computed:{
+    ...mapState([
+      'foundTeamsInfo',
+      
+    ]),
 
-	}
+  },
+  methods:{
+    ...mapMutations([
+      'showTTodo',
+    ]),
+    clickLi(uid,e){
+      console.log('---------clickLi---------');
+      console.log('uid:',uid);
+      /*get x and y*/
+      console.log('event:')
+      console.log(e);
+      this.showTTodo({
+        uid,
+        x:e.layerX-50,
+        y:e.layerY
+      });
+
+    },
+  }
+}
 </script>
 
 <style lang='less' scoped>
-	
+#tSearch{
+  
+    ul{
+      li{
+        list-style: none;
+        height:60px;
+        &:hover{
+          cursor:pointer;
+          box-shadow:0 0 5px #999;
+        };
 
+        img{
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          border:1px solid #999;
+          float:right;
+        }
+        div{
+          display: inline-block;
+          float:left;
+          width:200px;
+          .name{
+            height:20px;
+          }
+          .introduce{
+            height:40px;
+          }
+        }
+      }
+    }
+}
 </style>
-
-
-
-
-    

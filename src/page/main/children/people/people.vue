@@ -37,7 +37,7 @@
 		<!-- search people -->
 		<transition name='fadeY-10'>
 		<div 
-			id='search'
+			class='search'
 			v-show='onPSearch'
 		>
 			<span
@@ -48,6 +48,7 @@
 			<input 
 				v-model='psInput'
 				@keyup.enter = 'searchP'
+				placeholder="ID or NAME" 
 			>
 			<div
 				@click='searchP'
@@ -91,7 +92,6 @@
 		computed:{
 			...mapState([
 				'onPeople',
-				'userInfo',
 				'onPSearch',
 			]),
 		},
@@ -143,7 +143,6 @@
 		background:rgba(255,255,255,0.9);
 		z-index:10000001;
 
-
 		.close{
 			width: 100%;
 			height:40px;
@@ -179,7 +178,7 @@
 			}
 		}
 
-		#search{
+		.search{
 			&:after{
 				display:block;
 				clear:both;
@@ -209,6 +208,7 @@
 				background:transparent;
 				height:40px;
 				width:200px;
+				text-align: center;
 				&:hover{
 					box-shadow: 0 5px 5px #999;
 					color:#77CCCC;

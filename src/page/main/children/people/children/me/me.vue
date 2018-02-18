@@ -1,168 +1,150 @@
 <template>
-     <div 
-          id='me'
-     >
-          <img :src="userInfo.headImg" class="headImg">
-          <div><b>{{userInfo.uid}}</b></div>
-          <input class="name" v-model='userInfo.name' placeholder="name">
-          <input class="birthday" v-model='userInfo.birthday'  placeholder="birthday">
-          <input class="hobby" v-model='userInfo.hobby'  placeholder="hobby">
-          <textarea class="introduce" v-model='userInfo.introduce'  placeholder="introduce"></textarea>
-     </div>
+ <div id='me'>
+  <img-update></img-update>
+  <img 
+       @click='clickHeadImg'     
+       :src="userInfo.headImg"
+       class="headImg"
+  >
+  <div><b>{{userInfo.uid}}</b></div>
+    <input class="name" v-model='userInfo.name' placeholder="name">
+    <input class="birthday" v-model='userInfo.birthday'  placeholder="birthday">
+    <input class="hobby" v-model='userInfo.hobby'  placeholder="hobby">
+    <textarea class="introduce" v-model='userInfo.introduce'  placeholder="introduce"></textarea>
+
+    <button
+         @click='meUpdateText'
+    >UPDATE</button>
+ </div>
 </template>
 
 
 <script>
-
+import $ from 'jquery';
 import {mapState,mapMutations} from 'vuex';
+import imgUpdate from './children/imgUpdate.vue';
 
-     export default {
-          data(){
-               return{
+export default {
+  data(){
+       return{
 
-               }
-          },
-          computed:{
-               ...mapState([
-                    'userInfo',
+       }
+  },
+  components:{
+    imgUpdate,
+  },
+  computed:{
+    ...mapState([
+      'userInfo',
+      'onPImgUpdate',
+    ]),
+  },
+  methods:{
+    ...mapMutations([
+      'showPImgUpdate',
+    ]),
+    clickHeadImg(){
+      console.log('--------clickHeadImg--------');
+      let vm = this;
 
-               ]),
-          },
+      if(document.getElementById('cropperScript')){
+        toGetImg();
+      }else{
+        let script = document.createElement('script');
+        script.id = 'cropperScript'
+        script.src = 'cropperjs/dist/cropper.min.js';
+        script.async="async";
+        console.log('loading cropper.min.js ...');
+        document.body.appendChild(script);
+        script.onload = function(){
+          console.log('cropper.min.js ok!');
+          toGetImg();
+        }
+      }
 
-          methods:{
+      function toGetImg(){
+        let input = document.createElement('input');
+        input.type='file';
+        input.click();
+        input.onchange=function(){
+          console.log('input Image Change!');
+          console.log('The files : ')
+          console.log(input.files[0]);
 
-               ...mapMutations([
-
-               ]),
-
-               showPersonHeadForm:function(){
-                  $('#peopleHeadForm')[0].style.display = 'block';
-               },
-               showCheckImg:function(){
-                    $('#checkImg')[0].style.height = '200px';
-               },
-               hideCheckImg:function(){
-                    $('#checkImg')[0].style.height = '0px';
-               },
-               checkImg:function(e){
-                    var r = new FileReader();
-                    // this.headImageData = e.target.files[0];
-                    // console.log(this.headImageData);
-                    r.readAsDataURL(e.target.files[0]);
-                    var t = this;
-                    r.onload = function(e){
-                         t.showCheckImg();
-                         $('#checkImg')[0].src=this.result;
-                    };
-               },
-               hideHeadForm:function(){
-                    this.hideCheckImg();
-                    $('#peopleHeadForm')[0].style.display = 'none';
-               },
-
-               headImageUpdate:function(event){
-                    var formData = new FormData();
-
-                    var vm = this;               
-                    $.ajax({
-                         type: 'post',
-                         url: '/peopleImageUpdate',
-                         data: formData,
-                         mimeType: "multipart/form-data",
-                         contentType: false,
-                         cache: false,
-                         processData: false,
-                         success:function (headImagePath) {
-                              vm.hideHeadForm();               
-                              $('#headImg')[0].src = headImagePath;
-                         }
-                    });
-               },
-
-
-               warnItem:function(item){
-                    item.css('border-color','red');
-                    setTimeout(function(){
-                         item.css('border-color','transparent');
-                    },3000);
-               },
-
-               subBtnTextActive:function(text){
-                    this.subBtnText = text;
-                    var t = this;
-                    setTimeout(function(){
-                         t.subBtnText = '更新';
-                    },3000);
-               },
-
-               textUpdate:function(){
-                    if(this.name.length>10){
-                         this.warnItem($('#name'));
-                         this.subBtnTextActive('昵称字数过长');
-                    }else if(this.introduce.length>60){
-                         this.warnItem($('#introdushoe'));
-                         this.subBtnTextActive('简介字数不能超过6０');
-                    }else{
-
-                         var data = {
-                              uid:UID,
-                              name:this.name,
-                              introduce:this.introduce,
-                              sex:this.sex,
-                              hobby:this.hobby,
-                              birthday:this.birthday
-                         };
-
-                         textDataFilter(data);
-                         var t = this;
-                         $.post('/peopleTextUpdate',data,function(info){
-                              t.name = info.name;
-                              t.introduce = info.introduce;
-                              t.sex = info.sex;
-                              t.hobby = info.hobby;
-                              t.birthday = info.birthday;
-                              t.subBtnTextActive('更新成功');
-                         });
-                    } 
-               },
+          let r = new FileReader();
+          r.readAsDataURL(input.files[0]);
+          r.onload = function(){
+             console.log('read file 100%');
+             console.log('DataURL:');
+             console.log(r.result);
+             vm.showPImgUpdate(r.result);
           }
-     }
+        }
+      }
+    },
+
+    meUpdateText(){
+      console.log('meUpdate:');
+      console.log('userInfo:');
+      console.log(this.userInfo);
+      $.post('/meUpdateText',this.userInfo,(d)=>{
+        console.log('meUpdate callback: data:');
+        console.log(d);
+      });
+    },
+  }
+}
 
 </script>
 
 
 <style lang='less' scoped>
-     #me{
-          text-align: center;
-          padding-top:10px;
-          .headImg{
-               border-radius: 50%;
-               width:80px;
-               height:80px;
-               border:1px solid #999;
-               cursor:pointer;
-               margin-bottom:10px;
-               
-          }
-          input{
-               margin:5px 0;
-               width:80%;
-               text-align: center;
-               background: transparent;
-               border:1px solid transparent;
-               &:hover{
-                    border-bottom-color:#7CC;
-               };
-          }
-          textarea{
-               width:90%;
-               text-align: center;
-               background: transparent;
-               border:1px solid transparent;
-               &:hover{
-                    border-color:#7CC;
-               };
-          }
-     }
-
+#me{
+  text-align: center;
+  padding-top:10px;
+  .headImg{
+    border-radius: 50%;
+    width:80px;
+    height:80px;
+    border:1px solid #999;
+    cursor:pointer;
+    margin-bottom:10px;
+    &:hover{
+      box-shadow:0 0 5px #999
+    }
+  }
+  input{
+    margin:5px 0;
+    width:80%;
+    text-align: center;
+    background: transparent;
+    border:1px solid transparent;
+    &:hover{
+      border-bottom-color:#7CC;
+    };
+  }
+  textarea{
+    width:90%;
+    text-align: center;
+    background: transparent;
+    border:1px solid transparent;
+    &:hover{
+      border-color:#7CC;
+    };
+  }
+  button{
+    margin-top:10px;
+    background-color:#3c3;
+    color:#FFF;
+    border:none;
+    width:100px;
+    height:30px;
+    text-align: center;
+    vertical-align: center;
+    box-shadow:0 0 5px #3c3;
+    &:hover{
+      box-shadow:0 0 10px #3c3;
+    }
+  }
+}
 </style>

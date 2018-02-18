@@ -19,8 +19,10 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const jsonParser = bodyParser.json();
 
 // 图片上传
+let base = __dirname;
+// console.log('The base path:',base);
 const multer = require('multer');
-const upload = multer({ dest: 'build/public/img/uploads/' });
+const upload = multer({ dest: 'build/public/uploads/' });
 
 // 数据库模板
 const User = require('../build/model/user');
@@ -46,6 +48,7 @@ module.exports = {
 	path,
 	urlencodedParser,
 	jsonParser,
+	// multer,
 	upload,
 	User,
 	Unread,

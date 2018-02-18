@@ -49,11 +49,13 @@ gulp.task('clean-dev-main',function(){
 
 // 开发环境 ， 使用npm run dev
 
+
 gulp.task('dev-main',function(){
 
   vueify.compiler.applyConfig(require('./configs/vue.config.js'));
   var b = browserify('./src/main.js',require('./configs/browserify.config.js'))
     .transform(babelify)  //使用ES6转换到ES5的语法编译
+	.transform('browserify-css', {global: true})  //link injected css
     .transform(vueify)  //编译vue模板
     .transform(
       // 必填项，以处理 node_modules 里的文件
@@ -272,12 +274,13 @@ gulp.task('font-app',function(){
 	gulp.src([
 		'./build/public/css/app.css',
 		// './build/public/css/font.css',
+		// './node_modules/cropperjs/dist/cropper.min.css',
 		'./build/static/bootstrap/css/bootstrap.min.css'
 	])
 	.pipe(concat('bootstrap-app.css'))
 	.pipe(gulp.dest('./build/public/css'))
 
-	console.log('合并应用的样式和字体样式完成');
+	console.log('合并应用的样式和字体样式完成 ... and cropper');
 });
 
 

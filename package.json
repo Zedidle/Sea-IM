@@ -13,7 +13,7 @@
     "pm2": "pm2 start build/app.js",
     "clean": "node test/cleanData.js",
     "logoff": "node test/cleanLogin.js",
-    "setData":"node test/setData.js"
+    "setData": "node test/setData.js"
   },
   "browser": {
     "vue": "vue/dist/vue.js"
@@ -53,7 +53,11 @@
     "babelify": "^8.0.0",
     "browser-sync": "^2.23.6",
     "browserify": "^15.2.0",
+    "browserify-css": "^0.14.0",
+    "cropperjs": "^1.2.2",
     "cross-spawn": "^6.0.4",
+    "css-loader": "^0.28.9",
+    "cssnext": "^1.8.4",
     "envify": "^4.1.0",
     "file-type": "^7.5.0",
     "get-stream": "^3.0.0",
@@ -95,16 +99,25 @@
     "slash": "^1.0.0",
     "stream-combiner2": "^1.1.1",
     "strip-eof": "^1.0.0",
+    "style-loader": "^0.20.2",
+    "stylus": "^0.54.5",
     "transform-runtime": "^0.0.0",
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "vue": "^2.5.13",
+    "vue-cropperjs": "^2.2.0",
     "vue-router": "^3.0.1",
+    "vue-style-loader": "^4.0.2",
     "vueify": "^9.4.1",
     "vuex": "^3.0.1"
   },
   "engines": {
     "node": ">= 6.11.4",
     "npm": ">= 3.10.10"
-  }
+  },
+  "browserify-css": {
+        "autoInject": true,
+        "minify": true,
+        "rootDir": "."
+    }
 }

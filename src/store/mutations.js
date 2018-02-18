@@ -3,10 +3,159 @@ import $ from 'jquery';
 export default {
 
 
+	toJoin(state){
+		console.log('----------------toJoinTeam----------------');
+		state.isToJoin=true;
+		state.onTTodo = false;
+	},
+	notJoin(state){
+		state.isToJoin=false;
+	},
+
+
+	addStar(state){
+		console.log('-----------addStar-----------')
+		console.log('UID:',state.UID);
+		console.log('star uid : ',state.pTodoProps.uid);
+		let uid = state.UID,sid = state.pTodoProps.uid;
+		$.post('/addStar',{uid,sid},(d)=>{
+			console.log('Result of add star:',d);
+			if(!d) return;
+			for(let i of state.foundPeopleInfo){
+				if(i.uid === sid){
+					state.starInfo.unshift(i);
+					break;
+				}
+			}
+		});
+	},
+
+
+
+
+	leaveTeam(state){
+		console.log('---------------leaveTeam---------------');
+		let uid = state.UID,tid = state.tTodoProps.uid;
+		$.post('/leaveTeam',{uid,tid},(d)=>{
+			console.log('Result of leave team:',d);
+			if(!d) return;
+			for(let i=0;i<state.teamInfo.length;i++){
+				if(state.teamInfo[i].uid === tid){
+					console.log('leaving the team...');
+					state.teamInfo.splice(i,1);
+					state.onTTodo=false;
+					state.tTodoProps={};
+					break;
+				}
+			}
+		});
+
+	},
+
+	removeStar(state){
+		console.log('-----------removeStar-----------')
+		console.log('UID:',state.UID);
+		console.log('star uid : ',state.pTodoProps.uid);
+		let uid = state.UID,sid = state.pTodoProps.uid;
+		$.post('/removeStar',{uid,sid},(d)=>{
+			console.log('Result of remove star:',d);
+			if(!d) return;
+			for(let i=0;i<state.starInfo.length;i++){
+				if(state.starInfo[i].uid === sid){
+					console.log()
+					console.log('the star be removed...');
+					state.starInfo.splice(i,1);
+					state.onPTodo=false;
+					state.pTodoProps={};
+					break;
+				}
+			}
+		});
+	},
+
+	showSMoreInfo(state,info){
+		console.log('-----showStarInfo-----');
+		console.log('the star info:');
+		console.log(info);
+		state.onSMoreInfo = true;
+		state.sMoreInfo = info;
+	},
+	showTMoreInfo(state,info){
+		console.log('-----showTeamInfo-----');
+		console.log('the team info:');
+		console.log(info);
+		state.onTMoreInfo = true;
+		state.tMoreInfo = info;
+	},
+	hideSMoreInfo(state){
+		console.log('-----hideSMoreInfo-----');
+		state.onSMoreInfo=false;
+		state.sMoreInfo=null;
+	},
+	hideTMoreInfo(state){
+		console.log('-----hideTMoreInfo-----');
+		state.onTMoreInfo=false;
+		state.tMoreInfo=null;	
+	},
+	showTImgUpdate(state,dataURL){
+		state.onTImgUpdate = true;
+		state.newTHeadImg = dataURL;
+	},
+	hideTImgUpdate(state){
+		state.onTImgUpdate = false;
+		state.newTHeadImg = null;
+		// let cropperContainer = document.querySelector('#myteam .cropper-container');
+		// console.log('cropper-container');
+		// console.log(cropperContainer);
+		// cropperContainer.parentElement.removeChild(cropperContainer);
+	},
+
+	updatePImgS(state,headImg){
+		state.userInfo.headImg = headImg;
+	},
+	updateTImgS(state,headImg){
+		for(let i of state.teamInfo){
+			if(i.uid === state.UID){
+				console.log('get myteam in teamInfo');
+				i.headImg = headImg;
+				break;
+			}
+		}
+		for(let i of state.recentInfo){
+			if(i.uid === state.UID && i.level){
+				console.log('get myteam in recentInfo');
+				i.headImg = headImg;
+				break;
+			}
+		}
+	},
+
+	showPImgUpdate(state,dataURL){
+		state.onPImgUpdate = true;
+		state.newPHeadImg = dataURL;
+	},
+	hidePImgUpdate(state){
+		state.onPImgUpdate = false;
+		state.newPHeadImg = null;
+		// let cropperContainer = document.querySelector('#me .cropper-container');
+		// console.log('cropper-container');
+		// console.log(cropperContainer);
+		// cropperContainer.parentElement.removeChild(cropperContainer);
+	},
+	
+	showTTodo(state,props){
+		console.log('mutations:showTTodo:')
+		state.onTTodo = true;
+		state.tTodoProps = props;  /*uid,x,y*/
+	},
+	hideTTodo(state){
+		state.onTTodo = false;
+	},
+
 	showPTodo(state,props){
 		console.log('mutations:showPTodo:')
 		state.onPTodo = true;
-		state.pTodoProps = props;
+		state.pTodoProps = props;  /*uid,x,y*/
 	},
 	hidePTodo(state){
 		state.onPTodo = false;
@@ -24,15 +173,11 @@ export default {
 	getMoreMBtn.style.color = '#7CC';
 	setTimeout(()=>{getMoreMBtn.style.color = '#555';},2000);
 
-
     console.log('mess record length:');
     console.log(state.messRecord.length);
     if(state.messRecord.length){
-
     	console.log('get messages from record');
-			addMoreMessages(state.messRecord);
-
-
+		addMoreMessages(state.messRecord);
     }else{
       console.log('get messages from DB');
 			//获取更多聊天记录
@@ -70,6 +215,20 @@ export default {
   	}
 
   },
+
+	searchTeam(state,keyword){
+
+		console.log('---------searchTeam---------')
+		console.log('keyword:');
+		console.log(keyword);
+		$.get('/searchTeam',{
+			keyword,
+		},(d)=>{
+			console.log('searchTeam-callback:');
+			console.log(d);
+			state.foundTeamsInfo=d;
+		})
+	},
 
 
 	searchPeople(state,keyword){
@@ -110,7 +269,22 @@ export default {
 	},
 
 
+	findTeams(state,keyword){
 
+		console.log('findTeams');
+		console.log(state.teamInfo);
+		console.log(keyword);
+
+		if(keyword){
+			state.foundTeamsInfo = [];
+			for(let i of state.teamInfo){
+				if(i.uid.match(keyword)||i.name.match(keyword)){
+					state.foundTeamsInfo.push(i);
+				}
+			}
+		}
+		console.log(state.foundTeamsInfo);
+	},
 
 	findStars(state,keyword){
 
@@ -212,7 +386,7 @@ export default {
 
 
 	toggleTeam(state){
-		state.onTeam = !state.onTeam
+		state.onTeam = !state.onTeam;
 	},
 	showTSearch(state){
 		state.onTSearch = true;

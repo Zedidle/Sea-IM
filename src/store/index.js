@@ -24,20 +24,22 @@ const state = {
   onPSearch:false,
   onPTodo:false,
   pTodoProps:{}, /*uid,x,y*/
+  onPImgUpdate:false,
+  newPHeadImg:null,
+  foundStarsInfo:[],
+  foundPeopleInfo:[],
+
 
 
   onTeam:false, 
   onTSearch:false,
   onTTodo:false,
   tTodoProps:null,
+  onTImgUpdate:false,
+  newTHeadImg:null,
+  foundTeamsInfo:[],
 
 
-
-
-
-//--------------People-----------------
-  foundStarsInfo:[],
-  foundPeopleInfo:[],
 
 
 
@@ -45,6 +47,17 @@ const state = {
 
 //-------------------logoff-------------------
   showLogoff:false, //是否想要退出
+
+
+
+// ----------------starInfo----------------
+onSMoreInfo:false,
+sMoreInfo:null,
+
+//----------------teamInfo-----------------
+onTMoreInfo:false,
+pMoreInfo:null,
+
 
 
 
@@ -75,7 +88,7 @@ const state = {
 
 // -----------------------------------------------------
 
-
+  isToJoin:false,
 
 
 
