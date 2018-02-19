@@ -5,6 +5,7 @@ const {
 	People,
 	Team,
 	Unread,
+
 } = require('../../configs/server.config.js');
 
 
@@ -82,12 +83,19 @@ router.get('/joinJudge', (req,res)=>{
 
 
 //used by public/js/main.js g177,
-router.post('/join',urlencodedParser,(req,res)=>{
-	let data = req.body;
-	res.render('join.ejs',{
-		uid:data.uid,
-		tid:data.tid
+router.post('/toJoin',urlencodedParser,(req,res)=>{
+	let uid = req.body.uid;
+	let tid = req.body.tid;
+
+	List.update({uid},{$addToSet:{team:tid}},(err)=>{
+		console.log('add the tid to the list');
+		Team.update({uid:tid},{$addToset:{memebr:uid}},(err)=>{
+			console.log('add the uid to the team member');
+			res.send(true);
+		});
 	});
+
+
 });
 
 

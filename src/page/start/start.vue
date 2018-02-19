@@ -237,18 +237,18 @@ export default{
             console.log(vm.pw);
 
         	if(this.flagUid && this.flagPw){
-                $.get('/loginJudge', { uid: this.uid, password: this.pw },(j)=>{
+                $.get('/loginJudge', {uid: this.uid, password: this.pw},j=>{
                     console.log(j);
                     if(j==='l'){
                         vm.lBtnText = '帐号已登录!';
                         setTimeout(function(){ vm.lBtnText = '登录'; }, 2000);
                         return ;
-                    }   
+                    }
 
                     if(j){
                         $.post('/login',{
-                          uid:vm.uid,
-                          password:vm.pw
+                            uid:vm.uid,
+                            password:vm.pw
                         },function(allData){
                             //这里去获得所有状态到vuex里
                             vm.getAllLoginData(allData);
@@ -289,7 +289,7 @@ export default{
                         vm.tipPw = '';
                         vm.tipPww = '';
                         // 提示注册成功的组件出现
-                        vm.toggleRegistS();
+                        vm.toggleRegistS(vm.uid,vm.pw);
                     }else{
                         console.log('regist fail!')
                     }

@@ -15,7 +15,8 @@ const state = {
 //------------------------lr------------------------
   loginOrRegist: 'l' || 'r', //开始界面时，是处于登录状态还是注册状态, l:login ; r:regist
   isSuccessRegist: false,  //处于注册成功状态
-
+  rUid:null,
+  rPw:null,
 
 //-----------------------Domore----------------------
   onDomore:false, //是否展开更多操作

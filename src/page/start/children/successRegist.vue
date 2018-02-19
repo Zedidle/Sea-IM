@@ -2,13 +2,12 @@
 	<div class="success">
 	  	<h2>恭喜,注册成功!</h2>
 	    <button
-	      type="button"
-	      class="btn btn-success"
-	      >直接登录
+	      	class="btn btn-success"
+			@click = 'toLoginSR'
+	    >直接登录
 	    </button>
 
 		<button
-			type="button"
 			class="btn btn-default"
 			@click = 'toggleRegistS'
 		>返回
@@ -19,6 +18,7 @@
 <script>
 
 	console.log('link to successRegist!');
+	import $ from 'jquery';
 	import {mapState,mapMutations} from 'vuex';
 
 	export default {
@@ -30,7 +30,9 @@
 
 		computed:{
 			...mapState([
-            	'isSuccessRegist'
+            	'isSuccessRegist',
+            	'rUid',
+            	'rPw',
         	]),
 		},
 
@@ -38,16 +40,21 @@
 
 	        ...mapMutations([
 	            'toggleRegistS'
+	            'getAllLoginData',
 	        ]),
-
-			back(){
-				console.log('back 23333');
-			    // zPost('/main',{
-			      // uid:UID,
-			      // password:Password
-			    // });
-			    // sessionStorage.setItem('UID',UID);
-			}
+	        toLoginSR(){
+	        	let vm = this;
+	        	$.post('/login',{
+                    uid:vm.rUid,
+                    password:vm.rPw
+                },function(allData){
+                    //这里去获得所有状态到vuex里
+                    vm.getAllLoginData(allData);
+                    //并使页面跳转
+                    console.log('to /m');
+                    vm.$router.push({ path: '/m'});
+                });
+	        },
 		}
 	}
 </script>

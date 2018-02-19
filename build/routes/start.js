@@ -6,8 +6,9 @@ const {
 	crypto,
 	Unread,
 	People,
-	Team,
 	Pmess,
+	Team,
+	Tmess,
 	List,
 } = require('../../configs/server.config.js');
 
@@ -28,7 +29,8 @@ router.post('/regist', urlencodedParser, (req,res)=>{
 	let uid = req.body.uid;
 	let password = req.body.password;
 
-	z.L(uid,password);
+	console.log('uid,password:');
+	console.log(uid,password);
 
 	let hash = crypto.createHash('sha1');
 	hash.update(password);
@@ -37,11 +39,17 @@ router.post('/regist', urlencodedParser, (req,res)=>{
 	new People({ uid }).save();
 	new List({ uid }).save();
 	new Pmess({ uid }).save();
+	new Team({ 
+		uid,
+		name: 'TEAM '+uid,
+		member:[uid],
+		password:uid
+	}).save();
+	new Tmess({ uid }).save();
 	new User({ uid, password:hash.digest('hex') })
 		.save((err)=>{
 			if(err){
 				res.send(false);
-				z.L(err)
 			}else{
 				//注册成功
 				res.send(true);

@@ -16,7 +16,6 @@
       @click = 'cancelLogoff'
     >取消
     </div>
-  
   </div>
 </template>
 

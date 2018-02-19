@@ -46,9 +46,12 @@ router.post('/leaveTeam',urlencodedParser,(req,res)=>{
 	console.log(uid,tid);
 
 	List.update({uid},{$pull:{team:tid}},(err)=>{
-		console.log('leave team successfully!');
-		res.send(true);
+		Team.update({uid:tid},{$pull:{member:uid}},(err)=>{
+			console.log('leave team successfully!');
+			res.send(true);
+		});
 	});
+
 });
 
 
@@ -67,39 +70,6 @@ router.get('/showMembers', (req,res) => {
 					res.send(JSON.stringify(member_infos));
 				}
 			})
-		})
-	})
-})
-
-
-
-//used by views/tipDealWithTeam.js,
-//解散团队
-router.get('/dismissTeam', (req,res)=>{
-	var uid = req.query.uid;
-	console.log(req.query);
-
-	Team.findOne({uid},(err,t)=>{
-		res.render('dismissTeam.ejs',{
-			team_password:team[0].password,
-		});
-	})
-});
-
-//used by views/dismissTeam.ejs,
-router.post('/successDismissTeam',urlencodedParser,(req,res)=>{
-	var data = req.body;
-	console.log(data);
-
-	Team.findOne({uid:data.ID},(err,d)=>{
-		var members = d.member;
-		members.forEach(userid=>{
-			List.update({uid:userid},{$pull:{team:data.ID}}).exec();
-		})
-		Team.remove({uid:data.ID},(err)=>{
-			res.render('successDismissTeam.ejs',{
-				uid:data.ID
-			});
 		})
 	})
 })

@@ -9,8 +9,13 @@
     <div
       class='info'
     >
-      <input v-model='userInfo.name'>
-      <textarea v-model='userInfo.introduce'></textarea>
+      <input 
+        @blur = 'meUpdateText'  
+        v-model='userInfo.name'>
+      <textarea
+        @blur = 'meUpdateText'
+        v-model='userInfo.introduce'
+      ></textarea>
     </div>
   
   </div>
@@ -20,6 +25,7 @@
 
 <script>
   
+import $ from 'jquery';
 import {mapState,mapMutations} from 'vuex';
 
 
@@ -40,6 +46,15 @@ export default {
     ...mapMutations([
       'toggleDomore',
     ]),
+    meUpdateText(){
+      console.log('meUpdate:');
+      console.log('userInfo:');
+      console.log(this.userInfo);
+      $.post('/meUpdateText',this.userInfo,(d)=>{
+        console.log('meUpdate callback: data:');
+        console.log(d);
+      });
+    },
   }
 }
 

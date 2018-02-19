@@ -25,7 +25,7 @@
 		>ENSURE
 		</button>
 		<button
-			@click='notJoin'
+			@click='hideJoin'
 			class='btn btn-warning'
 		>CANCEL
 		</button>
@@ -35,6 +35,8 @@
 
 
 <script>
+
+import $ from 'jquery';
 import {mapState,mapMutations} from 'vuex';
 
 export default {
@@ -45,6 +47,7 @@ export default {
   },
   computed:{
     ...mapState([
+    	'UID',
     	'isToJoin',
     	'teamInfo',
     	'tTodoProps',
@@ -52,20 +55,41 @@ export default {
     ]),
   },
   methods:{
+
     ...mapMutations([
-    	'notJoin',
+    	'hideJoin',
+    	'toJoinS',
     ]),
 
     ensureToJoin(){
     	console.log('----------ensureToJoin----------');
+    	let vm = this;
     	for(let i of this.foundTeamsInfo){
     		console.log('tid,password:');
     		console.log(i.uid,i.password);
-    		if(this.tTodoProps.uid === i.uid &&
-    		 this.pw === i.password){
-    			/*join...*/
-    			console.log('got it!');
+    		if(this.tTodoProps.uid === i.uid){
+    			if(this.pw === i.password){
+	    			/*join...*/
+	    			console.log('got it!');
+	    			$.post('/toJoin',{
+	    				uid:this.UID,
+	    				tid:this.tTodoProps.uid,
+	    			},(d)=>{
+	    				console.log('success to join the team:');
+	    				console.log(d);
+	    				vm.pw = '';
+	    				vm.hideJoin();
+	    				vm.toJoinS(i);		
+	    			});
+    			}else{
+					this.pw = 'ERROR';	
+    			}
     		}
+
+
+
+
+
     	}
     },
     isHadJoined(){
@@ -94,6 +118,7 @@ export default {
 		.content{
 			text-align: center;
 			input{
+				width:100%;
 				text-align: center;
 				border:none;
 				box-shadow: 0 0 3px #999;

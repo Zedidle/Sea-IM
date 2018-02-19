@@ -3,12 +3,18 @@ import $ from 'jquery';
 export default {
 
 
+
+	toJoinS(state,team){
+		console.log('-----------toJoinS-----------');
+		state.teamInfo.unshift(team);
+	},
+
 	toJoin(state){
 		console.log('----------------toJoinTeam----------------');
 		state.isToJoin=true;
 		state.onTTodo = false;
 	},
-	notJoin(state){
+	hideJoin(state){
 		state.isToJoin=false;
 	},
 
@@ -264,8 +270,11 @@ export default {
 
 
   	//切换注册成功状态的开关
-	toggleRegistS(state){ 
+	toggleRegistS(state,rUid,rPw){ 
 		state.isSuccessRegist = !state.isSuccessRegist;
+		state.rUid = rUid;
+		state.rPw = rPw;
+		console.log('rUid,rPw:',rUid,rPw);
 	},
 
 
