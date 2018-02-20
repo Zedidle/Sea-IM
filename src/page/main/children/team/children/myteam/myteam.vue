@@ -1,42 +1,25 @@
 <template>
     <div id='myteam'>
-
-      <div 
-        v-if='!myteamInfo'
-        id='tip'
+      <img-update></img-update>
+      <img 
+           @click='clickHeadImg'     
+           :src="myteamInfo.headImg"
+           class="headImg"
       >
-        <h4 
-          style='text-align:center;'
-        >还没有建立团队
-        </h4>
-
-        <button>TO BUILD</button>
+      <div><b>{{myteamInfo.uid}}</b></div>
+      <div>
+        <b>Level: {{myteamInfo.level}}</b>
       </div>
-
-      <div
-        v-else 
-        class='content'
-      >
-        <img-update></img-update>
-        <img 
-             @click='clickHeadImg'     
-             :src="myteamInfo.headImg"
-             class="headImg"
-        >
-        <div><b>{{myteamInfo.uid}}</b></div>
-        <div>
-          <b>Level: {{myteamInfo.level}}</b>
-        </div>
-        <div>
-          <b>Scale: {{myteamInfo.member.length}}</b>
-        </div>
-          <input class="name" v-model='myteamInfo.name' placeholder="name">
-          <textarea class="introduce" v-model='myteamInfo.introduce'  placeholder="say somthing..."></textarea>
-
-          <button
-               @click='myteamUpdateText'
-          >UPDATE</button>
+      <div>
+        <b>Scale: {{myteamInfo.member.length}}</b>
       </div>
+      <input class="name" v-model='myteamInfo.name' placeholder="name">
+      <textarea class="introduce" v-model='myteamInfo.introduce'  placeholder="say somthing..."></textarea>
+
+      <button
+             @click='myteamUpdateText'
+        >UPDATE
+      </button>
     </div>
 </template>
 
@@ -127,51 +110,49 @@ export default {
 
 <style lang='less' scoped>
 #myteam{
-  .content{
+  text-align: center;
+  .headImg{
+    border-radius: 50%;
+    width:80px;
+    height:80px;
+    border:1px solid #999;
+    cursor:pointer;
+    margin:10px 0;
+    &:hover{
+      box-shadow:0 0 5px #999
+    }
+  }
+  input{
+    margin:5px 0;
+    width:80%;
     text-align: center;
-    .headImg{
-      border-radius: 50%;
-      width:80px;
-      height:80px;
-      border:1px solid #999;
-      cursor:pointer;
-      margin:10px 0;
-      &:hover{
-        box-shadow:0 0 5px #999
-      }
-    }
-    input{
-      margin:5px 0;
-      width:80%;
-      text-align: center;
-      background: transparent;
-      border:1px solid transparent;
-      &:hover{
-        border-bottom-color:#7CC;
-      };
-    }
-    textarea{
-      width:90%;
-      text-align: center;
-      background: transparent;
-      border:1px solid transparent;
-      &:hover{
-        border-color:#7CC;
-      };
-    }
-    button{
-      margin-top:10px;
-      background-color:#3c3;
-      color:#FFF;
-      border:none;
-      width:100px;
-      height:30px;
-      text-align: center;
-      vertical-align: center;
-      box-shadow:0 0 5px #3c3;
-      &:hover{
-        box-shadow:0 0 10px #3c3;
-      }
+    background: transparent;
+    border:1px solid transparent;
+    &:hover{
+      border-bottom-color:#7CC;
+    };
+  }
+  textarea{
+    width:90%;
+    text-align: center;
+    background: transparent;
+    border:1px solid transparent;
+    &:hover{
+      border-color:#7CC;
+    };
+  }
+  button{
+    margin-top:10px;
+    background-color:#3c3;
+    color:#FFF;
+    border:none;
+    width:100px;
+    height:30px;
+    text-align: center;
+    vertical-align: center;
+    box-shadow:0 0 5px #3c3;
+    &:hover{
+      box-shadow:0 0 10px #3c3;
     }
   }
 }

@@ -156,7 +156,10 @@ export default {
           vm.pushMContent(msg);
 
       }else{
-          vm.addUnread(msg);
+
+
+
+        vm.addUnread(msg);
       }
       
     });
@@ -168,6 +171,7 @@ export default {
       'pushMContent',
       'unshiftMContent',
       'getMoreMessage',
+      'addNewRecentLi',
     ]),
 
 
@@ -178,7 +182,7 @@ export default {
     addUnread(msg){
 
       let recentInfo = document.querySelectorAll('#list>li');
-      let uid,type,unr;
+      let uid,type,unr,j;
 
       for(let i of recentInfo){
         uid = i.querySelector('.uid').innerText;
@@ -191,8 +195,13 @@ export default {
             i.querySelector('.unread').innerText = 1;
           }
           i.querySelector('.unread').style.visibility = 'visible'
+          j=true;
           break;
         }
+      }
+
+      if(!j){
+        this.addNewRecentLi(msg);
       }
 
     },

@@ -19,20 +19,6 @@ router.post('/meUpdateText',urlencodedParser,(req,res)=>{
 	});
 });
 
-
-// let storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, '../public/uploads/pImages/');
-//   },
-//   filename: function (req, file, cb) {
-//   	console.log('The file is:');
-//   	console.log(file);
-//     cb(null, file.filename);
-//   }
-// })
-
-// let upload = multer({dest:'../public/uploads/'});
-
 //used by views/people.ejs
 router.post('/meUpdateImage', upload.any(), (req,res) => {
 	console.log('-------meUpdateImage-------');
@@ -82,5 +68,14 @@ router.post('/removeStar',urlencodedParser,(req,res)=>{
 	});
 });
 
+
+router.get('/getPInfo',(req,res)=>{
+	let uid = req.query(uid);
+	console.log('-----------getPInfo-----------');
+	People.findOne({uid},(err,d)=>{
+		console.log(d);
+		res.send(d);
+	});
+});
 
 module.exports = router;  

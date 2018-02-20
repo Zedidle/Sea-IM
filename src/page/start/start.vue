@@ -236,8 +236,8 @@ export default{
 
             console.log(vm.pw);
 
-        	if(this.flagUid && this.flagPw){
-                $.get('/loginJudge', {uid: this.uid, password: this.pw},j=>{
+        	if(vm.flagUid && vm.flagPw){
+                $.get('/loginJudge', {uid: vm.uid, password: vm.pw},j=>{
                     console.log(j);
                     if(j==='l'){
                         vm.lBtnText = '帐号已登录!';
@@ -270,8 +270,6 @@ export default{
         rSubmit:function(){
         	console.log('rSubmit');
 
-        	console.log(this.flagUid && this.flagPw && this.flagPww);
-
         	if(this.flagUid && this.flagPw && this.flagPww){
 
                 let vm = this;
@@ -282,14 +280,21 @@ export default{
                 },function(isSuccess){
                     if(isSuccess){
                         console.log('regist success!')
+                        // and exchange to state of regist success;
+                        // 提示注册成功的组件出现;
+                        console.log(vm.uid,vm.pw);
+                        vm.toggleRegistS(
+                            {
+                                uid:vm.uid,
+                                pw:vm.pw
+                            }
+                        );
                         vm.uid = '';
                         vm.pw = '';
                         vm.pww = '';
                         vm.tipUid = '';
                         vm.tipPw = '';
                         vm.tipPww = '';
-                        // 提示注册成功的组件出现
-                        vm.toggleRegistS(vm.uid,vm.pw);
                     }else{
                         console.log('regist fail!')
                     }

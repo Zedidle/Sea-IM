@@ -37,7 +37,7 @@ router.post('/regist', urlencodedParser, (req,res)=>{
 
 	new Unread({ uid }).save();
 	new People({ uid }).save();
-	new List({ uid }).save();
+	new List({ uid,team:[uid] }).save();
 	new Pmess({ uid }).save();
 	new Team({ 
 		uid,
@@ -102,8 +102,7 @@ router.post('/login', urlencodedParser,(req,res)=>{
 
 	hash.update(password);
 
-	User.findOne({uid},(err,u)=>{
-		if(err) throw err;
+	User.findOne({uid,password:hash.digest('hex')},(err,u)=>{
 		//如果用户存在且处于登录状态
 		if(u&&u.login){ res.send(false); return; }
 

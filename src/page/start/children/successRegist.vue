@@ -39,7 +39,7 @@
 		methods:{
 
 	        ...mapMutations([
-	            'toggleRegistS'
+	            'toggleRegistS',
 	            'getAllLoginData',
 	        ]),
 	        toLoginSR(){

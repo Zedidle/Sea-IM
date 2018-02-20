@@ -116,9 +116,8 @@
       changeContent(d){
         this.tContent = d;
         if(d==='search'){
-          this.showTSearch()
+          this.showTSearch();
         }
-
       },
       closeTSearch(){
         this.hideTSearch();

@@ -4,6 +4,44 @@ export default {
 
 
 
+
+	addNewRecentLi(state,msg){
+		console.log('-----------addNewRecentLi-----------');
+
+		if(msg.type==='p'){
+
+			/*judge if the setence of yourself*/
+			if(msg.uid === state.UID){
+				/*get the info of messto*/
+				// 1 
+				console.log('messto:',state.messto);
+				$.get('/getPInfo',{uid:messto},d=>{
+					console.log('getPInfo callback...');
+					console.log(d);
+					d.unr = 0;
+					state.recentInfo.unshift(d);
+				})
+
+			}else{
+				/*just save the info from msg*/
+				msg.unr = 1;
+				state.recentInfo.unshift(msg);
+			}
+			
+		}else if(msg.type==='t'){
+			/*just get the team info from state.teamInfo*/
+			// 2 		
+			console.log('messto:',state.messto);
+			for(let i of state.teaminfo){
+				if(i.uid === msg.uid){
+					state.recentInfo.unshift(i);
+					break;
+				}
+			}
+		}
+
+	},
+
 	toJoinS(state,team){
 		console.log('-----------toJoinS-----------');
 		state.teamInfo.unshift(team);
@@ -270,11 +308,12 @@ export default {
 
 
   	//切换注册成功状态的开关
-	toggleRegistS(state,rUid,rPw){ 
+	toggleRegistS(state,d){ 
+		console.log('-------------toggleRegistS----------------')
+		console.log(d);
 		state.isSuccessRegist = !state.isSuccessRegist;
-		state.rUid = rUid;
-		state.rPw = rPw;
-		console.log('rUid,rPw:',rUid,rPw);
+		state.rUid = d.uid;
+		state.rPw = d.pw;
 	},
 
 

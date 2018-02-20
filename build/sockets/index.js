@@ -88,9 +88,7 @@ module.exports = function(server){
           let mess = senderM.mess;
           //登记
           if(!mess[msg.to]){ mess[msg.to]=[]; }
-          
           mess[msg.to].push(m);
-
           Pmess.update({uid:msg.from}, {$set:{mess}}).exec();
         });
 
