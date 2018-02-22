@@ -114,6 +114,7 @@ module.exports = function(server){
           teamBroadcast(members,tm);
           function teamBroadcast(members, msgToTeam) {
             members.forEach((toWhom) => {
+              console.log('to:',toWhom);
               msgToTeam.to = toWhom;
               var J_tm = JSON.stringify(msgToTeam);
               io.emit(toWhom,J_tm);
@@ -123,6 +124,7 @@ module.exports = function(server){
           Tmess.update({uid:msg.to}, {$push:{mess:tm}}).exec();
         });
       }
+
     });
   });
 });

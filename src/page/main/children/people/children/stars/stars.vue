@@ -22,7 +22,6 @@
 					v-for='i in foundStarsInfo'
 					:key='i.uid'
 					@click='clickLi(i.uid,$event)'
-
 				>
 					<img :src="i.headImg">
 					<div>
@@ -35,7 +34,7 @@
 
 
 		<!-- all stars in your list -->
-		<ul>
+		<ul class='my-stars'>
 			<li 
 				v-for="i in starInfo"
 				:key="i.uid"
@@ -121,6 +120,7 @@ import {mapState,mapMutations} from 'vuex';
 <style lang='less' scoped>
 	#stars{
 		overflow-y:scroll;
+		height:360px;
 		.find{
 			border-bottom:1px solid #7BB;
 			&>div{

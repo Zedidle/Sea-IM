@@ -16,8 +16,12 @@ const {
 //---------------------Part of Regist----------------------
 
 
+
+
+
+
 // This router just for "Checking an UID whether exist"
-router.get('/checkUidIsUsed', urlencodedParser, (req,res)=>{
+router.get('/checkUidIsUsed',(req,res)=>{
 	let uidEnsure = req.query;
 	User.findOne(uidEnsure,(err,u) =>{ res.send(Boolean(u));});
 });

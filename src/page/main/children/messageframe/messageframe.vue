@@ -17,6 +17,7 @@
     <div>{{messname}}</div>
     
     <div
+      @click='showMoreInfo'
       class='messageframe-info'
     >
     <i 
@@ -25,7 +26,6 @@
     ></i>
     </div>
   </div>
-
 
   <div
     id="getMoreMessageOnFrame-btn"
@@ -58,9 +58,7 @@
           <div class="name">{{i.name}}</div>
           <span>{{i.time}}</span>
         </div>
-        <div class="content">
-          {{i.content}}
-        </div>
+        <div class="content" v-html='i.content'></div>
       </div>
       <br clear='both'>
     </li>
@@ -99,22 +97,19 @@
 
 <script>
 
-// import z from 'zhelp';
 import {mapState,mapMutations} from 'vuex';
 import expression from './children/expression.vue'
 
 export default {
   data(){
     return {
-
-
-
       iconS:{
         fontSize:'30px',
         lineHeight:'30px',
       }
     }
   },
+  
   components:{
     expression,
   },
@@ -137,7 +132,6 @@ export default {
     socket.on(vm.UID, (m)=>{
       let msg = JSON.parse(m);
       console.log('----------socket message come---------')
-      console.log(msg);
 
       /********** IMPORTANT ***********/
       //Messages come from people or team, receive it and make the different things!
@@ -152,14 +146,12 @@ export default {
           ))
         ){
 
-          msg.content = vm.expressionsParse(msg.content);
           vm.pushMContent(msg);
+          console.log('pushMContent');
 
       }else{
-
-
-
         vm.addUnread(msg);
+        console.log('addUnread');
       }
       
     });
@@ -172,10 +164,8 @@ export default {
       'unshiftMContent',
       'getMoreMessage',
       'addNewRecentLi',
+      'showMoreInfo',
     ]),
-
-
-
 
 
     // Because it dosen't work in vuex, as object's properties.
@@ -190,11 +180,13 @@ export default {
         unr = i.querySelector('.unread').innerText;
         if(uid===msg.uid && type===msg.type){
           if(unr){
+            console.log('unr+=1')
             i.querySelector('.unread').innerText = parseInt(unr)+1;
           }else{
+            console.log('unr=1')
             i.querySelector('.unread').innerText = 1;
           }
-          i.querySelector('.unread').style.visibility = 'visible'
+          i.querySelector('.unread').style.display = 'inline-block';
           j=true;
           break;
         }
@@ -204,15 +196,6 @@ export default {
         this.addNewRecentLi(msg);
       }
 
-    },
-
-    addRecentLi:function(info){
-      main.recentInfo.unshift(info);
-      if(main.messtype === 'team'){
-        Loginlist.recent_team.unshift(info.uid);
-      }else{
-        Loginlist.recent_people.unshift(info.uid);
-      }
     },
 
     mFloat(msg){
@@ -261,172 +244,6 @@ export default {
       }
       document.getElementById('messageframe-input').value = '';
     },
-
-
-    //when the mess come, if messageFrame is opning, check the messtype and messto, 
-    //if satisfy the condition, it will run this function to show the message.
-    //插入新消息到消息内容框
-    //isTop判断是否要上插并滚动到最顶
-    createMessDiv:function(msg, toTop){
-
-      if(!msg){
-        this.noMoreMessage();
-        return false;
-      }
-
-      //根据类型和消息来源判断消息框浮动方向
-      var f = judgeTypeforFloatDirection(msg, this.UID);
-      console.log(msg);
-      
-      //获取消息内容框对象
-      var cont = $('#messageframe-cont')[0];
-        
-      //转翻译表情信息
-      var msgContent = main.expressionsParse(msg.content);
-
-      if(toTop){
-        $(cont).prepend(vCreateMessDiv(msg, f, msgContent));
-        //置顶
-        cont.scrollTop = 0; 
-      }else{
-        
-        $('#messageframe-input')[0].value = '';
-        cont.scrollTop = cont.scrollHeight;
-      }
-
-    },
-        
-
-    showMembers:function(){
-      main.teamMembersSeen = true;
-      $.get('/showMembers',{ tid:main.messto }, function(_infos) {
-        var teamMembers_ul = document.querySelector('.teamMembers>ul');
-        for(var i=0;i<_infos.length;i++){
-          $(teamMembers_ul).append(vTeamMembersTemplate(_infos[i]));         
-        }
-      });
-    },
-
-    closeTeamMembers:function(){
-      document.querySelector('.teamMembers>ul').innerHTML = '';
-      this.teamMembersSeen = false;
-    },
-
-
-    
-    deleteTheRecentChat:function(){
-      var data = {
-        uid:this.UID,
-        type:main.messtype,
-        to:main.messto
-      };
-      $.post('/deleteRecentChat',data,function(d){
-        main.removeRecentLi(data);
-      });
-
-      main.messageframeClose();
-    },
-    
-
-
-    getMoreInfo:function(){
-      console.log('2333');
-
-      var data = {
-        type:this.messtype,
-        uid:this.messto
-      };
-
-      console.log('getMoreInfo');
-      console.log(data);
-
-      //无法查询团队信息,会引起系统崩溃!
-      $.get("/getInfo",data,function(info){
-        console.log(info);
-        //这里的数据格式同后台数据库一致，可以直接绑定到Vue对应的data对象上
-        main.moreInfo = info;
-        console.log(main.moreInfo);
-      });
-      this.moreinfoSeen = true;
-    },
-
-    expressionsParse(msgContent){
-      while(msgContent.match(/\#\(.{1,4}\)/)){
-        var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/))
-        
-        console.log(msgMatch.slice(2,-1));
-        var t = this.expressionToMark(msgMatch.slice(2,-1));
-
-        msgContent = msgContent.replace(
-          /#\(.{1,4}\)/,
-          `<div
-            class='expression-chatting'
-            style='background-image:url(img/faces.png); 
-              background-position:0px -${t*30}px;'
-          >
-          </div>`
-          );
-      }
-      return msgContent;
-    },
-
-    expressionToMark(expressionMark){
-          var t;
-          switch(expressionMark){
-            case '呵呵':t = 0; break;
-            case '哈哈':t = 1; break;
-            case '吐舌':t = 2; break;
-            case '啊':t = 3; break;
-            case '酷':t = 4; break;
-            case '怒':t = 5; break;
-            case '开心':t = 6; break;
-            case '汗':t = 7; break;
-            case '泪':t = 8; break;
-            case '黑线':t = 9; break;
-            case '鄙视':t = 10; break;
-            case '不高兴':t = 11; break;
-            case '真棒':t = 12; break;
-            case '钱':t = 13; break;
-            case '疑问':t = 14; break;
-            case '阴险':t = 15; break;
-            case '吐':t = 16; break;
-            case '咦':t = 17; break;
-            case '委屈':t = 18; break;
-            case '花心':t = 19; break;
-            case '呼':t = 20; break;
-            case '笑眼':t = 21; break;
-            case '冷':t = 22; break;
-            case '太开心':t = 23; break;
-            case '滑稽':t = 24; break;
-            case '勉强':t = 25; break;
-            case '狂汗':t = 26; break;
-            case '乖':t = 27; break;
-            case '睡觉':t = 28; break;
-            case '惊哭':t = 29; break;
-            case '生气':t = 30; break;
-            case '惊讶':t = 31; break;
-            case '喷':t = 32; break;
-            case '爱心':t = 33; break;
-            case '心碎':t = 34; break;
-            case '玫瑰':t = 35; break;
-            case '礼物':t = 36; break;
-            case '彩虹':t = 37; break;
-            case '星星月亮':t = 38; break;
-            case '太阳':t = 39; break;
-            case '钱币':t = 40; break;
-            case '灯泡':t = 41; break;
-            case '咖啡':t = 42; break;
-            case '蛋糕':t = 43; break;
-            case '音乐':t = 44; break;
-            case 'haha':t = 45; break;
-            case '胜利':t = 46; break;
-            case '大拇指':t = 47; break;
-            case '弱':t = 48; break;
-            case 'ok':t = 49; break;
-          }
-          return t;
-        }
-
   }
 }
 
@@ -652,12 +469,7 @@ export default {
           word-break:break-all;
           box-shadow: 0px 0px 5px #999;
           font-size: 1.2em;
-          .expression-chatting{
-            width:30px;
-            height:30px;
-            display: inline-block;
-            
-          }
+
         }
       }
     }

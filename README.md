@@ -29,3 +29,14 @@ npm run sup
 
 
 
+
+
+
+<h3>Part of test</h3>
+<p>1.Base on the test data(come from test/setData.js),Users talk with each other...100% 2018.02.22</p>
+
+
+
+
+<p>2.Regist and login directly, maybe it hide a bug...100% 2018.02.22</p>
+<p>then find user by the people search component, and start to talk with each other...100% </p>

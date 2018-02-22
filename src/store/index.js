@@ -113,19 +113,19 @@ pMoreInfo:null,
   messContent:[],        //content---Message Body----
   messRecord:[],         //record 
 
-  
   //更多消息的模板，聊天框右上角显示的信息 和 读取更多消息
-  moreInfo:{    
-    headImg:'', //头像
-    uid:'',     //对象id
-    name:'',    //对象昵称
-    level:'',   //如果是团队,则会有等级
-    memeber:'', //如果是团队,则会有成员
-    sex:'',     //性别
-    hobby:'',   //爱好
-    birthday:'',//生日
-    introduce:''//介绍
-  },
+  moreInfo:null,
+  // moreInfo:{
+  //   headImg:'', //头像
+  //   uid:'',     //对象id
+  //   name:'',    //对象昵称
+  //   level:'',   //如果是团队,则会有等级
+  //   memeber:'', //如果是团队,则会有成员
+  //   sex:'',     //性别
+  //   hobby:'',   //爱好
+  //   birthday:'',//生日
+  //   introduce:''//介绍
+  // },
 
 
 // ------------------------------------------------------

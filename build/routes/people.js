@@ -70,7 +70,7 @@ router.post('/removeStar',urlencodedParser,(req,res)=>{
 
 
 router.get('/getPInfo',(req,res)=>{
-	let uid = req.query(uid);
+	let uid = req.query.uid;
 	console.log('-----------getPInfo-----------');
 	People.findOne({uid},(err,d)=>{
 		console.log(d);

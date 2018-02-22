@@ -49,6 +49,7 @@ export default {
       'toggleDomore',
       'showMessageframe',
       'pushMContent',
+      'clearMContent',
     ]),
 
     clickMessLi(d){
@@ -68,23 +69,25 @@ export default {
         if(uid===d.uid && type===d.type){
           unr = i.querySelector('.unread').innerText;
           i.querySelector('.unread').innerText = '';
-          i.querySelector('.unread').style.visibility = 'hidden';
+          i.querySelector('.unread').style.display = 'none';
+          if(unr){
+            //get unread messages
+            let vm = this;
+            $.get('/getUnreadMess', {
+              uid:this.UID,
+              getUid:d.uid,
+              type:d.type,
+              unr,
+            }, d=>{
+              vm.clearMContent();
+              for(let i of d){
+                vm.pushMContent(i);
+              }
+            });
+          }
           break;
         }
       }
-
-      //get unread messages
-      let vm = this;
-      $.get('/getUnreadMess', {
-        uid:this.UID,
-        getUid:d.uid,
-        type:d.type,
-        unr,
-      }, (d)=>{
-        for(let i of d){
-          vm.pushMContent(i);
-        }
-      });
     },
 
     removeRecentLi:function(data){

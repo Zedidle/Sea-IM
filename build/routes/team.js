@@ -75,4 +75,13 @@ router.get('/showMembers', (req,res) => {
 })
 
 
+router.get('/getTInfo',(req,res)=>{
+	let uid = req.query.uid;
+	console.log('-----------getTInfo-----------');
+	Team.findOne({uid},(err,d)=>{
+		console.log(d);
+		res.send(d);
+	});
+});
+
 module.exports = router;  

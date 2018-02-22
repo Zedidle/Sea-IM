@@ -3,6 +3,32 @@ import $ from 'jquery';
 export default {
 
 
+	closeMoreInfo(state){
+		state.moreInfoSeen = false;
+		state.moreInfo = {};
+	},
+
+
+	showMoreInfo(state){
+		console.log('------------showMoreInfo-------------');
+		state.moreInfoSeen = true;
+
+		if(!state.moreInfo){
+			if(state.messtype==='p'){
+				$.get('/getPInfo',{uid:state.messto},d=>{
+					console.log('getPInfo:');
+					console.log(d);
+					state.moreInfo = d;
+				});
+			}else{
+				$.get('/getTInfo',{uid:state.messto},d=>{
+					console.log('getTInfo:');
+					console.log(d);
+					state.moreInfo = d;
+				});
+			}
+		}
+	},
 
 
 	addNewRecentLi(state,msg){
@@ -10,6 +36,7 @@ export default {
 
 		if(msg.type==='p'){
 
+			console.log('ppppppppppp');
 			/*judge if the setence of yourself*/
 			if(msg.uid === state.UID){
 				/*get the info of messto*/
@@ -30,10 +57,14 @@ export default {
 			
 		}else if(msg.type==='t'){
 			/*just get the team info from state.teamInfo*/
-			// 2 		
+			// 2
+			console.log('tttttttttt');
 			console.log('messto:',state.messto);
-			for(let i of state.teaminfo){
+			for(let i of state.teamInfo){
 				if(i.uid === msg.uid){
+					i.unr = 1;
+
+					console.log(i);
 					state.recentInfo.unshift(i);
 					break;
 				}
@@ -67,7 +98,16 @@ export default {
 			if(!d) return;
 			for(let i of state.foundPeopleInfo){
 				if(i.uid === sid){
-					state.starInfo.unshift(i);
+					let flag = false;
+					for(let j of state.starInfo){
+						if(j.uid===sid){
+							flag=true;
+							break;
+						}
+					}
+					if(!flag){
+						state.starInfo.unshift(i);
+					}
 					break;
 				}
 			}
@@ -223,18 +263,18 @@ export default {
     	console.log('get messages from record');
 		addMoreMessages(state.messRecord);
     }else{
-      console.log('get messages from DB');
-			//获取更多聊天记录
-			$.get('/getMoreMessage', {
-				receiveUid:state.UID,
-				fromUid:state.messto,
-				type:state.messtype
-			}, (m)=>{
-				console.log('get the messages from DB:');
-				console.log(m);
-				state.messRecord = m?m:[];
-				addMoreMessages(m);
-			});
+		console.log('get messages from DB');
+		//获取更多聊天记录
+		$.get('/getMoreMessage', {
+			receiveUid:state.UID,
+			fromUid:state.messto,
+			type:state.messtype
+		}, (m)=>{
+			console.log('get the messages from DB:');
+			console.log(m);
+			state.messRecord = m?m:[];
+			addMoreMessages(m);
+		});
     }
 
   	function addMoreMessages(messR){
@@ -243,6 +283,7 @@ export default {
     	for(let i=0;i<5;i++){
 	  		mr = messR[messR.length-1-skip-i];
 	  		if(mr){
+		        mr.content = expressionsParse(mr.content);
 	  			state.messContent.unshift(mr);
 	  		}else{
 	  			/*no more*/
@@ -481,6 +522,8 @@ export default {
 //-------------------messageframe----------------------
 
 	showMessageframe(state,d){
+
+
 		state.messto = d.uid;
 		state.messname = d.name;
 		state.messtype = d.type;
@@ -496,6 +539,8 @@ export default {
 	  state.teamMembersSeen=false;
 	  state.messtype=null;
 	  state.messto=null;
+	  state.moreInfo=null;
+	  state.moreInfoSeen=false;
       state.messContent = [];
       state.messRecord = [];
       document.getElementById('messageframe-input').value = '';
@@ -507,7 +552,14 @@ export default {
 
     },
 
+    clearMContent(state){
+    	state.messContent = [];
+    },
+
     pushMContent(state,msg){
+    	
+        msg.content = expressionsParse(msg.content);
+
     	state.messContent.push(msg);
     	setTimeout(()=>{
 	        let cont = document.getElementById('messageframe-cont');
@@ -516,13 +568,12 @@ export default {
 
     	if(state.messRecord.length){
     		state.messRecord.length++;
-    		// state.messRecord.push(msg);
     	}
+
     },
 
     unshiftMContent(state,msgs){
     	state.messContent = []
-
     },
 
 
@@ -533,3 +584,88 @@ export default {
 
 
 }
+
+
+
+
+
+
+
+	    function expressionsParse(msgContent){
+	      while(msgContent.match(/\#\(.{1,4}\)/)){
+	        var msgMatch = String(msgContent.match(/\#\(.{1,4}\)/))
+	        
+	        console.log(msgMatch.slice(2,-1));
+	        var t = expressionToMark(msgMatch.slice(2,-1));
+
+	        msgContent = msgContent.replace(
+	          /#\(.{1,4}\)/,
+	          `<div
+	            style='background-image:url(img/faces.png); 
+	              background-position:0px -${t*30}px;
+	              width:30px;
+	              height:30px;
+	              display: inline-block;'
+	          >
+	          </div>`
+	          );
+	      }
+	      return msgContent;
+	    }
+
+    	function expressionToMark(expressionMark){
+          var t;
+          switch(expressionMark){
+            case '呵呵':t = 0; break;
+            case '哈哈':t = 1; break;
+            case '吐舌':t = 2; break;
+            case '啊':t = 3; break;
+            case '酷':t = 4; break;
+            case '怒':t = 5; break;
+            case '开心':t = 6; break;
+            case '汗':t = 7; break;
+            case '泪':t = 8; break;
+            case '黑线':t = 9; break;
+            case '鄙视':t = 10; break;
+            case '不高兴':t = 11; break;
+            case '真棒':t = 12; break;
+            case '钱':t = 13; break;
+            case '疑问':t = 14; break;
+            case '阴险':t = 15; break;
+            case '吐':t = 16; break;
+            case '咦':t = 17; break;
+            case '委屈':t = 18; break;
+            case '花心':t = 19; break;
+            case '呼':t = 20; break;
+            case '笑眼':t = 21; break;
+            case '冷':t = 22; break;
+            case '太开心':t = 23; break;
+            case '滑稽':t = 24; break;
+            case '勉强':t = 25; break;
+            case '狂汗':t = 26; break;
+            case '乖':t = 27; break;
+            case '睡觉':t = 28; break;
+            case '惊哭':t = 29; break;
+            case '生气':t = 30; break;
+            case '惊讶':t = 31; break;
+            case '喷':t = 32; break;
+            case '爱心':t = 33; break;
+            case '心碎':t = 34; break;
+            case '玫瑰':t = 35; break;
+            case '礼物':t = 36; break;
+            case '彩虹':t = 37; break;
+            case '星星月亮':t = 38; break;
+            case '太阳':t = 39; break;
+            case '钱币':t = 40; break;
+            case '灯泡':t = 41; break;
+            case '咖啡':t = 42; break;
+            case '蛋糕':t = 43; break;
+            case '音乐':t = 44; break;
+            case 'haha':t = 45; break;
+            case '胜利':t = 46; break;
+            case '大拇指':t = 47; break;
+            case '弱':t = 48; break;
+            case 'ok':t = 49; break;
+          }
+          return t;
+        }
