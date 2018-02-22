@@ -17,7 +17,7 @@ const router = new VueRouter({
 	routes,
 });
 
-// 对应build/index.ejs
+// 对应build/index.html
 new Vue({
   	router,
   	store,
