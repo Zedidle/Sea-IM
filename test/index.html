@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+
+	<script src='../build/public/vue/vue.js'></script>
+	<script src='../build/public/vue/vue-router.js'></script>
+	<div id="app">
+		
+
+		<router-link :to="{ name: 'buildteam'}">User</router-link>
+		<router-view></router-view>	
+
+	</div>
+
+
+	<script>
+
+		var buildteam = {
+			template: `
+        <form
+        	v-bind:style='bgRed'
+            class="bs-example bs-example-form"
+            id="teamForm"
+            action="/successBuildTeam"
+            role='form' 
+            method='post'
+        >
+            <div id='welcome'>创建团队</div>
+
+            <div class="input-group">
+                <span
+                    class="input-group-addon"
+                    style='width:80px;'
+                >名称
+                </span>
+                <input
+                    name='teamname'
+                    class="form-control"
+                >
+            </div>
+
+            <div 
+                class='tip'
+                id='tipTeamname'
+            >
+            </div>
+
+            <br>
+
+            <div class="input-group">
+                <span
+                    class="input-group-addon"
+                    style='width:80px;'
+                >口令
+                </span>
+                <input
+                    id='password'
+                    name='password'
+                    type='password'
+                    class="form-control"
+                >
+            </div>
+            <div
+                class='tip'
+                id='tipPassword'
+            >
+            </div>
+
+            <br>
+              <div class="input-group">
+                <span
+                    class="input-group-addon"
+                    style='width:80px;'
+                >重复口令
+                </span>
+                <input
+                    id='password1'
+                    type="password"
+                    class="form-control"
+                >
+                </div>
+
+        		<div 
+                    class='tip'
+                    id='tipPassword1'
+                >
+                </div>
+
+            <br>
+
+            <button
+                id="submitBtn"
+                type="button"
+                class="btn btn-primary"
+            >建立
+            </button>
+
+            <button
+                id="backBtn"
+                type="button"
+                class="btn btn-warning"
+            >取消
+            </button>
+
+            <br clear='both'>
+        </form>`,
+	        data:function(){
+	        	return {
+	        		bgRed:{
+                'background-color':'red',
+                color:'green',    
+              }
+	        	}
+	        }
+		}
+
+		const router = new VueRouter({
+		  routes: [
+		    // 动态路径参数 以冒号开头
+		    { path: '/buildteam', name:'buildteam', component: buildteam }
+		  ]
+		})
+
+		var app = new Vue({
+			el:'#app',
+			router,
+			data:{
+
+			},
+		})
+
+	</script>
+</body>
+</html>

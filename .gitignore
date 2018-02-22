@@ -2,7 +2,7 @@ node_modules/
 npm-debug.log
 *.log
 npm-debug.log*
-test/
+
 clearlogin.js
 inidb.js
 package-lock.json
