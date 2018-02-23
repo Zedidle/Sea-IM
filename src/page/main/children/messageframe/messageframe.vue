@@ -232,6 +232,7 @@ export default {
     //发送消息
     sendMessage:function(){
       var v = document.getElementById('messageframe-input').value.trim();
+      console.log('235 sendMessage');
       if(v.length){
         var msg = {
           time:this.dayTime(),

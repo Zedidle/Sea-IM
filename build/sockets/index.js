@@ -21,8 +21,10 @@ module.exports = function(server){
   io.on('connection', function(socket){
     socket.on('heartbeat',function(uid){
       User.update({uid}, {$set:{login:true}}).exec();
+        console.log(uid,'login')
       setTimeout(function(){
         User.update({uid}, {$set:{login:false}}).exec();
+        console.log(uid,'logout')
       },9800);
     });
     
