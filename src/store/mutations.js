@@ -51,7 +51,7 @@ export default {
 
 			}else{
 				/*just save the info from msg*/
-				msg.unr = 1;
+				msg.unr = '1';
 				state.recentInfo.unshift(msg);
 			}
 			
@@ -62,7 +62,7 @@ export default {
 			for(let i of state.teamInfo){
 				if(i.uid === msg.uid){
 					let o = new Object(i);
-					o.unr = 1;
+					o.unr = '1';
 					state.recentInfo.unshift(o);
 					break;
 				}
