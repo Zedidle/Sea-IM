@@ -59,13 +59,11 @@ export default {
 			/*just get the team info from state.teamInfo*/
 			// 2
 			console.log('tttttttttt');
-			console.log('messto:',state.messto);
 			for(let i of state.teamInfo){
 				if(i.uid === msg.uid){
-					i.unr = 1;
-
-					console.log(i);
-					state.recentInfo.unshift(i);
+					let o = new Object(i);
+					o.unr = 1;
+					state.recentInfo.unshift(o);
 					break;
 				}
 			}
