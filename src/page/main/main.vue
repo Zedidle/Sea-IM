@@ -55,7 +55,7 @@
     },
     created(){
       console.log(this.UID + ' LOGIN');
-      //由于由browserSync代理，所以当前通讯端口也会发向3000
+      //如果由于由browserSync代理，所以当前通讯端口也会发向3000
       //every 10 seconds to send a heartbeat package, keep online;
       let vm = this;
       setInterval(function(){
