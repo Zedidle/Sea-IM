@@ -60,8 +60,8 @@ export default {
       console.log(e);
       this.showTTodo({
         uid,
-        x:e.layerX-50,
-        y:e.layerY
+        x:e.clientX-150,
+        y:e.clientY-100
       });
 
     },

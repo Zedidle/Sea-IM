@@ -257,7 +257,7 @@ export default{
                             vm.$router.push({ path: '/m'});
                         });
                     }else{
-                        vm.lBtnText = 'Account IS Not Match With PW';
+                        vm.lBtnText = '账号密码不匹配';
                         setTimeout(function(){ vm.lBtnText = '登录'; }, 2000);
                     }
                 });
