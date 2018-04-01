@@ -6,7 +6,6 @@ import uiConfig from '../configs/ui.config.js';
 
 uiConfig();
 
-
 // console.log('Bundle->routes:');
 // console.log(routes);
 

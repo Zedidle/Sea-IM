@@ -23,7 +23,7 @@ var listSchema = new Schema({
         type:Array,
         default:[],
     }
-})
+});
 
 var List = mongoose.model('List', listSchema);
 module.exports = List;

@@ -1,9 +1,9 @@
 <template>
-	<div 
+	<div
 		id="people"
 		v-show='onPeople'
 	>
-		<div 
+		<div
 			class="close"
 			@click = 'togglePeople'
 		>
@@ -230,7 +230,8 @@
 		}
 
 		.content{
-			height:440px;
+			overflow-y:scroll;
+			height:420px;
 		}
 	}
 

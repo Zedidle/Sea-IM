@@ -54,6 +54,7 @@
                     console.log('to /m');
                     vm.$router.push({ path: '/m'});
                 });
+                vm.toggleRegistS();
 	        },
 		}
 	}

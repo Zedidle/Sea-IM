@@ -20,7 +20,6 @@
       @mouseover = 'onH1Color'
       @mouseout = 'offH1Color'
       >{{greeting}}
-
     </h1>
   </transition>
 

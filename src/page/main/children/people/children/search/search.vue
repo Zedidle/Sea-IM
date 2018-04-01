@@ -57,13 +57,14 @@ export default {
       console.log(e);
       this.showPTodo({
         uid,
-        x:e.layerX-50,
-        y:e.layerY
+        x:e.clientX-150,
+        y:e.clientY-100
       });
 
     },
   }
 }
+
 </script>
 
 <style lang='less' scoped>
