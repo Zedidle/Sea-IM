@@ -4,6 +4,7 @@ const {
 	upload,
 	Team,
 	List,
+	sequence
 } = require('../../configs/server.config.js');
 
 
@@ -44,14 +45,19 @@ router.post('/leaveTeam',urlencodedParser,(req,res)=>{
 
 	console.log('uid,tid...');
 	console.log(uid,tid);
-
-	List.update({uid},{$pull:{team:tid}},(err)=>{
-		Team.update({uid:tid},{$pull:{member:uid}},(err)=>{
-			console.log('leave team successfully!');
-			res.send(true);
-		});
-	});
-
+	sequence(
+		next=>{
+			List.update({uid},{$pull:{team:tid}},(err)=>{
+				next();
+			});
+		},
+		next=>{
+			Team.update({uid:tid},{$pull:{member:uid}},(err)=>{
+				console.log('leave team successfully!');
+				res.send(true);
+			});
+		}
+	);
 });
 
 
@@ -60,18 +66,27 @@ router.get('/showMembers', (req,res) => {
 
 	var tid = req.query.tid;
 	
-	Team.findOne({uid:tid},(err,t)=>{
-		var members = t.member;
-		var member_infos = [];
-		members.forEach(member=>{
-			People.findOne({uid:member},(err,p)=>{
-				member_infos.push(p);
-				if(member_infos.length===members.length){
-					res.send(JSON.stringify(member_infos));
-				}
+	let data = {};
+	sequence(
+		next=>{
+			Team.findOne({uid:tid},(err,t)=>{
+				data.members = t.member;
+				data.member_infos = [];
+				next();
+			});
+		},
+		next=>{
+			data.members.forEach(member=>{
+				People.findOne({uid:member},(err,p)=>{
+					data.member_infos.push(p);
+					if(member_infos.length===members.length) next();
+				})
 			})
-		})
-	})
+		},
+		next=>{
+			res.send(JSON.stringify(data.member_infos));
+		}
+	)
 })
 
 

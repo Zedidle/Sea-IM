@@ -32,7 +32,7 @@ const Tmess = require('../build/model/tmess');
 const People = require('../build/model/people');
 const Team = require('../build/model/team');
 const List = require('../build/model/list');
-
+const sequence = require('zfc-sequence');
 
 module.exports = {
 	ip: '127.0.0.1',
@@ -57,5 +57,6 @@ module.exports = {
 	People,
 	Team,
 	List,
+	sequence,
 
 }

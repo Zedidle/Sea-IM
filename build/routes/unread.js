@@ -4,7 +4,7 @@ const {
 	Pmess,
 	Tmess,
 	Unread,
-
+	sequence
 	
 } = require('../../configs/server.config.js');
 
@@ -20,9 +20,10 @@ router.post('/test',urlencodedParser,(req,res)=>{
 
 //used by public/js/main-method.js
 router.post('/unReadTo0', urlencodedParser, (req, res) => {
-	let uid = req.body.uid;
-	let to = req.body.to;
-	let type = req.body.type;
+	let b = req.body; 
+	let uid = b.uid;
+	let to = b.to;
+	let type = b.type;
 
 	//处理用户的未读消息数
 	Unread.findOne({ uid }, (err, u) => {

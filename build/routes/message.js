@@ -4,12 +4,14 @@ const {
 	Tmess,
 	Pmess,
 	List,
+	sequence
 } = require('../../configs/server.config.js');
 
 router.get('/getMoreMessage', (req,res)=>{
-	let receiveUid = req.query.receiveUid;
-	let fromUid = req.query.fromUid;
-	let type = req.query.type;
+	let q = req.query;
+	let receiveUid = q.receiveUid;
+	let fromUid = q.fromUid;
+	let type = q.type;
 
 	console.log('---------getMoreMessage---------')
 	console.log('receiveUid:');
@@ -19,21 +21,26 @@ router.get('/getMoreMessage', (req,res)=>{
 	console.log('type:');
 	console.log(type);
 
-	new Promise((resolve,reject)=>{
-		if(type==='p'){
-			Pmess.findOne({uid:receiveUid},(err,m) => {
-				resolve(m?m.mess[fromUid]:false);
-			});
-		}else{
-			Tmess.findOne({uid:fromUid}, (err,m) => {
-				resolve(m?m.mess:false);
-			});
+	let mess;
+
+	sequence(
+		(next)=>{
+			if(type==='p'){
+				Pmess.findOne({uid:receiveUid},(err,m) => {
+					mess = m?m.mess[fromUid]:false;
+					next();
+				});
+			}else if(type === 't'){
+				Tmess.findOne({uid:fromUid}, (err,m) => {
+					mess = m?m.mess:false;
+					next();
+				});
+			}
+		},
+		(next)=>{
+			res.send(mess);
 		}
-	}).then((mess) => {
-		console.log('get the messages:')
-		console.log(mess);
-		res.send(mess);
-	});
+	)
 });
 
 //used by main-methods.js
@@ -43,13 +50,15 @@ router.get('/getInfo', (req,res) => {
 	var uid = req.query.uid;
 
 	console.log(type, uid);
-
 	//如果是团队则会导致系统崩溃,为什么？
-
 	if(type==='team'){
-		Team.findOne({uid},(err,t)=>{ res.send(t); });
+		Team.findOne({uid},(err,t)=>{ 
+			res.send(t);
+		});
 	}else{
-		People.findOne({uid},(err,p)=>{ res.send(p);});
+		People.findOne({uid},(err,p)=>{
+			res.send(p);
+		});
 	}
 });
 
@@ -63,12 +72,21 @@ router.post('/starOrUnstar', urlencodedParser, (req,res) => {
 		});
 	}else{
 		List.findOneAndUpdate(
-			{uid:data.uid}, 
-			{$addToSet:{star:data.to}},
-			{new:true},
+			{
+				uid:data.uid
+			},
+			{
+				$addToSet:{
+					star:data.to
+				}
+			},
+			{
+				new:true
+			},
 		 	(err,p) => {
 				res.send(p);
-			});
+			}
+		);
 	}
 })
 
@@ -80,7 +98,6 @@ router.post('/deleteRecentChat', urlencodedParser, (req,res) => {
 	var to = data.to;
 
 	List.update({uid:data.uid}, {$pull:{recent_people:data.to}},(err) => {
-		if(err) throw err;
 		res.send(true);
 	})
 });
