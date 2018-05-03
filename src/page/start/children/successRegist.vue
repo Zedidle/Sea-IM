@@ -1,17 +1,8 @@
 <template>
 	<div class="success">
 	  	<h2>恭喜,注册成功!</h2>
-	    <button
-	      	class="btn btn-success"
-			@click = 'toLoginSR'
-	    >直接登录
-	    </button>
-
-		<button
-			class="btn btn-default"
-			@click = 'toggleRegistS'
-		>返回
-		</button>
+	    <button @click = 'toLoginSR'> 直接登录 </button>
+		<button @click = 'toggleRegistS'> 返回 </button>
 	</div>
 </template>
 
@@ -44,17 +35,18 @@
 	        ]),
 	        toLoginSR(){
 	        	let vm = this;
+	        	console.log(vm.rUid);
+	        	console.log(vm.rPw);
 	        	$.post('/login',{
                     uid:vm.rUid,
                     password:vm.rPw
-                },function(allData){
+                },allData=>{
                     //这里去获得所有状态到vuex里
+                    console.log(allData);
                     vm.getAllLoginData(allData);
                     //并使页面跳转
-                    console.log('to /m');
                     vm.$router.push({ path: '/m'});
                 });
-                vm.toggleRegistS();
 	        },
 		}
 	}

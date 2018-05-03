@@ -7,13 +7,14 @@ const {
   express,
   User,
   session,
+  redis,
 } = require('../configs/server.config.js');
 
 const app = express();
 
 const server = require('http').Server(app);
-server.listen(port, ip, function(){
-  console.log("释放端口："+ip+':'+port);
+server.listen(port, ip, ()=>{
+  console.log("Open the port："+ip+':'+port);
 });
 
 // 启用通讯
@@ -27,10 +28,21 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;  
 mongoose.connect(db, {useMongoClient:true}, (err) => {
   if(err){
-    console.log('Connect DB Fail! Error: ',err);
+    console.log('Connect DB Fail! Error:-->',err);
     process.exit(1);
   }
 });
+
+
+/* =========== redis =========== */
+redis.set("testKey", "Redis is on ready!",()=>{
+  redis.get('testKey',(err,rep)=>{
+    console.log(rep);
+  })
+});
+/* ============================= */
+
+
 
 // 如果是开发阶段则让所有用户注销
 if(process.env.NODE_ENV === 'development'){

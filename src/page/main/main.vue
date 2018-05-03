@@ -27,8 +27,6 @@
   import people from './children/people/people.vue';
   import team from './children/team/team.vue';
 
-
-
   export default {
     components:{
       logoff,
@@ -63,7 +61,7 @@
           socket.emit('heartbeat',vm.UID);
           console.log('heartbeat!');
         }
-      },10000);
+      },5000);
     },
     // methods:vMethods()
     methods:{
@@ -124,8 +122,9 @@
     width:300px;
     height:564px;
     border:1px solid #7CC;
-    box-shadow: 0 0 15px #999;
+    box-shadow: 0 0 5px #999;
     background:rgba(247,247,247,0.95);
+    overflow: hidden;
 
     @media(max-width: 768px){
       top:0%;

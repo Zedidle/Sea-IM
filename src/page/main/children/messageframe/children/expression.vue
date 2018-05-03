@@ -95,6 +95,7 @@
 			    case 47:t = '大拇指'; break;
 			    case 48:t = '弱'; break;
 			    case 49:t = 'ok'; break;
+			    case 50:t = 'rabbit'; break;
 			  }
 			  main.expressionSeen = false;
 			  let input = document.getElementById('messageframe-input');

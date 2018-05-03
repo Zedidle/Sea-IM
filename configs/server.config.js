@@ -1,7 +1,4 @@
 // 全部的后台模块引用
-// const z = require('zhelp');
-
-
 const express = require('express');
 const router = express.Router();
 
@@ -24,20 +21,23 @@ let base = __dirname;
 const multer = require('multer');
 const upload = multer({ dest: 'build/public/uploads/' });
 
+
+var redis = require("redis").createClient();
+redis.on("error", function (err) {
+    console.log("Error " + err);
+});
+
+
 // 数据库模板
-const User = require('../build/model/user');
-const Unread = require('../build/model/unread');
-const Pmess = require('../build/model/pmess');
-const Tmess = require('../build/model/tmess');
-const People = require('../build/model/people');
-const Team = require('../build/model/team');
-const List = require('../build/model/list');
+const model = require('../build/model');
+
+/* 自定以方法模块 */
 const sequence = require('zfc-sequence');
 
 module.exports = {
 	ip: '127.0.0.1',
 	port: 8000,
-	db: 'mongodb://localhost/seanet',
+	db: 'mongodb://localhost/seaim',
 	
 	// z,
 	session,
@@ -50,13 +50,15 @@ module.exports = {
 	jsonParser,
 	// multer,
 	upload,
-	User,
-	Unread,
-	Pmess,
-	Tmess,
-	People,
-	Team,
-	List,
-	sequence,
 
+	User:model.User,
+	Unread:model.Unread,
+	Pmess:model.Pmess,
+	Tmess:model.Tmess,
+	People:model.People,
+	Team:model.Team,
+	List:model.List,
+
+	sequence,
+	redis,
 }

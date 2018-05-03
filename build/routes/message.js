@@ -12,15 +12,6 @@ router.get('/getMoreMessage', (req,res)=>{
 	let receiveUid = q.receiveUid;
 	let fromUid = q.fromUid;
 	let type = q.type;
-
-	console.log('---------getMoreMessage---------')
-	console.log('receiveUid:');
-	console.log(receiveUid);
-	console.log('fromUid:');
-	console.log(fromUid);
-	console.log('type:');
-	console.log(type);
-
 	let mess;
 
 	sequence(

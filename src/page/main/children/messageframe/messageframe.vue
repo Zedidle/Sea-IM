@@ -265,10 +265,10 @@ export default {
   position:fixed;
   z-index: 1000;
   top:35px;
-  left: 400px;
+  left: 50%;
+  transform:translateX(-50%);
   width:700px;
   height:560px;
-  box-shadow: 0px 0px 5px @seaBlue;
   @media (max-width:768px){
     top: 0px; left:0px;
     width:100%;
@@ -385,7 +385,7 @@ export default {
   }
   .messageframe-top{
     display: block;
-    height: 3rem;
+    height: 2rem;
     color: #fff;
     background-color: @seaBlue;
     @media (max-width:600px){
@@ -436,12 +436,13 @@ export default {
     overflow-y:scroll; 
     font-size:1.2em;
     padding-top:25px;
+    padding-right:40px;
+    transform:translateX(1rem);
     li{
       margin-bottom:0.4em;
       .avator{
         width:60px;
         height:60px;
-        /*float:left;*/
         border-radius: 50%;
         border:1px solid #999;
       }
@@ -481,7 +482,7 @@ export default {
     border:solid 2px @seaBlue;
     display: block;
     text-align: center;
-    height:4rem;
+    height:3rem;
     color:#fff;
     position:absolute;
     bottom:0;
@@ -491,12 +492,12 @@ export default {
       font-size:20px;
       text-align: center;
       color: #fff;
-      border:2px solid @seaBlue;
       background-color:@seaBlue;
       display: inline-block;
       float: left;
       height:100%;
       width:10%;
+      border:none;
       cursor: pointer;
       &:hover{
         color:@seaBlue;
@@ -508,31 +509,25 @@ export default {
       display: inline-block;
       float: left;
       height:100%;
-      width:80%;
+      width:78%;
       font-size: 1.2em;
+      border:none;
       color:#222;
-      border:2px solid @seaBlue;
-      @media (max-width:600px){
-        width:75%;
-      }
     }
     .messageframe-subm{
       display: inline-block;
       font-size: 20px;
       text-align: center;
       background-color: @seaBlue;
-      border:2px solid @seaBlue;
       color:#FFF;
       float: left;
       height:100%;
+      border:none;
       width:10%;
       cursor: pointer;
       &:hover{
         color:@seaBlue;
         background-color:#FFF;
-      }
-      @media (max-width:600px){
-        width:15%;
       }
     }
   }

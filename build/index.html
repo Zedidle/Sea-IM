@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>SeaNet</title>
+  <title>Sea IM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="stylesheet" href="css/bootstrap-app.css">
   <link rel="stylesheet" href="css/font.css">
   <link rel="stylesheet" href="cropperjs/dist/cropper.css">
 </head>
@@ -12,34 +11,9 @@
   <div id="app">
     <router-view></router-view>
   </div>
-  
-  <span
-    id='bg-change-btn'
-  >
-  <i 
-    title='更换背景'
-    style='font-weight: 600;'
-    class="icon iconfont icon-refresh"
-  ></i>
-  </span>
-
-  <footer
-      style='position:fixed;
-          height:10px;
-          display:block;
-          width:100%;
-          bottom:2%;   
-          text-align:center;'
-  >
-<!--     <ul
-        style='list-style: none;padding:0;margin:0;'
-    >
-        <li style='color:#EEF;'>@SeaNet</li>
-    </ul> -->
-  </footer>
   <script src="/socket.io/socket.io.js"></script>
   <script> let socket = io(); </script>
   <script src='js/bundle.js'></script>
-  <script defer src='cropperjs/dist/cropper.min.js'></script>
+  <script src='cropperjs/dist/cropper.min.js'></script>
 </body>
 </html>

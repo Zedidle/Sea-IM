@@ -5,7 +5,7 @@
 		v-show='onPImgUpdate'
 	>
 		<!-- <input type="file"> -->
-		<img 
+		<img
 			id='newPHeadImg'
 			:src="newPHeadImg"
 		>
@@ -119,7 +119,8 @@ import {mapState,mapMutations} from 'vuex';
 
 <style lang='less' scoped>
 	#imgUpdate{
-		box-shadow: 0 0 5px #999;
+		border:solid 1px solid #999;
+		box-shadow: 0 0 3px #999;
 		position:fixed;
 		top:50%;
 		left:50%;
@@ -134,6 +135,11 @@ import {mapState,mapMutations} from 'vuex';
 			border:none;
 			padding:10px;
 			box-shadow: 0 0 5px #999;
+			
+			&:first-of-type{
+				background-color:#364975;
+			}
+
 		}
 	}
 </style>

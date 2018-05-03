@@ -75,13 +75,9 @@ export default {
   overflow: hidden;
   z-index: 10000000;
   
-
-
   #logOff{
     width:100%;
     font-weight: 600;
-    border-top:3px solid transparent;
-    border-bottom:3px solid transparent;
     height:34px;
     line-height: 28px;
     font-size: 20px;
@@ -90,30 +86,24 @@ export default {
     color:#fff;
     background-color: #999;
     &:hover{
-      background-color: #AAA;
-      border-color:#EEE;
+      color:red;
     }
   }
 
   .ele{
-    width:50px;
-    height:50px;
-    line-height: 50px;
-    border-radius: 10%;
+    width:3rem;
+    height:3rem;
+    line-height: 3rem;
     margin:10px;
     font-weight: 600;
     text-align: center;
     display: inline-block;
     cursor:pointer;
     color:#7EBCB7;
-    background:rgba(255,255,255,0.8);
+    border:1px solid #333;
+    background:#FFF;
     &:hover{
       box-shadow: 0 0 5px #999;
-    }
-    @media(max-width:480px){
-      &:hover{
-        box-shadow: 0 0 5px #FFF;
-      }
     }
   }
 

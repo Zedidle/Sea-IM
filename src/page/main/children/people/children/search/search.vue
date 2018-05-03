@@ -15,7 +15,7 @@
           <div>
             <div class='name'>{{i.name}}</div>      
             <div class='introduce'>{{i.introduce}}</div>      
-            </div>
+          </div>
         </li>
       </transition-group>
 		</div>
@@ -50,11 +50,6 @@ export default {
       'showPTodo',
     ]),
     clickLi(uid,e){
-      console.log('---------clickLi---------');
-      console.log('uid:',uid);
-      /*get x and y*/
-      console.log('event:')
-      console.log(e);
       this.showPTodo({
         uid,
         x:e.clientX-150,
@@ -71,6 +66,7 @@ export default {
 	#pSearch{
 
     ul{
+      padding-left:1rem;
       li{
         list-style: none;
         height:60px;
@@ -80,26 +76,26 @@ export default {
         };
 
         img{
-          width: 60px;
-          height: 60px;
+          width: 3rem;
+          height: 3rem;
           border-radius: 50%;
           border:1px solid #999;
-          float:right;
+          float: right;
         }
         div{
-          display: inline-block;
-          float:left;
+          float: left;
           width:200px;
           .name{
-            height:20px;
+            height:1rem;
+            font-size:0.8rem;
           }
           .introduce{
-            height:40px;
+            font-size:0.8rem;
+            height:2.5rem;
           }
         }
       }
     }
-
   }
 </style>
 

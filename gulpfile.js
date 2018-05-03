@@ -47,9 +47,6 @@ gulp.task('clean-dev-main',function(){
 
 
 
-// 开发环境 ， 使用npm run dev
-
-
 gulp.task('dev-main',function(){
 
   vueify.compiler.applyConfig(require('./configs/vue.config.js'));
@@ -72,7 +69,6 @@ gulp.task('dev-main',function(){
     console.log('生成sourcemap')
     console.log('输出报错流...');
     console.log('输出文件！')
-  
   combiner.obj([
       b.bundle(),  //开始连接并捆绑所有文件
         source('bundle.js'),   //命名捆绑成的文件，并当作源文件
@@ -84,38 +80,28 @@ gulp.task('dev-main',function(){
     ])
     .on('error', console.error.bind(console)); //确认开启报错
    
+    setTimeout(reload,3000);
 
 });
 
 
-gulp.task('dev-main-watch',['dev-main'],function(){
-	browserReload();
-})
-function browserReload(){
-	return reload();
-}
-
-
+// npm run dev
 gulp.task('development',function(){
-	    // 从这个项目的根目录启动服务器
-    
+	// 从这个项目的根目录启动服务器
 	gulpSequence(
 		'clean-dev-main',
 		'font-styles',
 		'dev-main',
-		function(){
-			console.log('According to the Sequence... Finished!');
-		}
-	)
-
+		()=>{ console.log('According to the Sequence...!'); }
+	);
 
     browserSync.init({
         proxy: ip +':'+port
     });
 
 
-    gulp.watch(["src/main.js","./src/**/*.js","./configs/ui.config.js"],["dev-main-watch"]);
-    gulp.watch("./src/**/*.vue",["dev-main-watch"]);
+    gulp.watch(["src/main.js","./src/**/*.js","./configs/ui.config.js"],["dev-main"]);
+    gulp.watch("./src/**/*.vue",["dev-main"]);
 	gulp.watch(['./src/less/**/*.less','./configs/config.less'],['font-styles']);
 	console.log('正在监听:*.vue');
 	console.log('正在监听:*.less');

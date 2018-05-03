@@ -6,6 +6,7 @@ const {
   Team,
   List,
   Unread,
+  redis,
 } = require('../../configs/server.config.js');
 
 
@@ -13,21 +14,23 @@ module.exports = function(server){
 
 	var io = require('socket.io')(server);
 
-  console.log('-----------服务器开启socket通讯-----------');
-  console.log("--------------|||开始监听|||-------------");
-  console.log("----------------聊天消息---------------");
-  console.log("-----------------心跳包---------------");
-  
   io.on('connection', function(socket){
-    socket.on('heartbeat',function(uid){
-      User.update({uid}, {$set:{login:true}}).exec();
-        console.log(uid,'login')
-      setTimeout(function(){
-        User.update({uid}, {$set:{login:false}}).exec();
-        console.log(uid,'logout')
-      },9800);
+
+    console.log('Socket is on ready!');
+
+
+    socket.on('heartbeat',(uid)=>{
+      redis.set(uid,true,()=>{
+        setTimeout(()=>{
+          redis.set(uid,false,()=>{
+            console.log(uid,'bit')
+          });
+        },4950)
+      })
     });
-    
+
+
+
 
   socket.on('chat', function(J_msg) {
     //1.服务器接收格式化了的消息，并解格式化；

@@ -69,7 +69,6 @@ export default {
     width:100%;
     height:80px;
     border-bottom:2px solid #999;
-    box-shadow: 0 0 3px #999;
 
     img{
       width:80px;
@@ -112,8 +111,7 @@ export default {
       }
     }
     .active{
-      border:2px solid #399891;
-      border-radius: 0%;
+      box-shadow:0 0 10px #999;
     }
   }
 

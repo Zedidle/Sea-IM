@@ -119,8 +119,6 @@ import {mapState,mapMutations} from 'vuex';
 </script>
 <style lang='less' scoped>
 	#stars{
-		overflow-y:scroll;
-		height:360px;
 		.find{
 			border-bottom:1px solid #7BB;
 			&>div{
@@ -154,11 +152,11 @@ import {mapState,mapMutations} from 'vuex';
 					height: 60px;
 					border-radius: 50%;
 					border:1px solid #999;
-					float:right;
+					float: right;
 				}
 				div{
 					display: inline-block;
-					float:left;
+					float: left;
 					width:200px;
 					.name{
 						height:20px;

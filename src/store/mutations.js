@@ -348,20 +348,14 @@ export default {
 
   	//切换注册成功状态的开关
 	toggleRegistS(state,d){ 
-		console.log('-------------toggleRegistS----------------')
-		console.log(d);
 		state.isSuccessRegist = !state.isSuccessRegist;
 		state.rUid = d.uid;
 		state.rPw = d.pw;
+		window.location.href='/';
 	},
 
 
 	findTeams(state,keyword){
-
-		console.log('findTeams');
-		console.log(state.teamInfo);
-		console.log(keyword);
-
 		if(keyword){
 			state.foundTeamsInfo = [];
 			for(let i of state.teamInfo){
@@ -370,7 +364,6 @@ export default {
 				}
 			}
 		}
-		console.log(state.foundTeamsInfo);
 	},
 
 	findStars(state,keyword){
@@ -445,11 +438,8 @@ export default {
 			}
 		}
 
-
-
 		state.starInfo = JSON.parse(d.starInfo);
 		state.teamInfo = JSON.parse(d.teamInfo);
-
 	},
 
 
@@ -664,6 +654,7 @@ export default {
             case '大拇指':t = 47; break;
             case '弱':t = 48; break;
             case 'ok':t = 49; break;
+            case 'rabbit':t = 50; break;
           }
           return t;
         }

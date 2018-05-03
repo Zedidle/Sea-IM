@@ -159,15 +159,14 @@
 		}
 
 		#operator{
-			height:40px;
-			margin-top:40px;
+			height:2.5rem;
 			div{
 				text-align: center;
 				font-weight: 600;
 				float: left;
 				width:99px;
-				line-height:40px; 
-				height: 40px;
+				line-height:2.5rem; 
+				height: 100%;
 				border-bottom:1px solid #7CC;
 
 				&:hover{
@@ -231,7 +230,13 @@
 
 		.content{
 			overflow-y:scroll;
-			height:420px;
+			height:24rem;
+			width:100%;
+			transform:translateX(1rem);
+			padding:1rem 0;
+			>*{
+				transform:translateX(-0.5rem);
+			}
 		}
 	}
 

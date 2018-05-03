@@ -1,15 +1,6 @@
 console.log('load ui config');
 
 module.exports = function(){  
-    document.getElementById('bg-change-btn').onmouseover = function(){
-      console.log('hover');
-      document.getElementById('bg-change-btn').className = 'spin';
-    }
-    document.getElementById('bg-change-btn').onmouseout = function(){
-      console.log('out');
-      document.getElementById('bg-change-btn').className = '';
-    }
-    
     var BgController = function(obj){
       this.v = 1;
       this.update = function(){
@@ -20,7 +11,7 @@ module.exports = function(){
       }.bind(this);
       this.bgFlash = function(){
         var img = document.createElement('img');
-        img.src='./img/background/bg'+this.v+'.jpg';
+        img.src='img/bg.jpg';
         img.onload = function(){
           setTimeout(function(){
             console.log('Finish onload!');
@@ -35,5 +26,5 @@ module.exports = function(){
     }
     var bodyBgController = new BgController(document.body);
     bodyBgController.bgFlash();
-    document.getElementById('bg-change-btn').onclick = bodyBgController.bgChange;
+    // document.getElementById('bg-change-btn').onclick = bodyBgController.bgChange;
 }

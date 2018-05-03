@@ -2,7 +2,6 @@
 	<div
 		id='pTodo'
 		v-if='onPTodo'
-		:style='pTodoS'
 	>
 		<div
 			@click='hidePTodo'
@@ -49,16 +48,7 @@ import {mapState,mapMutations} from 'vuex';
 				'pTodoProps',
 				'foundPeopleInfo',
 			]),
-			pTodoS(){
-				return {
-					position:'absolute',
-					width:'120px',
-					boxShadow:'0 0 5px #999',
-					top:this.pTodoProps.y + 'px',
-					left:this.pTodoProps.x + 'px',
-					textAlign: 'center',
-				}
-			}
+
 		},
 		methods:{
 			...mapMutations([
@@ -100,6 +90,13 @@ import {mapState,mapMutations} from 'vuex';
 
 <style lang='less' scoped>
 	#pTodo{
+		position:absolute;
+		width:8rem;
+		box-shadow:0 0 5px #999;
+		top:50%;
+		left:50%;
+		text-align: center;
+		transform:translate(-50%);
 		div{
 			text-align: center;
 			background-color: #111;

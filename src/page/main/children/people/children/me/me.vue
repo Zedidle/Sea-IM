@@ -18,7 +18,6 @@
  </div>
 </template>
 
-
 <script>
 import $ from 'jquery';
 import {mapState,mapMutations} from 'vuex';
@@ -44,53 +43,21 @@ export default {
       'showPImgUpdate',
     ]),
     clickHeadImg(){
-      console.log('--------clickHeadImg--------');
       let vm = this;
-
-      if(document.getElementById('cropperScript')){
-        toGetImg();
-      }else{
-        let script = document.createElement('script');
-        script.id = 'cropperScript'
-        script.src = 'cropperjs/dist/cropper.min.js';
-        script.async="async";
-        console.log('loading cropper.min.js ...');
-        document.body.appendChild(script);
-        script.onload = function(){
-          console.log('cropper.min.js ok!');
-          toGetImg();
-        }
-      }
-
-      function toGetImg(){
-        let input = document.createElement('input');
-        input.type='file';
-        input.click();
-        input.onchange=function(){
-          console.log('input Image Change!');
-          console.log('The files : ')
-          console.log(input.files[0]);
-
-          let r = new FileReader();
-          r.readAsDataURL(input.files[0]);
-          r.onload = function(){
-             console.log('read file 100%');
-             console.log('DataURL:');
-             console.log(r.result);
-             vm.showPImgUpdate(r.result);
-          }
+      let input = document.createElement('input');
+      input.type='file';
+      input.click();
+      input.onchange=function(){
+        let r = new FileReader();
+        r.readAsDataURL(input.files[0]);
+        r.onload = function(){
+           vm.showPImgUpdate(r.result);
         }
       }
     },
 
     meUpdateText(){
-      console.log('meUpdate:');
-      console.log('userInfo:');
-      console.log(this.userInfo);
-      $.post('/meUpdateText',this.userInfo,(d)=>{
-        console.log('meUpdate callback: data:');
-        console.log(d);
-      });
+      $.post('/meUpdateText',this.userInfo);
     },
   }
 }
@@ -101,7 +68,6 @@ export default {
 <style lang='less' scoped>
 #me{
   text-align: center;
-  padding-top:10px;
   .headImg{
     border-radius: 50%;
     width:80px;
